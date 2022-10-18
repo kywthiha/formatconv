@@ -6,16 +6,21 @@
 -->
 <script>
 import { ref } from "vue";
+import { computed } from "@vue/reactivity";
 import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
 import { POOL_DATA } from "../../config/cognito";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 export default {
   setup() {
     const router = useRouter();
+    const store = useStore();
     const oldPassword = ref("");
     const newPassword = ref("");
     let name = ref(null);
+
+    const profilename = computed(() => store.state.authModule.name);
 
     // 認証済みメールでコードを送信する
     function changePassword() {
@@ -61,6 +66,7 @@ export default {
       oldPassword,
       newPassword,
       name,
+      profilename,
     };
   },
 };
@@ -70,6 +76,49 @@ export default {
     <div>
       <div>
         <header-display>
+          <template v-slot:totp-slot>
+            <button @click="enableMFASetting">
+              <div class="form-switch" style="padding-left: 0em">
+                <label class="form-check-label" for="flexSwitchCheckDefault">
+                  {{ $t("screenItemProperties.common.mfaOnOff") }}</label
+                >
+                <input
+                  class="form-check-input"
+                  style="margin-left: 0em"
+                  type="checkbox"
+                  id="flexSwitchCheckDefault"
+                  :value="mfaValue"
+                  v-model="mfaValue"
+                  @change="newQRCode($event)"
+                />
+              </div>
+            </button>
+          </template>
+          <template v-slot:register-slot>
+            <div class="dropdown">
+              <button
+                class="btn btn-secondary dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton1"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                {{ profilename }}
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li>
+                  <a class="dropdown-item" href="#" @click="changePassword">{{
+                    $t("screenItemProperties.changePassword.changePassword")
+                  }}</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="#" @click.prevent="logout"
+                    >ログアウト</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </template>
           <template v-slot:titlebar-slot>
             <div class="logo-icon">
               <img src="../../assets/logo-icon.png" class="img-fluid" />
@@ -99,10 +148,26 @@ export default {
                             >
                           </td>
                           <td>
-                            <input
+                            <!-- <input
                               type="text"
                               v-model.trim="oldPassword"
                               autocomplete="false"
+                            /> -->
+                            <input
+                              type="password"
+                              v-model.trim="password"
+                              autocomplete="false"
+                              v-bind:class="{
+                                'form-control': true,
+                                'is-invalid':
+                                  !validPassword(password) && passwordBlured,
+                              }"
+                              v-bind:style="[
+                                !validPassword(password) && passwordBlured
+                                  ? { 'margin-bottom': '0px' }
+                                  : { 'margin-bottom': '20px' },
+                              ]"
+                              v-on:blur="passwordBlured = true"
                             />
                           </td>
                         </tr>
@@ -121,6 +186,25 @@ export default {
                             <input
                               type="password"
                               v-model.trim="newPassword"
+                              autocomplete="false"
+                            />
+                          </td>
+                        </tr>
+                      </div>
+                      <div class="input-text">
+                        <!-- 新しいパスワード確認 -->
+                        <tr>
+                          <td class="mail-label">
+                            <label style="width: 170px">{{
+                              $t(
+                                "screenItemProperties.passwordReset.confirmNewPassword"
+                              )
+                            }}</label>
+                          </td>
+                          <td>
+                            <input
+                              type="password"
+                              v-model.trim="confirmPassword"
                               autocomplete="false"
                             />
                           </td>

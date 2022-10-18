@@ -37,7 +37,10 @@ export default {
     const route = useRoute();
 
     const { rt, t } = useI18n();
-    console.log("test ", t("E001"));
+    console.log(
+      "test ",
+      t("errorMessages.E0001", { requireValue: t("title") })
+    );
 
     const email = ref("");
     const username = ref("");
@@ -48,17 +51,42 @@ export default {
     const confirmMFACode = ref(false);
 
     const emailBlured = ref(false);
+    let emailRequireMsg = ref("");
     const passwordBlured = ref(false);
+    let passRequireMsg = ref("");
 
     function validEmail(email) {
       var reMail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      if (!reMail.test(email)) {
+        if (email.length === 0) {
+          emailRequireMsg.value = t("errorMessages.E0001", {
+            requireValue: "メール",
+          });
+        } else {
+          emailRequireMsg.value = t("errorMessages.E0002", {
+            fromatValue: "メール",
+          });
+        }
+      }
       return reMail.test(email);
     }
 
     function validPassword(password) {
       var rePassword =
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-
+      if (!rePassword.test(password)) {
+        if (password.length === 0) {
+          passRequireMsg.value = t("errorMessages.E0001", {
+            requireValue: "パスワード",
+          });
+        } else if (password.length > 0 && password.length < 8) {
+          passRequireMsg.value = "パスワードは8文字以上でなければなりません。";
+        } else {
+          passRequireMsg.value = t("errorMessages.E0002", {
+            fromatValue: "パスワード",
+          });
+        }
+      }
       return rePassword.test(password);
     }
 
@@ -176,6 +204,8 @@ export default {
       validEmail,
       passwordBlured,
       validPassword,
+      emailRequireMsg,
+      passRequireMsg,
     };
   },
 };
@@ -226,7 +256,9 @@ export default {
                     v-on:blur="emailBlured = true"
                     autocomplete="false"
                   />
-                  <div class="invalid-feedback">メールを入力してください。</div>
+                  <div class="invalid-feedback">
+                    {{ emailRequireMsg }}
+                  </div>
                 </td>
               </tr>
             </div>
@@ -256,7 +288,7 @@ export default {
                     v-on:blur="passwordBlured = true"
                   />
                   <div class="invalid-feedback">
-                    パスワードを入力してください。
+                    {{ passRequireMsg }}
                   </div>
                 </td>
               </tr>

@@ -121,9 +121,20 @@ export default {
     <header-display>
       <template v-slot:totp-slot>
         <button @click="enableMFASetting">
-          <span class="figcaption">{{
-            $t("screenItemProperties.common.mfaOnOff")
-          }}</span>
+          <div class="form-switch" style="padding-left: 0em">
+            <label class="form-check-label" for="flexSwitchCheckDefault">
+              {{ $t("screenItemProperties.common.mfaOnOff") }}</label
+            >
+            <input
+              class="form-check-input"
+              style="margin-left: 0em"
+              type="checkbox"
+              id="flexSwitchCheckDefault"
+              :value="mfaValue"
+              v-model="mfaValue"
+              @change="newQRCode($event)"
+            />
+          </div>
         </button>
       </template>
       <template v-slot:register-slot>

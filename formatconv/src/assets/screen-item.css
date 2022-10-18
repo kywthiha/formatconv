@@ -298,7 +298,7 @@ input[type="password"] {
 }
 
 .mfa-confirm-btn {
-  width: 180px;
+  width: 140px;
   height: 37px;
   border-radius: 5px;
   background-color: #6c8bc5;
@@ -309,7 +309,7 @@ input[type="password"] {
 }
 
 .mfa-cancel-btn {
-  width: 80px;
+  width: 120px;
   height: 37px;
   border-radius: 5px;
   background-color: #dd5d46;

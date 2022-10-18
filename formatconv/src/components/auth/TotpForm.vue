@@ -33,6 +33,8 @@ export default {
       store.dispatch("fetchMFAValue");
     });
 
+    const profilename = computed(() => store.state.authModule.name);
+
     // 新しい Qr コードを作成する
     function newQRCode() {
       //　「MFAを有効にする」のチェックを外すと、MFAが無効になる
@@ -162,6 +164,7 @@ export default {
       message,
       messageStyleType,
       setMessage,
+      profilename,
     };
   },
 };
@@ -169,12 +172,48 @@ export default {
 <template>
   <div>
     <header-display>
+      <template v-slot:totp-slot>
+        <button @click="enableMFASetting">
+          <div class="form-switch" style="padding-left: 0em">
+            <label class="form-check-label" for="flexSwitchCheckDefault">
+              {{ $t("screenItemProperties.common.mfaOnOff") }}</label
+            >
+            <input
+              class="form-check-input"
+              style="margin-left: 0em"
+              type="checkbox"
+              id="flexSwitchCheckDefault"
+              :value="mfaValue"
+              v-model="mfaValue"
+              @change="newQRCode($event)"
+            />
+          </div>
+        </button>
+      </template>
       <template v-slot:register-slot>
-        <router-link to="#"
-          ><button>
-            <span class="figcaption">アカウント名：ｘｘｘ</span>
-          </button></router-link
-        >
+        <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {{ profilename }}
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li>
+              <a class="dropdown-item" href="#" @click="changePassword">{{
+                $t("screenItemProperties.changePassword.changePassword")
+              }}</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" @click.prevent="logout"
+                >ログアウト</a
+              >
+            </li>
+          </ul>
+        </div>
       </template>
       <template v-slot:titlebar-slot>
         <div class="logo-icon">
@@ -208,8 +247,8 @@ export default {
                 </div>
                 <div v-if="showQRCode" class="mb-3 text-center">
                   <div class="scanner-lbl">
-                    Scan QR Code using Authy, Microsoft Authenticator or Google
-                    Authenticator
+                    Authy, Microsoft Authenticator 又は Google Authenticator
+                    を利用して、QAコードをスキャンします。
                   </div>
                   <div class="mt-3">
                     <qrcode-vue
@@ -221,7 +260,7 @@ export default {
                 </div>
                 <hr />
                 <div v-if="showQRCode" class="mt-1 text-center">
-                  <p>Enter MFA Code</p>
+                  <p>MFAコード</p>
                   <div class="row text-center">
                     <div class="col-4 offset-md-4 mb-2">
                       <div class="input-group">
@@ -237,10 +276,10 @@ export default {
                   </div>
                   <!-- ボタンエリア -->
                   <button class="mfa-cancel-btn mt-2 me-2" @click="cancel">
-                    Cancel
+                    キャンセル
                   </button>
                   <button class="mfa-confirm-btn mt-2 me-2" @click="verifyMFA">
-                    Confirm MFA Setup
+                    送信
                   </button>
                 </div>
               </div>
