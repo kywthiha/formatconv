@@ -1,0 +1,53 @@
+{
+  "title": "撮影データ変換サービス",
+  "email": "メール：　",
+  "password": "パスワード：　",
+  "login": "ログイン",
+  "signup": "アカウント登録",
+  "resetpassword": "パスワードリセット",
+  "sendNewCode": "再送信する",
+  "notReceivedCode": "検証コードが届かない場合は、以下より再度送信してください。",
+  "E001": "検証コードをまず入力してください。",
+  "screenItemProperties": {
+    "common": {
+      "title": "撮影データ変換サービス",
+      "register": "アカウント登録",
+      "email": "メール：　",
+      "password": "パスワード：　",
+      "verificationCode": "検証コード：　",
+      "accountName": "アカウント名：",
+      "mfaOnOff": "多要素認証ON/OFF"
+    },
+    "button": {
+      "registerBtn": "登録",
+      "termsOfServiceBtn": "利用規約",
+      "confirmAccountBtn": "アカウント確認",
+      "loginBtn": "ログイン",
+      "resetPasswordBtn": "リセット",
+      "updatePasswordBtn": "パスワード更新",
+      "dataConvertionUploadBtn": "変換データアップロード",
+      "convertingBtn": "変換中",
+      "closeBtn": "閉じる"
+    },
+    "signup": {
+      "userName": "アカウント名：　",
+      "confirmPassword": "パスワード確認：　"
+    },
+    "confirmAccount": {
+      "sentNewCodeLabel": "検証コードが届かない場合は、以下より再度送信してください。",
+      "sentNewCodeLink": "再送信する"
+    },
+    "signin": {
+      "resetPassword": "パスワードリセット",
+      "onetimePassword": "ワンタイムパスワード："
+    },
+    "passwordReset": {
+      "newPassword": "新しいパスワード：　",
+      "confirmNewPassword": "新しいパスワード確認：　"
+    },
+    "fileUpload": {
+      "fileName": "フォルダ名",
+      "fileSize": "サイズ（GB）"
+    }
+  }
+}
