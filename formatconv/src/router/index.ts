@@ -7,6 +7,7 @@ import PasswordResetForm from "../components/auth/PasswordResetForm.vue";
 import Confirm from "../components/auth/ConfirmAccountForm.vue";
 import store from "../store/index.js";
 import ChangePasswordForm from "../components/auth/ChangePasswordForm.vue";
+import SigninForm from "../views/Signin.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,7 +20,7 @@ const router = createRouter({
     {
       path: "/signin",
       name: "signin",
-      component: () => import("../views/Signin.vue"),
+      component: SigninForm,
     },
     {
       path: "/signup",
@@ -35,6 +36,7 @@ const router = createRouter({
       path: "/confirm",
       name: "confirm",
       component: Confirm,
+      beforeEnter: isAuthenticated,
       meta: {
         requiresAuth: true,
       },
@@ -43,6 +45,7 @@ const router = createRouter({
       path: "/fileUpload",
       name: "fileUpload",
       component: FileUpload,
+      beforeEnter: isAuthenticated,
       meta: {
         requiresAuth: true,
       },
@@ -51,6 +54,7 @@ const router = createRouter({
       path: "/mfa",
       name: "Mfa",
       component: MFASettings,
+      beforeEnter: isAuthenticated,
       meta: {
         requiresAuth: true,
       },
@@ -59,6 +63,7 @@ const router = createRouter({
       path: "/changePassword",
       name: "ChangePassword",
       component: ChangePasswordForm,
+      beforeEnter: isAuthenticated,
       meta: {
         requiresAuth: true,
       },
@@ -66,18 +71,12 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to, form, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (store.getters.isAuthenticated) {
-      next();
-    } else {
-      next("/signin");
-    }
+function isAuthenticated(to, from, next) {
+  if (store.getters.isAuthenticated) {
+    next();
+  } else {
+    next("/signin");
   }
-  // if (store.getters.isAuthenticated) {
-  //   next("/fileUpload");
-  // }
-  next();
-});
+}
 
 export default router;
