@@ -50,8 +50,6 @@ export default {
     const emailBlured = ref(false);
     const passwordBlured = ref(false);
 
-    const profilename = ref("");
-
     function validEmail(email) {
       var reMail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
       return reMail.test(email);
@@ -141,6 +139,7 @@ export default {
       );
       store.dispatch("setIsAuthenticated", true);
       store.dispatch("setEmail", session.idToken.payload.email);
+      store.dispatch("setName", session.idToken.payload.name);
     }
 
     onMounted(function () {

@@ -27,6 +27,9 @@ export default {
   setEmail(context, payload) {
     context.commit("setEmail", payload);
   },
+  setName(context, payload) {
+    context.commit("setName", payload);
+  },
   setSession(context, payload) {
     context.commit("setSession", payload);
   },

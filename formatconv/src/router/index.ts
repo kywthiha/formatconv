@@ -6,6 +6,8 @@ import MFASettings from "../components/auth/TotpForm.vue";
 import PasswordResetForm from "../components/auth/PasswordResetForm.vue";
 import Confirm from "../components/auth/ConfirmAccountForm.vue";
 import store from "../store/index.js";
+import ChangePasswordForm from "../components/auth/ChangePasswordForm.vue";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -33,6 +35,9 @@ const router = createRouter({
       path: "/confirm",
       name: "confirm",
       component: Confirm,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: "/fileUpload",
@@ -46,6 +51,17 @@ const router = createRouter({
       path: "/mfa",
       name: "Mfa",
       component: MFASettings,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/changePassword",
+      name: "ChangePassword",
+      component: ChangePasswordForm,
+      meta: {
+        requiresAuth: true,
+      },
     },
   ],
 });
@@ -58,9 +74,9 @@ router.beforeEach((to, form, next) => {
       next("/signin");
     }
   }
-  if (store.getters.isAuthenticated) {
-    next("/fileUpload");
-  }
+  // if (store.getters.isAuthenticated) {
+  //   next("/fileUpload");
+  // }
   next();
 });
 

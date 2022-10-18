@@ -34,9 +34,7 @@ export default {
         onSuccess: function (data) {
           confirmCode.value = true;
         },
-        onFailure: function (err) {
-          setMessage(err.message, "alert-danger");
-        },
+        onFailure: function (err) {},
       });
     }
 

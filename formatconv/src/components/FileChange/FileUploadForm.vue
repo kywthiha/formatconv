@@ -22,8 +22,8 @@ export default {
     let moveMFASetting = ref(false);
     let router = useRouter();
     let route = useRoute();
-    let profilename = ref(route.query.profilename);
     let fileList = ref("");
+
     function handleDrop(event) {
       console.log("fileSelected ", event.target.files);
       for (var i = 0; i < event.target.files.length; i++) {
@@ -38,6 +38,7 @@ export default {
       console.log("fileName ", fileName.value);
       console.log("fileSize ", fileSize.value);
     }
+
     function dragFile(event) {
       console.log(event.dataTransfer.files);
       console.log("dragFile ", event.dataTransfer.files[0].name);
@@ -50,6 +51,12 @@ export default {
       console.log("fileSize ", fileSize);
     }
 
+    function changePassword() {
+      router.replace({
+        name: "ChangePassword",
+      });
+    }
+
     function enableMFASetting() {
       console.log("enableMFASetting ");
       moveMFASetting.value = true;
@@ -57,6 +64,7 @@ export default {
         name: "Mfa",
       });
     }
+
     function setUserSessionInfo(session) {
       setTimeout(function () {
         store.dispatch("autoLogout");
@@ -77,17 +85,20 @@ export default {
       () => store.state.authModule.cognitoUserName
     );
 
-    console.log(store.state.authModule.cognitoUserName);
-    console.log(cognitoUserName);
+    const profilename = computed(() => store.state.authModule.name);
+
+    console.log("22", store.state.authModule.cognitoUserName);
+    console.log(store.state.authModule.name);
 
     const logout = () => {
       store.dispatch("logout");
       router.push({
-        name: "SignIn",
+        name: "signin",
         params: { message: "You have logged out" },
       });
     };
     return {
+      changePassword,
       handleDrop,
       dragFile,
       fileDropSelected,
@@ -116,20 +127,28 @@ export default {
         </button>
       </template>
       <template v-slot:register-slot>
-        <div class="row justify-content-end">
-          <router-link to="#" class="col-auto">
-            <button class="">
-              <span class="figcaption"
-                >アカウント名：{{ cognitoUserName }}</span
+        <div class="dropdown">
+          <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {{ profilename }}
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li>
+              <a class="dropdown-item" href="#" @click="changePassword">{{
+                $t("screenItemProperties.changePassword.changePassword")
+              }}</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" @click.prevent="logout"
+                >ログアウト</a
               >
-            </button>
-          </router-link>
-          <router-link to="#" @click.prevent="logout" class="col-auto">
-            <button>
-              <i class="bi bi-box-arrow-left me-1"></i>
-              Logout
-            </button>
-          </router-link>
+            </li>
+          </ul>
         </div>
       </template>
       <template v-slot:titlebar-slot>

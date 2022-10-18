@@ -48,6 +48,10 @@
     "fileUpload": {
       "fileName": "フォルダ名",
       "fileSize": "サイズ（GB）"
+    },
+    "changePassword": {
+      "oldPassword": "以前のパスワード：　",
+      "changePassword": "パスワード変更"
     }
   }
 }

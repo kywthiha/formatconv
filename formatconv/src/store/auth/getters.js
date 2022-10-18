@@ -27,6 +27,9 @@ export default {
   email(state) {
     return state.email;
   },
+  name(state) {
+    return state.name;
+  },
   didAutoLogout(state) {
     return state.didAutoLogout;
   },

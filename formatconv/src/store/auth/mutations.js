@@ -15,6 +15,9 @@ export default {
   setUsername(state, payload) {
     state.cognitoUserName = payload;
   },
+  setName(state, payload) {
+    state.name = payload;
+  },
   logout(state) {
     state.isAuthenticated = false;
   },
