@@ -50,7 +50,7 @@
       "fileSize": "サイズ（GB）"
     },
     "changePassword": {
-      "oldPassword": "以前のパスワード：　",
+      "oldPassword": "現在のパスワード：　",
       "changePassword": "パスワード変更"
     }
   }
