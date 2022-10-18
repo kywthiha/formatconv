@@ -104,61 +104,58 @@ export default {
             <div>
               <form @submit.prevent="changePassword">
                 <body-display>
-                  <template v-slot:body>
-                    <div class="input-text">
-                      <!-- メール -->
-                      <tr>
-                        <td class="mail-label">
-                          <label>{{
+                  <template v-slot:body style="margin-right: 170px">
+                    <div style="margin-right: 70px">
+                      <div class="input-text">
+                        <!-- メール -->
+                        <tr>
+                          <td class="mail-label">
+                            <label style="width: 170px">
+                              {{
+                                $t(
+                                  "screenItemProperties.changePassword.oldPassword"
+                                )
+                              }}</label
+                            >
+                          </td>
+                          <td>
+                            <input
+                              type="text"
+                              v-model.trim="oldPassword"
+                              autocomplete="false"
+                            />
+                          </td>
+                        </tr>
+                      </div>
+                      <div class="input-text">
+                        <!-- 新しいパスワード -->
+                        <tr>
+                          <td class="mail-label">
+                            <label style="width: 170px">{{
+                              $t(
+                                "screenItemProperties.passwordReset.newPassword"
+                              )
+                            }}</label>
+                          </td>
+                          <td>
+                            <input
+                              type="password"
+                              v-model.trim="newPassword"
+                              autocomplete="false"
+                            />
+                          </td>
+                        </tr>
+                      </div>
+                      <!-- ボタンエリア -->
+                      <div class="sign-in" style="margin-left: 70px">
+                        <button>
+                          {{
                             $t(
-                              "screenItemProperties.changePassword.oldPassword"
+                              "screenItemProperties.changePassword.changePassword"
                             )
-                          }}</label>
-                        </td>
-                        <td>
-                          <input
-                            type="text"
-                            v-model.trim="oldPassword"
-                            autocomplete="false"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="mail-label">
-                          <label>{{
-                            $t("screenItemProperties.passwordReset.newPassword")
-                          }}</label>
-                        </td>
-                        <td>
-                          <input
-                            type="text"
-                            v-model.trim="newPassword"
-                            autocomplete="false"
-                          />
-                        </td>
-                      </tr>
-                      <tr>
-                        <td></td>
-                        <td colspan="2">
-                          <router-link to="/signin"
-                            ><span class="figcaption" style="font-size: 14px"
-                              ><u>{{
-                                $t("screenItemProperties.button.loginBtn")
-                              }}</u></span
-                            ></router-link
-                          >
-                        </td>
-                      </tr>
-                    </div>
-                    <!-- ボタンエリア -->
-                    <div class="sign-in">
-                      <button>
-                        {{
-                          $t(
-                            "screenItemProperties.changePassword.changePassword"
-                          )
-                        }}
-                      </button>
+                          }}
+                        </button>
+                      </div>
                     </div>
                   </template>
                 </body-display>
