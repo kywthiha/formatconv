@@ -25,7 +25,6 @@ export default createStore({
   modules: {
     authModule,
     settingsModule,
-    // contactsModule,
   },
   getters: {
     getIsLoading(state) {

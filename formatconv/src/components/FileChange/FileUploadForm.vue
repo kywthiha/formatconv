@@ -5,14 +5,16 @@
     作成日 : 2022/10/17　 
 -->
 <script>
+import { computed } from "@vue/reactivity";
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import store from "../../store/index";
+import { useStore } from "vuex";
 
 const events = ["dragenter", "dragleave", "dragover", "drop"];
 
 export default {
   setup() {
+    const store = useStore();
     let fileDropSelected = ref(false);
     let fileSelected = ref("");
     let fileName = ref("");
@@ -22,7 +24,6 @@ export default {
     let route = useRoute();
     let profilename = ref(route.query.profilename);
     let fileList = ref("");
-
     function handleDrop(event) {
       console.log("fileSelected ", event.target.files);
       for (var i = 0; i < event.target.files.length; i++) {
@@ -37,8 +38,8 @@ export default {
       console.log("fileName ", fileName.value);
       console.log("fileSize ", fileSize.value);
     }
-
     function dragFile(event) {
+      console.log(event.dataTransfer.files);
       console.log("dragFile ", event.dataTransfer.files[0].name);
       fileDropSelected.value = true;
       fileSelected.value = event.dataTransfer.files[0];
@@ -56,14 +57,12 @@ export default {
         name: "Mfa",
       });
     }
-
     function setUserSessionInfo(session) {
       setTimeout(function () {
         store.dispatch("autoLogout");
         router.replace("/signin");
         alert("You have been automatically logged out");
       }, autoTimeout(session));
-
       store.dispatch("setSession", session);
       store.dispatch("setIDToken", session.getIdToken().getJwtToken());
       store.dispatch(
@@ -73,6 +72,21 @@ export default {
       store.dispatch("setIsAuthenticated", true);
       store.dispatch("setEmail", session.idToken.payload.email);
     }
+
+    const cognitoUserName = computed(
+      () => store.state.authModule.cognitoUserName
+    );
+
+    console.log(store.state.authModule.cognitoUserName);
+    console.log(cognitoUserName);
+
+    const logout = () => {
+      store.dispatch("logout");
+      router.push({
+        name: "SignIn",
+        params: { message: "You have logged out" },
+      });
+    };
     return {
       handleDrop,
       dragFile,
@@ -85,6 +99,8 @@ export default {
       moveMFASetting,
       setUserSessionInfo,
       profilename,
+      logout,
+      cognitoUserName,
     };
   },
 };
@@ -100,11 +116,21 @@ export default {
         </button>
       </template>
       <template v-slot:register-slot>
-        <router-link to="#"
-          ><button style="width: 250px">
-            <span class="figcaption">アカウント名：{{ profilename }}</span>
-          </button></router-link
-        >
+        <div class="row justify-content-end">
+          <router-link to="#" class="col-auto">
+            <button class="">
+              <span class="figcaption"
+                >アカウント名：{{ cognitoUserName }}</span
+              >
+            </button>
+          </router-link>
+          <router-link to="#" @click.prevent="logout" class="col-auto">
+            <button>
+              <i class="bi bi-box-arrow-left me-1"></i>
+              Logout
+            </button>
+          </router-link>
+        </div>
       </template>
       <template v-slot:titlebar-slot>
         <div class="logo-icon">

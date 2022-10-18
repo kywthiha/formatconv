@@ -87,9 +87,8 @@ export default {
           // ユーザーセッション情報を Vue 状態システムに保存する
           setUserSessionInfo(session);
 
-          router.replace({
+          router.push({
             name: "fileUpload",
-            query: { profilename: session.idToken.payload.name },
           });
         },
         onFailure(error) {

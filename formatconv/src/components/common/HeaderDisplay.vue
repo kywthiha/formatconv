@@ -1,11 +1,11 @@
 <template>
-  <div class="row">
-    <div class="col">
+  <div class="row justify-content-between">
+    <div class="col-auto">
       <div class="totp-btn">
         <slot name="totp-slot"></slot>
       </div>
     </div>
-    <div class="col">
+    <div class="col-auto">
       <div class="register">
         <slot name="register-slot"></slot>
       </div>
