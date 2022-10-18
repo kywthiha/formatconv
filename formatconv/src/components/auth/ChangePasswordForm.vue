@@ -48,26 +48,6 @@ export default {
           console.log("call result: " + result);
 
           if (result === "SUCCESS") {
-            // cognitoUser.getUserAttributes(function (err, result) {
-            //   if (err) {
-            //     alert(err.message || JSON.stringify(err));
-            //     return;
-            //   }
-
-            //   for (var i = 0; i < result.length; i++) {
-            //     if (result[i].getName() === "name") {
-            //       name = result[i].getValue();
-            //       console.log("name ", name);
-            //     }
-            //     console.log(
-            //       "attribute " +
-            //         result[i].getName() +
-            //         " has value " +
-            //         result[i].getValue()
-            //     );
-            //   }
-            // });
-
             router.replace({
               name: "fileUpload",
             });
