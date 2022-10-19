@@ -18,7 +18,6 @@ export default {
     const store = useStore();
     const oldPassword = ref("");
     const newPassword = ref("");
-    let name = ref(null);
 
     const profilename = computed(() => store.state.authModule.name);
 
@@ -26,13 +25,10 @@ export default {
     function changePassword() {
       const userPool = new CognitoUserPool(POOL_DATA);
       let cognitoUser = userPool.getCurrentUser();
-      console.log(cognitoUser);
 
       // cognito ユーザーのセッションを取得する
       // 取得できないと、「User is not authenticated」エラーが発生した
       cognitoUser.getSession(function (err, session) {
-        console.log("hello ", session.idToken.payload.name);
-        name = session.idToken.payload.name;
         if (err) {
           alert(err);
           return;
@@ -61,28 +57,7 @@ export default {
       );
     }
 
-    function validPassword(password) {
-      var rePassword =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-      if (!rePassword.test(password)) {
-        // if (password.length === 0) {
-        //   passRequireMsg.value = t("errorMessages.E0001", {
-        //     requireValue: "パスワード",
-        //   });
-        // } else if (password.length > 0 && password.length < 8) {
-        //   passRequireMsg.value = "パスワードは8文字以上でなければなりません。";
-        // } else {
-        //   passRequireMsg.value = t("errorMessages.E0002", {
-        //     fromatValue: "パスワード",
-        //   });
-        // }
-      }
-      return rePassword.test(password);
-    }
-
     function enableMFAStatus(event) {
-      console.log("checkbox value ", event.target.checked);
-
       router.replace({
         name: "Mfa",
         query: { checkedValue: event.target.checked },
@@ -91,7 +66,6 @@ export default {
 
     //　ユーザーに対して MFA が有効か無効かを格納する計算プロパティ
     const mfaValue = computed(() => {
-      console.log(" in file upload ", store.getters.isMFAEnabled);
       return store.getters.isMFAEnabled;
     });
 
@@ -108,9 +82,7 @@ export default {
       changePassword,
       oldPassword,
       newPassword,
-      name,
       profilename,
-      validPassword,
       enableMFAStatus,
       mfaValue,
     };
@@ -199,25 +171,10 @@ export default {
                             >
                           </td>
                           <td>
-                            <!-- <input
-                              type="text"
-                              v-model.trim="oldPassword"
-                              autocomplete="false"
-                            /> -->
                             <input
                               type="password"
-                              v-model.trim="password"
+                              v-model.trim="oldPassword"
                               autocomplete="false"
-                              v-bind:class="{
-                                'form-control': true,
-                                'is-invalid':
-                                  !validPassword(password) && passwordBlured,
-                              }"
-                              v-bind:style="[
-                                !validPassword(password) && passwordBlured
-                                  ? { 'margin-bottom': '0px' }
-                                  : { 'margin-bottom': '20px' },
-                              ]"
                               v-on:blur="passwordBlured = true"
                             />
                           </td>
