@@ -16,7 +16,8 @@
       "password": "パスワード：　",
       "verificationCode": "検証コード：　",
       "accountName": "アカウント名：",
-      "mfaOnOff": "多要素認証ON/OFF"
+      "mfaOnOff": "多要素認証ON/OFF",
+      "serviceConfirmMenu": "サービス利用規約確認"
     },
     "button": {
       "registerBtn": "登録",

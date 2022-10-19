@@ -246,6 +246,11 @@ export default {
               }}</a>
             </li>
             <li>
+              <a class="dropdown-item" href="#">{{
+                $t("screenItemProperties.common.serviceConfirmMenu")
+              }}</a>
+            </li>
+            <li>
               <a class="dropdown-item" href="#" @click.prevent="logout"
                 >ログアウト</a
               >

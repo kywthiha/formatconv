@@ -155,7 +155,6 @@ export default {
             <label class="form-check-label" for="flexSwitchCheckDefault">
               {{ $t("screenItemProperties.common.mfaOnOff") }}</label
             >
-
             <input
               class="form-check-input"
               style="margin-left: 0em"
@@ -183,6 +182,11 @@ export default {
             <li>
               <a class="dropdown-item" href="#" @click="changePassword">{{
                 $t("screenItemProperties.changePassword.changePassword")
+              }}</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">{{
+                $t("screenItemProperties.common.serviceConfirmMenu")
               }}</a>
             </li>
             <li>
