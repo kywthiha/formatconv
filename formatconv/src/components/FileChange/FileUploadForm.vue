@@ -6,11 +6,11 @@
 -->
 <script>
 import { computed } from "@vue/reactivity";
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onBeforeMount, onBeforeUpdate } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 
-const events = ["dragenter", "dragleave", "dragover", "drop"];
+// const events = ["dragenter", "dragleave", "dragover", "drop"];
 
 export default {
   setup() {
@@ -87,9 +87,7 @@ export default {
 
     const profilename = computed(() => store.state.authModule.name);
 
-    console.log("22", store.state.authModule.cognitoUserName);
-    console.log(store.state.authModule.name);
-
+    //
     const logout = () => {
       store.dispatch("logout");
       router.push({
@@ -97,6 +95,36 @@ export default {
         params: { message: "You have logged out" },
       });
     };
+
+    //　ユーザーに対して MFA が有効か無効かを格納する計算プロパティ
+    const mfaValue = computed(() => {
+      console.log(" in file upload ", store.getters.isMFAEnabled);
+      return store.getters.isMFAEnabled;
+    });
+
+    //　ログインしたユーザーの mFA の現在の状態を確認する
+    onBeforeMount(function () {
+      store.dispatch("fetchMFAValue");
+    });
+
+    onBeforeUpdate(function () {
+      store.dispatch("fetchMFAValue");
+    });
+
+    // const self = this;
+    function enableMFAStatus(event) {
+      console.log("checkbox value ", event.target.checked);
+      // this.$root.broadcast("checkedValue", {
+      //   users: event.target.checked,
+      // });
+      // self.$root.$emit("checkedValue", event.target.checked);
+      // TotpForm.$emit("checkedValue", event.target.checked);
+      router.replace({
+        name: "Mfa",
+        query: { checkedValue: event.target.checked },
+      });
+    }
+
     return {
       changePassword,
       handleDrop,
@@ -112,6 +140,8 @@ export default {
       profilename,
       logout,
       cognitoUserName,
+      enableMFAStatus,
+      mfaValue,
     };
   },
 };
@@ -120,11 +150,12 @@ export default {
   <div>
     <header-display>
       <template v-slot:totp-slot>
-        <button @click="enableMFASetting">
+        <button>
           <div class="form-switch" style="padding-left: 0em">
             <label class="form-check-label" for="flexSwitchCheckDefault">
               {{ $t("screenItemProperties.common.mfaOnOff") }}</label
             >
+
             <input
               class="form-check-input"
               style="margin-left: 0em"
@@ -132,7 +163,7 @@ export default {
               id="flexSwitchCheckDefault"
               :value="mfaValue"
               v-model="mfaValue"
-              @change="newQRCode($event)"
+              @change="enableMFAStatus($event)"
             />
           </div>
         </button>

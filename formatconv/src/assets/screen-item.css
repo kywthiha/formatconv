@@ -445,3 +445,12 @@ input[type="password"] {
 }
 
 /* confirm-acc-form end */
+
+/* drop-down start */
+.dropdown-toggle:active,
+.dropdown-toggle:hover,
+.btn.show,
+.open .dropdown-toggle {
+  background: #4a69a3 !important;
+}
+/* drop-down end */

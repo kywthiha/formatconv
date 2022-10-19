@@ -11,16 +11,22 @@ import { CognitoUserPool } from "amazon-cognito-identity-js";
 import useAlert from "../../hooks/alert";
 import store from "../../store/index";
 import { POOL_DATA } from "../../config/cognito";
+import { useRoute, useRouter } from "vue-router";
 
 export default {
   components: {
     QrcodeVue,
   },
   setup() {
+    const route = useRoute();
+    let router = useRouter();
     const isEnabled = ref(false);
     const qrData = ref("");
     const showQRCode = ref(false);
     const qrCode = ref("");
+
+    const checkedValue = ref(route.query.checkedValue);
+    console.log("tet ", checkedValue.value);
 
     const { message, messageStyleType, setMessage } = useAlert();
 
@@ -39,6 +45,7 @@ export default {
     function newQRCode() {
       //　「MFAを有効にする」のチェックを外すと、MFAが無効になる
       if (mfaValue.value === true) {
+        console.log("hello ", mfaValue.value);
         setMFA(false);
         setMessage(
           "MFA has successfully been disabled for your account.",
@@ -140,6 +147,19 @@ export default {
       );
     }
 
+    //  const checkedValue = computed(() => {
+    //     'checkedValue': function(data) {
+    //       console.log("checkedValue",data)
+    //     // do your stuff here
+    // }
+    //  });
+
+    // onMounted(() => {
+    //   this.$root.$on("checkedValue", (msg) => {
+    //     console.log(msg);
+    //   });
+    // });
+
     //　ユーザーに対して MFA が有効か無効かを格納する計算プロパティ
     const mfaValue = computed(() => {
       console.log(`MFA enabled - ${store.getters.isMFAEnabled}`);
@@ -149,6 +169,21 @@ export default {
     function cancel() {
       showQRCode.value = false;
       setMessage("MFA setup cancelled", "alert-success");
+    }
+
+    if (checkedValue.value !== null || checkedValue.value !== undefined) {
+      newQRCode();
+    }
+
+    function enableMFAStatus(event) {
+      newQRCode();
+    }
+
+    function changePassword() {
+      console.log("hey");
+      router.replace({
+        name: "ChangePassword",
+      });
     }
 
     return {
@@ -165,6 +200,9 @@ export default {
       messageStyleType,
       setMessage,
       profilename,
+      checkedValue,
+      enableMFAStatus,
+      changePassword,
     };
   },
 };
@@ -173,7 +211,7 @@ export default {
   <div>
     <header-display>
       <template v-slot:totp-slot>
-        <button @click="enableMFASetting">
+        <button>
           <div class="form-switch" style="padding-left: 0em">
             <label class="form-check-label" for="flexSwitchCheckDefault">
               {{ $t("screenItemProperties.common.mfaOnOff") }}</label
@@ -185,7 +223,7 @@ export default {
               id="flexSwitchCheckDefault"
               :value="mfaValue"
               v-model="mfaValue"
-              @change="newQRCode($event)"
+              @change="enableMFAStatus($event)"
             />
           </div>
         </button>
@@ -229,22 +267,22 @@ export default {
           <div class="col-12 text-start">
             <div>
               <div class="row">
-                <div class="row" v-if="!showQRCode">
-                  <table>
-                    <!-- Enabled MFA checkbox -->
-                    <tr>
+                <!-- <div class="row" v-if="!showQRCode">
+                  <table> -->
+                <!-- Enabled MFA checkbox -->
+                <!-- <tr>
                       <td><label class="enable-label">Enabled MFA</label></td>
-                      <td>
-                        <input
+                      <td> -->
+                <!-- <input
                           type="checkbox"
                           :value="mfaValue"
                           v-model="mfaValue"
                           @change="newQRCode($event)"
-                        />
-                      </td>
+                        /> -->
+                <!-- </td>
                     </tr>
                   </table>
-                </div>
+                </div> -->
                 <div v-if="showQRCode" class="mb-3 text-center">
                   <div class="scanner-lbl">
                     Authy, Microsoft Authenticator 又は Google Authenticator

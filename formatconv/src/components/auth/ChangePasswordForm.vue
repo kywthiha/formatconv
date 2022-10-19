@@ -5,7 +5,7 @@
     作成日 : 2022/10/18　 
 -->
 <script>
-import { ref } from "vue";
+import { ref, onBeforeMount, onBeforeUpdate } from "vue";
 import { computed } from "@vue/reactivity";
 import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
 import { POOL_DATA } from "../../config/cognito";
@@ -61,12 +61,58 @@ export default {
       );
     }
 
+    function validPassword(password) {
+      var rePassword =
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+      if (!rePassword.test(password)) {
+        // if (password.length === 0) {
+        //   passRequireMsg.value = t("errorMessages.E0001", {
+        //     requireValue: "パスワード",
+        //   });
+        // } else if (password.length > 0 && password.length < 8) {
+        //   passRequireMsg.value = "パスワードは8文字以上でなければなりません。";
+        // } else {
+        //   passRequireMsg.value = t("errorMessages.E0002", {
+        //     fromatValue: "パスワード",
+        //   });
+        // }
+      }
+      return rePassword.test(password);
+    }
+
+    function enableMFAStatus(event) {
+      console.log("checkbox value ", event.target.checked);
+
+      router.replace({
+        name: "Mfa",
+        query: { checkedValue: event.target.checked },
+      });
+    }
+
+    //　ユーザーに対して MFA が有効か無効かを格納する計算プロパティ
+    const mfaValue = computed(() => {
+      console.log(" in file upload ", store.getters.isMFAEnabled);
+      return store.getters.isMFAEnabled;
+    });
+
+    //　ログインしたユーザーの mFA の現在の状態を確認する
+    onBeforeMount(function () {
+      store.dispatch("fetchMFAValue");
+    });
+
+    onBeforeUpdate(function () {
+      store.dispatch("fetchMFAValue");
+    });
+
     return {
       changePassword,
       oldPassword,
       newPassword,
       name,
       profilename,
+      validPassword,
+      enableMFAStatus,
+      mfaValue,
     };
   },
 };
@@ -77,7 +123,7 @@ export default {
       <div>
         <header-display>
           <template v-slot:totp-slot>
-            <button @click="enableMFASetting">
+            <button>
               <div class="form-switch" style="padding-left: 0em">
                 <label class="form-check-label" for="flexSwitchCheckDefault">
                   {{ $t("screenItemProperties.common.mfaOnOff") }}</label
@@ -89,7 +135,7 @@ export default {
                   id="flexSwitchCheckDefault"
                   :value="mfaValue"
                   v-model="mfaValue"
-                  @change="newQRCode($event)"
+                  @change="enableMFAStatus($event)"
                 />
               </div>
             </button>
