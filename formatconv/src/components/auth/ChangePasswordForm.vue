@@ -24,7 +24,13 @@ export default {
     // 認証済みメールでコードを送信する
     function changePassword() {
       const userPool = new CognitoUserPool(POOL_DATA);
-      let cognitoUser = userPool.getCurrentUser();
+      const userData = {
+        Username: "myathtet44@gmail.com",
+        Pool: userPool,
+      };
+      const cognitoUser = new CognitoUser(userData);
+      // let cognitoUser = userPool.getCurrentUser();
+      console.log(" cognito user in change password ", cognitoUser);
 
       // cognito ユーザーのセッションを取得する
       // 取得できないと、「User is not authenticated」エラーが発生した
