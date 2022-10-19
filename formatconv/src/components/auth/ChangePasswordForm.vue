@@ -11,13 +11,20 @@ import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
 import { POOL_DATA } from "../../config/cognito";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import validation from "../../hooks/validation";
 
 export default {
   setup() {
     const router = useRouter();
     const store = useStore();
     const oldPassword = ref("");
+    let oldPasswordBlured = ref(false);
     const newPassword = ref("");
+    let newPasswordBlured = ref(false);
+    const confirmNewPassword = ref("");
+    let confirmNewPasswordBlured = ref(false);
+    let name = ref(null);
+    const { validPassword, passRequireMsg } = validation();
 
     const profilename = computed(() => store.state.authModule.name);
 
@@ -95,7 +102,13 @@ export default {
     return {
       changePassword,
       oldPassword,
+      oldPasswordBlured,
       newPassword,
+      newPasswordBlured,
+      confirmNewPassword,
+      confirmNewPasswordBlured,
+      validPassword,
+      passRequireMsg,
       profilename,
       enableMFAStatus,
       mfaValue,
@@ -190,8 +203,22 @@ export default {
                               type="password"
                               v-model.trim="oldPassword"
                               autocomplete="false"
-                              v-on:blur="passwordBlured = true"
+                              v-bind:class="{
+                                'form-control': true,
+                                'is-invalid':
+                                  !validPassword(oldPassword) &&
+                                  oldPasswordBlured,
+                              }"
+                              v-bind:style="[
+                                !validPassword(oldPassword) && oldPasswordBlured
+                                  ? { 'margin-bottom': '0px' }
+                                  : { 'margin-bottom': '20px' },
+                              ]"
+                              v-on:blur="oldPasswordBlured = true"
                             />
+                            <div class="invalid-feedback">
+                              {{ passRequireMsg }}
+                            </div>
                           </td>
                         </tr>
                       </div>
@@ -210,7 +237,22 @@ export default {
                               type="password"
                               v-model.trim="newPassword"
                               autocomplete="false"
+                              v-bind:class="{
+                                'form-control': true,
+                                'is-invalid':
+                                  !validPassword(newPassword) &&
+                                  newPasswordBlured,
+                              }"
+                              v-bind:style="[
+                                !validPassword(newPassword) && newPasswordBlured
+                                  ? { 'margin-bottom': '0px' }
+                                  : { 'margin-bottom': '20px' },
+                              ]"
+                              v-on:blur="newPasswordBlured = true"
                             />
+                            <div class="invalid-feedback">
+                              {{ passRequireMsg }}
+                            </div>
                           </td>
                         </tr>
                       </div>
@@ -227,9 +269,25 @@ export default {
                           <td>
                             <input
                               type="password"
-                              v-model.trim="confirmPassword"
+                              v-model.trim="confirmNewPassword"
                               autocomplete="false"
+                              v-bind:class="{
+                                'form-control': true,
+                                'is-invalid':
+                                  !validPassword(confirmNewPassword) &&
+                                  confirmNewPasswordBlured,
+                              }"
+                              v-bind:style="[
+                                !validPassword(confirmNewPassword) &&
+                                confirmNewPasswordBlured
+                                  ? { 'margin-bottom': '0px' }
+                                  : { 'margin-bottom': '20px' },
+                              ]"
+                              v-on:blur="confirmNewPasswordBlured = true"
                             />
+                            <div class="invalid-feedback">
+                              {{ passRequireMsg }}
+                            </div>
                           </td>
                         </tr>
                       </div>

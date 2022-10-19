@@ -405,6 +405,11 @@ input[type="password"] {
   cursor: pointer;
 }
 
+.signup-link {
+  margin-left: 280px;
+  padding-top: 30px;
+}
+
 /*
  * The following styles are auto-applied to elements with
  * transition="modal" when their visibility is toggled

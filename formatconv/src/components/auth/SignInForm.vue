@@ -22,6 +22,7 @@ import HeaderDisplay from "../common/HeaderDisplay.vue";
 import LocaleSelect from "../LocaleSelect.vue";
 import BodyDisplay from "../common/BodyDisplay.vue";
 import { useI18n } from "vue-i18n";
+import validation from "../../hooks/validation";
 
 export default {
   components: {
@@ -37,10 +38,7 @@ export default {
     const route = useRoute();
 
     const { rt, t } = useI18n();
-    console.log(
-      "test ",
-      t("errorMessages.E0001", { requireValue: t("title") })
-    );
+    console.log("test ", t("errorMessages.E0001", { format: t("title") }));
 
     const email = ref("");
     const username = ref("");
@@ -48,46 +46,21 @@ export default {
     const mfaCode = ref("");
 
     const { message, messageStyleType, setMessage } = useAlert();
+    const { validEmail, emailRequireMsg } = validation();
     const confirmMFACode = ref(false);
 
     const emailBlured = ref(false);
-    let emailRequireMsg = ref("");
     const passwordBlured = ref(false);
     let passRequireMsg = ref("");
 
-    function validEmail(email) {
-      var reMail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      if (!reMail.test(email)) {
-        if (email.length === 0) {
-          emailRequireMsg.value = t("errorMessages.E0001", {
-            requireValue: "メール",
-          });
-        } else {
-          emailRequireMsg.value = t("errorMessages.E0002", {
-            fromatValue: "メール",
-          });
-        }
-      }
-      return reMail.test(email);
-    }
-
     function validPassword(password) {
-      var rePassword =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-      if (!rePassword.test(password)) {
-        if (password.length === 0) {
-          passRequireMsg.value = t("errorMessages.E0001", {
-            requireValue: "パスワード",
-          });
-        } else if (password.length > 0 && password.length < 8) {
-          passRequireMsg.value = "パスワードは8文字以上でなければなりません。";
-        } else {
-          passRequireMsg.value = t("errorMessages.E0002", {
-            fromatValue: "パスワード",
-          });
-        }
+      if (password.length === 0) {
+        passRequireMsg.value = t("errorMessages.E0001", {
+          input: "パスワード",
+        });
+        return false;
       }
-      return rePassword.test(password);
+      return true;
     }
 
     // ログインする
@@ -118,6 +91,8 @@ export default {
           });
         },
         onFailure(error) {
+          console.log("error...", error);
+          console.log("error message....", error.message);
           if (error.message === "User is not confirmed.") {
             router.replace({
               name: "confirm",
@@ -129,6 +104,7 @@ export default {
           }
           if (!error.message.includes("SOFTWARE_TOKEN_MFA_CODE")) {
             setMessage(error.message, "alert-danger");
+            console.log("message...", message);
           }
           store.dispatch("setIsLoading", false);
         },
@@ -234,6 +210,23 @@ export default {
         </header-display>
         <body-display>
           <template v-slot:body>
+            <!-- Error Alert -->
+            <div
+              class="alert alert-danger alert-dismissible d-flex align-items-center fade show"
+              v-if="message"
+            >
+              <i class="bi-exclamation-octagon-fill"></i>
+              <strong class="mx-2">Error!</strong>
+              {{ message }}
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+              ></button>
+            </div>
+            <!-- <base-message :type="messageStyleType" v-if="message">{{
+              message
+            }}</base-message> -->
             <div class="input-text">
               <!-- メール -->
               <tr>
