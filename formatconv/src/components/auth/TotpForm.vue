@@ -180,11 +180,18 @@ export default {
     }
 
     function changePassword() {
-      console.log("hey");
       router.replace({
         name: "ChangePassword",
       });
     }
+
+    const logout = () => {
+      store.dispatch("logout");
+      router.push({
+        name: "signin",
+        params: { message: "You have logged out" },
+      });
+    };
 
     return {
       isEnabled,
@@ -203,6 +210,7 @@ export default {
       checkedValue,
       enableMFAStatus,
       changePassword,
+      logout,
     };
   },
 };

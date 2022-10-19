@@ -78,6 +78,14 @@ export default {
       store.dispatch("fetchMFAValue");
     });
 
+    const logout = () => {
+      store.dispatch("logout");
+      router.push({
+        name: "signin",
+        params: { message: "You have logged out" },
+      });
+    };
+
     return {
       changePassword,
       oldPassword,
@@ -85,6 +93,7 @@ export default {
       profilename,
       enableMFAStatus,
       mfaValue,
+      logout,
     };
   },
 };
