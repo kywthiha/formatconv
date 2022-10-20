@@ -10,8 +10,10 @@ import { ref, onBeforeMount, onBeforeUpdate } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import FileItem from "./FileItem.vue";
+import { POOL_DATA } from "../../config/cognito";
+import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
+import disableMFA from "../../hooks/disableMFA";
 
-// const events = ["dragenter", "dragleave", "dragover", "drop"];
 const store = useStore();
 let moveMFASetting = ref(false);
 let router = useRouter();
@@ -92,6 +94,8 @@ function setUserSessionInfo(session) {
 
 const profilename = computed(() => store.state.authModule.name);
 
+const username = computed(() => store.state.authModule.cognitoUserName);
+
 //
 const logout = () => {
   store.dispatch("logout");
@@ -116,18 +120,15 @@ onBeforeUpdate(function () {
   store.dispatch("fetchMFAValue");
 });
 
-// const self = this;
 function enableMFAStatus(event) {
-  console.log("checkbox value ", event.target.checked);
-  // this.$root.broadcast("checkedValue", {
-  //   users: event.target.checked,
-  // });
-  // self.$root.$emit("checkedValue", event.target.checked);
-  // TotpForm.$emit("checkedValue", event.target.checked);
-  router.replace({
-    name: "Mfa",
-    query: { checkedValue: event.target.checked },
-  });
+  if (event.target.checked === true) {
+    router.replace({
+      name: "Mfa",
+      query: { checkedValue: event.target.checked },
+    });
+  } else {
+    disableMFA();
+  }
 }
 </script>
 <template>

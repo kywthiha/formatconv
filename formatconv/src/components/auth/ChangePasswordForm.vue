@@ -12,6 +12,7 @@ import { POOL_DATA } from "../../config/cognito";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import validation from "../../hooks/validation";
+import disableMFA from "../../hooks/disableMFA";
 
 export default {
   setup() {
@@ -75,10 +76,14 @@ export default {
     }
 
     function enableMFAStatus(event) {
-      router.replace({
-        name: "Mfa",
-        query: { checkedValue: event.target.checked },
-      });
+      if (event.target.checked === true) {
+        router.replace({
+          name: "Mfa",
+          query: { checkedValue: event.target.checked },
+        });
+      } else {
+        disableMFA();
+      }
     }
 
     //　ユーザーに対して MFA が有効か無効かを格納する計算プロパティ
