@@ -10,16 +10,32 @@ import { ref, onBeforeMount, onBeforeUpdate } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import FileItem from "./FileItem.vue";
+import * as zip from "@zip.js/zip.js";
 
 // const events = ["dragenter", "dragleave", "dragover", "drop"];
 const store = useStore();
 let moveMFASetting = ref(false);
 let router = useRouter();
 const files = ref([]);
-const service_name = "formatconv";
+const service_name = import.meta.env.VITE_SERVICE_NAME;
+const accept_file_types = [
+  "application/zip",
+  "application/x-zip",
+  "application/x-zip-compressed",
+];
 
 const getUploadUrl = async (targetFiles) => {
-  console.log(targetFiles);
+  const filter_files = [...targetFiles].filter((file) =>
+    accept_file_types.includes(file.type)
+  );
+
+  if (filter_files.length < 1) {
+    alert("Invalid file type");
+    return;
+  }
+
+  files.value = filter_files.map((file) => ({ file }));
+
   try {
     const response = await fetch(
       "https://wdduz75b1m.execute-api.us-east-1.amazonaws.com/test/presigned-url-upload",
@@ -31,36 +47,108 @@ const getUploadUrl = async (targetFiles) => {
         },
         body: JSON.stringify({
           service_name,
-          file_names: [...targetFiles].map((file) => file.name),
+          file_names: filter_files.map((file) => file.name),
         }),
       }
     );
-
+    const data = await response.json();
     if (response.ok) {
-      const data = await response.json();
-      files.value = [...targetFiles].map((file) => {
+      // update state files list
+      files.value = filter_files.map((file) => {
         return {
           file: file,
           ...data.find((i) => i.file_name == file.name),
         };
       });
     } else {
-      const data = await response.json();
       console.log(data);
       alert(data.message);
     }
   } catch (e) {
     console.log(e);
+    alert(e.message);
   }
 };
 
-async function handleDrop(event) {
-  files.value = [...event.target.files].map((file) => ({ file }));
-  await getUploadUrl(event.target.files);
+async function folderToZip(files) {
+  const zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"), {
+    bufferedWrite: true,
+  });
+  await Promise.all(
+    Array.from(files).map(async (file) => {
+      console.log(file);
+      await zipWriter.add(file.name, new zip.BlobReader(file), {
+        onstart(max) {
+          console.log("start");
+          console.log(max);
+        },
+        onprogress(index, max) {
+          console.log(index, max, file.name);
+        },
+        onend(computedSize) {
+          console.log("end", file.name);
+        },
+      });
+    })
+  );
+  console.log("finish");
+  const my_blob = await zipWriter.close();
+  const file = new File([my_blob], files[0].webkitRelativePath.split("/")[0], {
+    type: my_blob.type,
+  });
+  console.log(my_blob);
+  console.log(file);
+  return file;
 }
-async function dragFile(event) {
-  files.value = [...event.dataTransfer.files].map((file) => ({ file }));
-  await getUploadUrl(event.dataTransfer.files);
+
+function convertMinute(millis) {
+  var minutes = Math.floor(millis / 60000);
+  var seconds = ((millis % 60000) / 1000).toFixed(0);
+  return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+}
+
+async function handleInputFileChange(event) {
+  console.log(event.target.files);
+  const startTime = performance.now();
+  const file = await folderToZip(event.target.files);
+  const endTime = performance.now();
+  const message = `Execution Time = ${convertMinute(endTime - startTime)} `;
+  console.log(message);
+  alert(message);
+  files.value = [file].map((file) => ({ file }));
+  // await getUploadUrl([file]);
+  // await getUploadUrl(event.target.files);
+}
+
+function traverseFileTree(item, path) {
+  path = path || "";
+  if (item.isFile) {
+    // Get file
+    item.file(function (file) {
+      console.log("File:", path + file.name);
+    });
+  } else if (item.isDirectory) {
+    // Get folder contents
+    const dirReader = item.createReader();
+    dirReader.readEntries(function (entries) {
+      for (let i = 0; i < entries.length; i++) {
+        traverseFileTree(entries[i], path + item.name + "/");
+      }
+    });
+  }
+}
+
+async function handleDropFile(event) {
+  const items = event.dataTransfer.items;
+  for (let i = 0; i < items.length; i++) {
+    // webkitGetAsEntry is where the magic happens
+    const item = items[i].webkitGetAsEntry();
+    if (item) {
+      traverseFileTree(item);
+    }
+  }
+  // await folderToZip(event.dataTransfer.files);
+  // await getUploadUrl(event.dataTransfer.files);
 }
 
 function changePassword() {
@@ -198,9 +286,11 @@ function enableMFAStatus(event) {
         v-if="!files.length"
       >
         <input
-          @change="handleDrop"
+          @change="handleInputFileChange"
           type="file"
           multiple
+          webkitdirectory
+          directory
           id="inputName"
           class="visually-hidden"
         />
@@ -208,7 +298,7 @@ function enableMFAStatus(event) {
           $t("screenItemProperties.button.dataConvertionUploadBtn")
         }}</label>
 
-        <div @drop="dragFile" class="drag-container">
+        <div @drop="handleDropFile" class="drag-container">
           <span>+</span>
         </div>
       </div>
