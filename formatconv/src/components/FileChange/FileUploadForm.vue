@@ -10,11 +10,12 @@ import { ref, onBeforeMount, onBeforeUpdate } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import FileItem from "./FileItem.vue";
+import { POOL_DATA } from "../../config/cognito";
+import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
+import disableMFA from "../../hooks/disableMFA";
 import * as zip from "@zip.js/zip.js";
 
-// const events = ["dragenter", "dragleave", "dragover", "drop"];
 const store = useStore();
-let moveMFASetting = ref(false);
 let router = useRouter();
 const files = ref([]);
 const service_name = import.meta.env.VITE_SERVICE_NAME;
@@ -157,28 +158,9 @@ function changePassword() {
   });
 }
 
-function enableMFASetting() {
-  console.log("enableMFASetting ");
-  moveMFASetting.value = true;
-  router.replace({
-    name: "Mfa",
-  });
-}
-
-function setUserSessionInfo(session) {
-  setTimeout(function () {
-    store.dispatch("autoLogout");
-    router.replace("/signin");
-    alert("You have been automatically logged out");
-  }, autoTimeout(session));
-  store.dispatch("setSession", session);
-  store.dispatch("setIDToken", session.getIdToken().getJwtToken());
-  store.dispatch("setUsername", session.idToken.payload["cognito:username"]);
-  store.dispatch("setIsAuthenticated", true);
-  store.dispatch("setEmail", session.idToken.payload.email);
-}
-
 const profilename = computed(() => store.state.authModule.name);
+
+const username = computed(() => store.state.authModule.cognitoUserName);
 
 //
 const logout = () => {
@@ -204,18 +186,15 @@ onBeforeUpdate(function () {
   store.dispatch("fetchMFAValue");
 });
 
-// const self = this;
 function enableMFAStatus(event) {
-  console.log("checkbox value ", event.target.checked);
-  // this.$root.broadcast("checkedValue", {
-  //   users: event.target.checked,
-  // });
-  // self.$root.$emit("checkedValue", event.target.checked);
-  // TotpForm.$emit("checkedValue", event.target.checked);
-  router.replace({
-    name: "Mfa",
-    query: { checkedValue: event.target.checked },
-  });
+  if (event.target.checked === true) {
+    router.replace({
+      name: "Mfa",
+      query: { checkedValue: event.target.checked },
+    });
+  } else {
+    disableMFA();
+  }
 }
 </script>
 <template>

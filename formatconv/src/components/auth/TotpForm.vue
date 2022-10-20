@@ -100,10 +100,11 @@ export default {
       cognitoUser.verifySoftwareToken(qrCode.value, "SoftwareToken", {
         onSuccess: function (result) {
           setMFA(true);
-          setMessage(
-            "MFA has successfully been setup for your account.",
-            "alert-success"
-          );
+          alert("MFA has successfully been setup for your account.");
+          // setMessage(
+          //   "MFA has successfully been setup for your account.",
+          //   "alert-success"
+          // );
           showQRCode.value = false;
         },
         onFailure: function (err) {
@@ -176,6 +177,8 @@ export default {
     }
 
     function enableMFAStatus(event) {
+      console.log("enableMFAStatus ", event.target.checked);
+      // mfaValue.value = event.target.checked;
       newQRCode();
     }
 
@@ -296,7 +299,7 @@ export default {
                     </tr>
                   </table>
                 </div> -->
-                <div v-if="showQRCode" class="mb-3 text-center">
+                <div class="mb-3 text-center">
                   <div class="scanner-lbl">
                     Authy, Microsoft Authenticator 又は Google Authenticator
                     を利用して、QAコードをスキャンします。
@@ -310,7 +313,7 @@ export default {
                   </div>
                 </div>
                 <hr />
-                <div v-if="showQRCode" class="mt-1 text-center">
+                <div class="mt-1 text-center">
                   <p>MFAコード</p>
                   <div class="row text-center">
                     <div class="col-4 offset-md-4 mb-2">
