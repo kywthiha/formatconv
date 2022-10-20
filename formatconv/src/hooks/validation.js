@@ -17,11 +17,11 @@ export default function FormValidation() {
         });
       } else if (password.length > 0 && password.length < 8) {
         passRequireMsg.value = t("errorMessages.E0003", {
-          param3: "パスワード",
+          param1: "パスワード",
         });
       } else {
         passRequireMsg.value = t("errorMessages.E0002", {
-          param2: "パスワード",
+          param1: "パスワード",
         });
       }
     }
@@ -37,7 +37,7 @@ export default function FormValidation() {
         });
       } else {
         emailRequireMsg.value = t("errorMessages.E0002", {
-          param2: "メール",
+          param1: "メール",
         });
       }
     }
