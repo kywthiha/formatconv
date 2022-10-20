@@ -1,6 +1,5 @@
 import { POOL_DATA } from "../config/cognito";
 import { CognitoUserPool } from "amazon-cognito-identity-js";
-import { useStore } from "vuex";
 import store from "../store/index";
 function disableMFA() {
   // Cognito ユーザープールへの参照を取得する

@@ -15,7 +15,6 @@ import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
 import disableMFA from "../../hooks/disableMFA";
 
 const store = useStore();
-let moveMFASetting = ref(false);
 let router = useRouter();
 const files = ref([]);
 const service_name = "formatconv";
@@ -69,27 +68,6 @@ function changePassword() {
   router.replace({
     name: "ChangePassword",
   });
-}
-
-function enableMFASetting() {
-  console.log("enableMFASetting ");
-  moveMFASetting.value = true;
-  router.replace({
-    name: "Mfa",
-  });
-}
-
-function setUserSessionInfo(session) {
-  setTimeout(function () {
-    store.dispatch("autoLogout");
-    router.replace("/signin");
-    alert("You have been automatically logged out");
-  }, autoTimeout(session));
-  store.dispatch("setSession", session);
-  store.dispatch("setIDToken", session.getIdToken().getJwtToken());
-  store.dispatch("setUsername", session.idToken.payload["cognito:username"]);
-  store.dispatch("setIsAuthenticated", true);
-  store.dispatch("setEmail", session.idToken.payload.email);
 }
 
 const profilename = computed(() => store.state.authModule.name);
