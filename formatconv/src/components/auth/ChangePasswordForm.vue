@@ -23,25 +23,29 @@ export default {
     let newPasswordBlured = ref(false);
     const confirmNewPassword = ref("");
     let confirmNewPasswordBlured = ref(false);
-    let name = ref(null);
     const { validPassword, passRequireMsg } = validation();
 
     const profilename = computed(() => store.state.authModule.name);
+    const username = computed(() => store.state.authModule.cognitoUserName);
+    console.log("in change password ", username.value);
 
     // 認証済みメールでコードを送信する
     function changePassword() {
       const userPool = new CognitoUserPool(POOL_DATA);
       const userData = {
-        Username: "myathtet44@gmail.com",
+        Username: username.value,
         Pool: userPool,
       };
+
       const cognitoUser = new CognitoUser(userData);
-      // let cognitoUser = userPool.getCurrentUser();
       console.log(" cognito user in change password ", cognitoUser);
 
+      // ユーザーを認証するには getSession を呼び出す必要がある
       // cognito ユーザーのセッションを取得する
       // 取得できないと、「User is not authenticated」エラーが発生した
       cognitoUser.getSession(function (err, session) {
+        console.log("in Change pass", err);
+        console.log("in Change pass session", session);
         if (err) {
           alert(err);
           return;
@@ -113,6 +117,7 @@ export default {
       enableMFAStatus,
       mfaValue,
       logout,
+      username,
     };
   },
 };

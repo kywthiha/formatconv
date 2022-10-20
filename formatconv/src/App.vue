@@ -7,18 +7,16 @@ export default {
   setup() {
     const store = useStore();
 
-    // gets reference to the Cognito user pool
+    // Cognito ユーザープールへの参照を取得する
     const userPool = new CognitoUserPool(POOL_DATA);
 
-    //gets current logged in user
+    // 現在ログインしているユーザーを取得する
     const cognitoUser = userPool.getCurrentUser();
 
-    console.log(cognitoUser);
 
-    // logic to check if users session is still valid
+    // ユーザーのセッションがまだ有効かどうかを確認する
     if (cognitoUser) {
-      console.log(cognitoUser);
-      cognitoUser.getSession(function (err, session) {
+¥      cognitoUser.getSession(function (err, session) {
         if (err) {
           console.log(err.message || JSON.stringify(err));
           return;

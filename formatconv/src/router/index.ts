@@ -36,10 +36,6 @@ const router = createRouter({
       path: "/confirm",
       name: "confirm",
       component: Confirm,
-      beforeEnter: isAuthenticated,
-      meta: {
-        requiresAuth: true,
-      },
     },
     {
       path: "/fileUpload",
