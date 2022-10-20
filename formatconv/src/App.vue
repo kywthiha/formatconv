@@ -13,10 +13,9 @@ export default {
     // 現在ログインしているユーザーを取得する
     const cognitoUser = userPool.getCurrentUser();
 
-
     // ユーザーのセッションがまだ有効かどうかを確認する
     if (cognitoUser) {
-¥      cognitoUser.getSession(function (err, session) {
+      cognitoUser.getSession(function (err, session) {
         if (err) {
           console.log(err.message || JSON.stringify(err));
           return;
