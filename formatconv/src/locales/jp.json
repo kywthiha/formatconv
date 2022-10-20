@@ -57,6 +57,10 @@
       "changePassword": "パスワード変更"
     }
   },
+  "errorParams": {
+    "email": "メール",
+    "password": "パスワード"
+  },
   "errorMessages": {
     "E0001": "{param1}を入力してください。",
     "E0002": "{param1}フォーマットが正しくありません。",

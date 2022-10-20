@@ -13,15 +13,15 @@ export default function FormValidation() {
     if (!rePassword.test(password)) {
       if (password.length === 0) {
         passRequireMsg.value = t("errorMessages.E0001", {
-          param1: "パスワード",
+          param1: t("errorParams.password"),
         });
       } else if (password.length > 0 && password.length < 8) {
         passRequireMsg.value = t("errorMessages.E0003", {
-          param1: "パスワード",
+          param1: t("errorParams.password"),
         });
       } else {
         passRequireMsg.value = t("errorMessages.E0002", {
-          param1: "パスワード",
+          param1: t("errorParams.password"),
         });
       }
     }
@@ -33,11 +33,11 @@ export default function FormValidation() {
     if (!reMail.test(email)) {
       if (email.length === 0) {
         emailRequireMsg.value = t("errorMessages.E0001", {
-          param1: "メール",
+          param1: t("errorParams.email"),
         });
       } else {
         emailRequireMsg.value = t("errorMessages.E0002", {
-          param1: "メール",
+          param1: t("errorParams.email"),
         });
       }
     }

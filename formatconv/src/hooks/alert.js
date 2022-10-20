@@ -17,16 +17,18 @@ export default function useAlert() {
   }
 
   function exceptionError(exceptionMessage) {
-    if (exceptionMessage === "User is not confirmed.") {
+    if (exceptionMessage === "UserNotConfirmedException") {
       message.value = t("errorMessages.E0008");
-    } else if (exceptionMessage === "Incorrect username or password.") {
+    } else if (exceptionMessage === "NotAuthorizedException") {
       message.value = t("errorMessages.E0005");
-    } else if (exceptionMessage === "User does not exist.") {
+    } else if (exceptionMessage === "UserNotFoundException") {
       message.value = t("errorMessages.E00011");
-    } else if (
-      exceptionMessage === "Attempt limit exceeded, please try after some time."
-    ) {
+    } else if (exceptionMessage === "LimitExceededException") {
       message.value = t("errorMessages.E00012");
+    } else if (exceptionMessage === "TooManyRequestsException") {
+      message.value = t("errorMessages.E00015");
+    } else if (exceptionMessage === "InternalErrorException") {
+      message.value = t("errorMessages.E00016");
     }
   }
 
