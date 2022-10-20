@@ -44,23 +44,28 @@ export default {
     const username = ref("");
     const password = ref("");
     const mfaCode = ref("");
-
-    const { message, messageStyleType, setMessage } = useAlert();
     const { validEmail, emailRequireMsg } = validation();
+    const { message, messageStyleType, setMessage, exceptionError } =
+      useAlert();
     const confirmMFACode = ref(false);
 
     const emailBlured = ref(false);
     const passwordBlured = ref(false);
     let passRequireMsg = ref("");
+    let alertStatus = true;
 
     function validPassword(password) {
       if (password.length === 0) {
         passRequireMsg.value = t("errorMessages.E0001", {
-          input: "パスワード",
+          param1: "パスワード",
         });
         return false;
       }
       return true;
+    }
+
+    function hideAlert() {
+      message.value = "";
     }
 
     // ログインする
@@ -92,7 +97,6 @@ export default {
         },
         onFailure(error) {
           console.log("error...", error);
-          console.log("error message....", error.message);
           if (error.message === "User is not confirmed.") {
             router.replace({
               name: "confirm",
@@ -104,7 +108,7 @@ export default {
           }
           if (!error.message.includes("SOFTWARE_TOKEN_MFA_CODE")) {
             setMessage(error.message, "alert-danger");
-            console.log("message...", message);
+            exceptionError(error.message);
           }
           store.dispatch("setIsLoading", false);
         },
@@ -117,7 +121,6 @@ export default {
 
     function autoTimeout(result) {
       const seconds_timeout = 3600;
-
       // ユーザーのログインが 1 時間後に期限切れになるように設定する
       const expirationDate =
         +result.idToken.payload["auth_time"] + seconds_timeout;
@@ -182,6 +185,9 @@ export default {
       validPassword,
       emailRequireMsg,
       passRequireMsg,
+      alertStatus,
+      hideAlert,
+      exceptionError,
     };
   },
 };
@@ -208,25 +214,22 @@ export default {
             <label>{{ $t("screenItemProperties.common.title") }}</label>
           </template>
         </header-display>
+        <!-- Error Alert -->
+        <div
+          class="alert alert-danger alert-dismissible align-items-center fade show"
+          v-if="message"
+          style="text-align: center"
+        >
+          <!-- <i
+                class="bi-exclamation-octagon-fill"
+                style="text-align: center"
+              ></i> -->
+          <!-- <strong class="mx-2">Error!</strong> -->
+          <label>{{ message }}</label>
+          <button type="button" class="btn-close" @click="hideAlert"></button>
+        </div>
         <body-display>
           <template v-slot:body>
-            <!-- Error Alert -->
-            <div
-              class="alert alert-danger alert-dismissible d-flex align-items-center fade show"
-              v-if="message"
-            >
-              <i class="bi-exclamation-octagon-fill"></i>
-              <strong class="mx-2">Error!</strong>
-              {{ message }}
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="alert"
-              ></button>
-            </div>
-            <!-- <base-message :type="messageStyleType" v-if="message">{{
-              message
-            }}</base-message> -->
             <div class="input-text">
               <!-- メール -->
               <tr>
