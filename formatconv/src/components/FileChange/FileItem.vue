@@ -6,8 +6,8 @@
 -->
 <script setup>
 import { onMounted, reactive, ref } from "vue";
-
 const props = defineProps(["item"]);
+const error_message = ref(null);
 const progress = reactive({
   loaded: {
     fileSize: 0,
@@ -22,8 +22,7 @@ const progress = reactive({
 const complete = ref(false);
 
 const humanFileSize = (size) => {
-  console.log(size);
-  var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+  const i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
   return {
     fileSize: (size / Math.pow(1024, i)).toLocaleString(),
     fileUnit: ["B", "KB", "MB", "GB", "TB"][i],
@@ -51,10 +50,12 @@ const uploadToS3 = async () => {
         console.log(response);
         const code = response.getElementsByTagName("Code")[0].textContent;
         const message = response.getElementsByTagName("Message")[0].textContent;
+        error_message.value = message;
         console.log(code, message);
         console.log(response.getElementsByTagName("Code")[0].textContent);
         console.log(response.getElementsByTagName("Message")[0].textContent);
       } catch (error) {
+        error_message.value = error.message;
         console.log(e.currentTarget.responseText);
       }
     }
@@ -74,7 +75,6 @@ const uploadToS3 = async () => {
     }
   };
   console.log("Start Upload");
-  console.log(props.item.upload_url);
   const xhr = new XMLHttpRequest();
   xhr.upload.addEventListener("progress", handlPprogress, false);
   xhr.addEventListener("load", handlPprogress, false);
@@ -85,16 +85,17 @@ const uploadToS3 = async () => {
   xhr.send(props.item.file);
 };
 
-onMounted(() => {
+onMounted(async () => {
   if (props.item.file && props.item.upload_url && !complete.value) {
-    uploadToS3().then((res) => {
-      console.log(res);
-    });
+    await uploadToS3();
   }
 });
 </script>
 <template>
   <div class="file-item">
+    <div class="alert alert-danger" role="alert" v-if="error_message">
+      {{ error_message }}
+    </div>
     <div class="row justify-content-between">
       <div class="col align-self-center">
         <div class="fw-bold">フォルダ名</div>
@@ -111,7 +112,7 @@ onMounted(() => {
         <button class="btn-upload btn-complete" v-else-if="complete">
           完了
         </button>
-        <button class="btn-upload" v-else>始める</button>
+        <button class="btn-upload" v-else>スタート</button>
       </div>
     </div>
     <template v-if="item.upload_url && !complete">
