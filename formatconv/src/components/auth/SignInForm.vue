@@ -36,8 +36,7 @@ export default {
     const router = useRouter();
     const route = useRoute();
 
-    const { rt, t } = useI18n();
-    console.log("test ", t("errorMessages.E0001", { format: t("title") }));
+    const { t } = useI18n();
 
     const email = ref("");
     const username = ref("");
@@ -54,13 +53,15 @@ export default {
     let alertStatus = true;
 
     function validPassword(password) {
+      console.log("pass length", password.length);
       if (password.length === 0) {
         passRequireMsg.value = t("errorMessages.E0001", {
           param1: t("errorParams.password"),
         });
         return false;
+      } else {
+        return true;
       }
-      return true;
     }
 
     function hideAlert() {
@@ -69,8 +70,10 @@ export default {
 
     // ログインする
     function signIn() {
+      if (!isValid()) {
+        return;
+      }
       const userPool = new CognitoUserPool(POOL_DATA);
-
       const authData = {
         Username: email.value,
         Password: password.value,
@@ -117,6 +120,15 @@ export default {
           cognitoUser.sendMFACode(mfaCode.value, this, codeDeliveryDetails);
         },
       });
+    }
+
+    function isValid() {
+      if (!(validEmail(email.value) && validPassword(password.value))) {
+        emailBlured.value = true;
+        passwordBlured.value = true;
+        return false;
+      }
+      return true;
     }
 
     function autoTimeout(result) {
@@ -175,6 +187,7 @@ export default {
       alertStatus,
       hideAlert,
       exceptionError,
+      isValid,
     };
   },
 };
@@ -182,7 +195,7 @@ export default {
 
 <template>
   <!-- <locale-select></locale-select> -->
-  <form @submit.prevent="signIn">
+  <div>
     <div v-if="!confirmMFACode">
       <div>
         <header-display>
@@ -201,95 +214,96 @@ export default {
             <label>{{ $t("screenItemProperties.common.title") }}</label>
           </template>
         </header-display>
+
         <!-- Error Alert -->
         <div
           class="alert alert-danger alert-dismissible align-items-center fade show"
           v-if="message"
           style="text-align: center"
         >
-          <!-- <i
-                class="bi-exclamation-octagon-fill"
-                style="text-align: center"
-              ></i> -->
-          <!-- <strong class="mx-2">Error!</strong> -->
           <label>{{ message }}</label>
           <button type="button" class="btn-close" @click="hideAlert"></button>
         </div>
         <body-display>
           <template v-slot:body>
-            <div class="input-text">
-              <!-- メール -->
-              <tr>
-                <td class="mail-label">
-                  <label>{{ $t("screenItemProperties.common.email") }}</label>
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    v-model.trim="email"
-                    v-bind:class="{
-                      'form-control': true,
-                      'is-invalid': !validEmail(email) && emailBlured,
-                    }"
-                    v-bind:style="[
-                      !validEmail(email) && emailBlured
-                        ? { 'margin-bottom': '0px' }
-                        : { 'margin-bottom': '20px' },
-                    ]"
-                    v-on:blur="emailBlured = true"
-                    autocomplete="false"
-                  />
-                  <div class="invalid-feedback">
-                    {{ emailRequireMsg }}
-                  </div>
-                </td>
-              </tr>
-            </div>
+            <form @submit.prevent="signIn">
+              <div class="input-text">
+                <!-- メール -->
+                <tr>
+                  <td class="mail-label">
+                    <label>{{ $t("screenItemProperties.common.email") }}</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      maxlength="128"
+                      v-model.trim="email"
+                      v-bind:class="{
+                        'form-control': true,
+                        'is-invalid': !validEmail(email) && emailBlured,
+                      }"
+                      v-bind:style="[
+                        !validEmail(email) && emailBlured
+                          ? { 'margin-bottom': '0px' }
+                          : { 'margin-bottom': '20px' },
+                      ]"
+                      v-on:blur="emailBlured = true"
+                      autocomplete="false"
+                    />
+                    <div class="invalid-feedback">
+                      {{ emailRequireMsg }}
+                    </div>
+                  </td>
+                </tr>
+              </div>
 
-            <div class="input-text">
-              <!-- パスワード -->
-              <tr>
-                <td class="password-label">
-                  <label>{{
-                    $t("screenItemProperties.common.password")
-                  }}</label>
-                </td>
-                <td>
-                  <input
-                    type="password"
-                    v-model.trim="password"
-                    autocomplete="false"
-                    v-bind:class="{
-                      'form-control': true,
-                      'is-invalid': !validPassword(password) && passwordBlured,
-                    }"
-                    v-bind:style="[
-                      !validPassword(password) && passwordBlured
-                        ? { 'margin-bottom': '0px' }
-                        : { 'margin-bottom': '20px' },
-                    ]"
-                    v-on:blur="passwordBlured = true"
-                  />
-                  <div class="invalid-feedback">
-                    {{ passRequireMsg }}
-                  </div>
-                </td>
-              </tr>
-              <!-- リンク -->
-              <router-link to="/resetPassword"
-                ><span class="figcaption"
-                  ><u>{{
-                    $t("screenItemProperties.signin.resetPassword")
-                  }}</u></span
-                ></router-link
-              >
-            </div>
-            <!-- ボタンエリア -->
-            <div class="sign-in">
-              <button>
-                {{ $t("screenItemProperties.button.loginBtn") }}
-              </button>
-            </div>
+              <div class="input-text">
+                <!-- パスワード -->
+                <tr>
+                  <td class="password-label">
+                    <label>{{
+                      $t("screenItemProperties.common.password")
+                    }}</label>
+                  </td>
+                  <td>
+                    <input
+                      type="password"
+                      maxlength="256"
+                      v-model.trim="password"
+                      autocomplete="false"
+                      v-bind:class="{
+                        'form-control': true,
+                        'is-invalid':
+                          !validPassword(password) && passwordBlured,
+                      }"
+                      v-bind:style="[
+                        !validPassword(password) && passwordBlured
+                          ? { 'margin-bottom': '0px' }
+                          : { 'margin-bottom': '20px' },
+                      ]"
+                      v-on:blur="passwordBlured = true"
+                    />
+                    <div class="invalid-feedback">
+                      {{ passRequireMsg }}
+                    </div>
+                  </td>
+                </tr>
+                <!-- リンク -->
+                <router-link to="/resetPassword"
+                  ><span class="figcaption"
+                    ><u>{{
+                      $t("screenItemProperties.signin.resetPassword")
+                    }}</u></span
+                  ></router-link
+                >
+              </div>
+              <!-- ボタンエリア -->
+              <div class="sign-in">
+                <button>
+                  {{ $t("screenItemProperties.button.loginBtn") }}
+                </button>
+              </div>
+            </form>
           </template>
         </body-display>
       </div>
@@ -306,35 +320,38 @@ export default {
             <label>{{ $t("screenItemProperties.common.title") }}</label>
           </template>
         </header-display>
-        <div class="container">
-          <div>
-            <div class="reset-input-text">
-              <!-- ワンタイムパスワード -->
-              <tr>
-                <td class="totp-label">
-                  <label>{{
-                    $t("screenItemProperties.signin.onetimePassword")
-                  }}</label>
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    v-model.trim="mfaCode"
-                    autocomplete="false"
-                    required
-                  />
-                </td>
-              </tr>
-            </div>
-            <!-- ボタンエリア -->
-            <div class="sign-in">
-              <button style="margin-left: 170px">
-                {{ $t("login") }}
-              </button>
+        <form @submit.prevent="signIn">
+          <div class="container">
+            <div>
+              <div class="reset-input-text">
+                <!-- ワンタイムパスワード -->
+                <tr>
+                  <td class="totp-label">
+                    <label>{{
+                      $t("screenItemProperties.signin.onetimePassword")
+                    }}</label>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      maxlength="6"
+                      v-model.trim="mfaCode"
+                      autocomplete="false"
+                      required
+                    />
+                  </td>
+                </tr>
+              </div>
+              <!-- ボタンエリア -->
+              <div class="sign-in">
+                <button style="margin-left: 170px">
+                  {{ $t("login") }}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
-  </form>
+  </div>
 </template>
