@@ -46,9 +46,16 @@ export default function FormValidation() {
   }
 
   function validUsername(username) {
-    var reUsername =
-      /^(?=.{3,63}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;
-    if (!reUsername.test(username)) {
+    // var reUsername = /^(?=.{3,63}$)(?![_.])(?!.*[_.]{2})[a-z0-9._]+(?<![_.])$/;
+
+    var reUsername = /^(?=.{3,63}$)[a-z0-9]+$/;
+
+    if (username.length === 0) {
+      console.log(" in required errror");
+      usernameRequireMsg.value = t("errorMessages.E0001", {
+        param1: t("errorParams.username"),
+      });
+    } else if (!reUsername.test(username)) {
       usernameRequireMsg.value = t("errorMessages.E0002", {
         param1: t("errorParams.username"),
       });

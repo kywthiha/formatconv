@@ -35,8 +35,10 @@ export default {
 
     // 新しい Qr コードを作成する
     function newQRCode() {
+      alert("new qr code");
       //　「MFAを有効にする」のチェックを外すと、MFAが無効になる
       if (mfaValue.value === true) {
+        alert("new qr code true");
         console.log("hello ", mfaValue.value);
         setMFA(false);
         setMessage(
@@ -93,10 +95,7 @@ export default {
         onSuccess: function (result) {
           setMFA(true);
           alert("MFA has successfully been setup for your account.");
-          // setMessage(
-          //   "MFA has successfully been setup for your account.",
-          //   "alert-success"
-          // );
+
           showQRCode.value = false;
         },
         onFailure: function (err) {
@@ -147,11 +146,26 @@ export default {
     });
 
     function cancel() {
-      showQRCode.value = false;
-      setMessage("MFA setup cancelled", "alert-success");
+      // store.dispatch("setMFA", !store.state.settingsModule.isMFAEnabled);
+
+      alert("cancel");
+      if (checkedValue.value === true) {
+        alert("true");
+        store.dispatch("setStatus", false);
+        store.dispatch("setMFA", false);
+      } else if (checkedValue.value === false) {
+        alert("false");
+        store.dispatch("setStatus", true);
+        store.dispatch("setMFA", true);
+      } else {
+        store.dispatch("setMFA", !store.state.settingsModule.isMFAEnabled);
+      }
+      // store.dispatch("fetchMFAValue");
+      // store.dispatch("setMFA", !checkedValue.value);
     }
 
     if (checkedValue.value !== null || checkedValue.value !== undefined) {
+      alert("hello");
       console.log("in if ", checkedValue.value);
       newQRCode();
     }
