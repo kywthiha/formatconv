@@ -1,13 +1,13 @@
 <template>
-  <sign-in-form></sign-in-form>
+  <file-upload-form></file-upload-form>
 </template>
 
 <script>
-import SignInForm from "../components/auth/SignInForm.vue";
+import FileUploadForm from "../components/FileChange/FileUploadForm.vue";
 
 export default {
-  components: { SignInForm },
-  name: "SignIn",
+  components: { FileUploadForm },
+  name: "fileUpload",
 };
 </script>
 

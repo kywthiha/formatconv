@@ -5,6 +5,7 @@ import { useI18n } from "vue-i18n";
 export default function FormValidation() {
   let passRequireMsg = ref("");
   let emailRequireMsg = ref("");
+  let usernameRequireMsg = ref("");
   const { t } = useI18n();
 
   function validPassword(password) {
@@ -44,10 +45,23 @@ export default function FormValidation() {
     return reMail.test(email);
   }
 
+  function validUsername(username) {
+    var reUsername =
+      /^(?=.{3,63}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/;
+    if (!reUsername.test(username)) {
+      usernameRequireMsg.value = t("errorMessages.E0002", {
+        param1: t("errorParams.username"),
+      });
+    }
+    return reUsername.test(username);
+  }
+
   return {
     validPassword,
     passRequireMsg,
     validEmail,
     emailRequireMsg,
+    validUsername,
+    usernameRequireMsg,
   };
 }

@@ -59,7 +59,8 @@
   },
   "errorParams": {
     "email": "メール",
-    "password": "パスワード"
+    "password": "パスワード",
+    "username": "アカウント名"
   },
   "errorMessages": {
     "E0001": "{param1}を入力してください。",

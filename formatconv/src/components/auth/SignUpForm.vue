@@ -14,6 +14,7 @@ import {
 } from "amazon-cognito-identity-js";
 import { POOL_DATA } from "../../config/cognito";
 import HeaderDisplay from "../common/HeaderDisplay.vue";
+import validation from "../../hooks/validation";
 
 export default {
   components: { HeaderDisplay, TermsAndConditionsForm },
@@ -29,6 +30,8 @@ export default {
 
     const isShowing = ref(false);
     const showModal = ref(false);
+    const usernameBlured = ref(false);
+    const { validUsername, usernameRequireMsg } = validation();
 
     // サインアップメソッドを呼び出す
     async function signUp() {
@@ -87,6 +90,9 @@ export default {
       signUp,
       confirm_password,
       isShowing,
+      validUsername,
+      usernameRequireMsg,
+      usernameBlured,
     };
   },
 };
@@ -120,9 +126,22 @@ export default {
                     <input
                       type="text"
                       v-model.trim="username"
+                      v-bind:class="{
+                        'form-control': true,
+                        'is-invalid':
+                          !validUsername(username) && usernameBlured,
+                      }"
+                      v-bind:style="[
+                        !validUsername(username) && usernameBlured
+                          ? { 'margin-bottom': '0px' }
+                          : { 'margin-bottom': '20px' },
+                      ]"
+                      v-on:blur="usernameBlured = true"
                       autocomplete="false"
-                      required
                     />
+                    <div class="invalid-feedback">
+                      {{ usernameRequireMsg }}
+                    </div>
                   </td>
                 </tr>
               </div>

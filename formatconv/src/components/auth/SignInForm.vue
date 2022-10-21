@@ -7,7 +7,6 @@
 <script>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { validateSignInForm } from "../../utils/validator";
 import useAlert from "../../hooks/alert";
 import store from "../../store/index";
 import {

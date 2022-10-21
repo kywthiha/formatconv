@@ -16,6 +16,7 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      beforeEnter: isAuthenticated,
     },
     {
       path: "/signin",
@@ -42,27 +43,18 @@ const router = createRouter({
       name: "fileUpload",
       component: FileUpload,
       beforeEnter: isAuthenticated,
-      meta: {
-        requiresAuth: true,
-      },
     },
     {
       path: "/mfa",
       name: "Mfa",
       component: MFASettings,
       beforeEnter: isAuthenticated,
-      meta: {
-        requiresAuth: true,
-      },
     },
     {
       path: "/changePassword",
       name: "ChangePassword",
       component: ChangePasswordForm,
       beforeEnter: isAuthenticated,
-      meta: {
-        requiresAuth: true,
-      },
     },
   ],
 });
