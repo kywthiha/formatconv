@@ -57,7 +57,7 @@ export default {
     function validPassword(password) {
       if (password.length === 0) {
         passRequireMsg.value = t("errorMessages.E0001", {
-          param1: "パスワード",
+          param1: t("errorParams.password"),
         });
         return false;
       }
@@ -97,6 +97,7 @@ export default {
         },
         onFailure(error) {
           console.log("error...", error);
+          console.log("type error...", JSON.stringify({ error }));
           if (error.message === "User is not confirmed.") {
             router.replace({
               name: "confirm",
@@ -108,7 +109,7 @@ export default {
           }
           if (!error.message.includes("SOFTWARE_TOKEN_MFA_CODE")) {
             setMessage(error.message, "alert-danger");
-            exceptionError(error.message);
+            exceptionError(error.name);
           }
           store.dispatch("setIsLoading", false);
         },
@@ -154,19 +155,6 @@ export default {
         message.value = route.params.message;
       }
     });
-
-    function isValid() {
-      const validationData = validateSignInForm({
-        username: username.value,
-        password: password.value,
-      });
-
-      if (!validationData.valid) {
-        setMessage(validationData.message, "alert-danger");
-        return false;
-      }
-      return true;
-    }
 
     return {
       email,
