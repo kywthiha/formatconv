@@ -27,7 +27,8 @@ export default {
     const showQRCode = ref(false);
     const qrCode = ref("");
 
-    const checkedValue = ref(route.query.checkedValue);
+    const checkedValue = computed(() => store.state.authModule.toggleStatus);
+
     console.log("tet ", checkedValue.value);
 
     const { message, messageStyleType, setMessage } = useAlert();
@@ -139,19 +140,6 @@ export default {
       );
     }
 
-    //  const checkedValue = computed(() => {
-    //     'checkedValue': function(data) {
-    //       console.log("checkedValue",data)
-    //     // do your stuff here
-    // }
-    //  });
-
-    // onMounted(() => {
-    //   this.$root.$on("checkedValue", (msg) => {
-    //     console.log(msg);
-    //   });
-    // });
-
     //　ユーザーに対して MFA が有効か無効かを格納する計算プロパティ
     const mfaValue = computed(() => {
       console.log(`MFA enabled - ${store.getters.isMFAEnabled}`);
@@ -163,7 +151,7 @@ export default {
       setMessage("MFA setup cancelled", "alert-success");
     }
 
-    if (checkedValue.value !== null || checkedValue.value !== undefined) {
+    if (checkedValue.value === true) {
       newQRCode();
     }
 

@@ -1,8 +1,3 @@
-/*
-  Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
-  SPDX-License-Identifier: MIT-0 
-*/
-
 //timeout in seconds
 // let seconds_timeout = 3600;
 
@@ -29,6 +24,9 @@ export default {
   },
   setName(context, payload) {
     context.commit("setName", payload);
+  },
+  setStatus(context, payload) {
+    context.commit("setToggleStatus", payload);
   },
   setSession(context, payload) {
     context.commit("setSession", payload);

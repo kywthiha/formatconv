@@ -9,6 +9,7 @@ export default {
       cognitoSub: null,
       email: null,
       name: null,
+      toggleStatus: false,
       idToken: null,
       accessToken: null,
       refreshToken: null,

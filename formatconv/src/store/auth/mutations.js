@@ -18,6 +18,9 @@ export default {
   setName(state, payload) {
     state.name = payload;
   },
+  setToggleStatus(state, payload) {
+    state.toggleStatus = payload;
+  },
   logout(state) {
     state.isAuthenticated = false;
   },

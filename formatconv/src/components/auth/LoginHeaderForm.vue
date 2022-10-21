@@ -4,16 +4,19 @@ import { onBeforeMount, onBeforeUpdate } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import disableMFA from "../../hooks/disableMFA";
+
 export default {
   setup() {
     const router = useRouter();
     const store = useStore();
+
     //　ユーザーに対して MFA が有効か無効かを格納する計算プロパティ
     const mfaValue = computed(() => {
       return store.getters.isMFAEnabled;
     });
 
     const profilename = computed(() => store.state.authModule.name);
+
     const logout = () => {
       store.dispatch("logout");
       router.push({
@@ -21,6 +24,7 @@ export default {
         params: { message: "You have logged out" },
       });
     };
+
     //　ログインしたユーザーの mFA の現在の状態を確認する
     onBeforeMount(function () {
       store.dispatch("fetchMFAValue");
@@ -32,11 +36,12 @@ export default {
 
     function enableMFAStatus(event) {
       if (event.target.checked === true) {
+        store.dispatch("setStatus", event.target.checked);
         router.replace({
           name: "Mfa",
-          query: { checkedValue: event.target.checked },
         });
       } else {
+        store.dispatch("setStatus", event.target.checked);
         disableMFA();
       }
     }
