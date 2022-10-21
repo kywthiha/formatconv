@@ -151,7 +151,8 @@ export default {
       setMessage("MFA setup cancelled", "alert-success");
     }
 
-    if (checkedValue.value === true) {
+    if (checkedValue.value !== null || checkedValue.value !== undefined) {
+      console.log("in if ", checkedValue.value);
       newQRCode();
     }
 
