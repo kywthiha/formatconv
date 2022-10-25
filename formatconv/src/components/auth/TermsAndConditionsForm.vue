@@ -29,7 +29,11 @@ export default {
 
           <div class="modal-body">
             <slot name="body">
-              <textarea class="textarea" v-model="logitems"></textarea>
+              <textarea
+                class="textarea"
+                v-model="logitems"
+                maxlength="2000"
+              ></textarea>
 
               <content />
             </slot>

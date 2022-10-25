@@ -210,7 +210,9 @@ export default {
               <td>
                 <input
                   type="text"
+                  maxlength="128"
                   v-model.trim="username"
+                  disabled="true"
                   autocomplete="false"
                 />
               </td>
@@ -229,6 +231,7 @@ export default {
                 <input
                   type="text"
                   v-model.trim="code"
+                  maxlength="6"
                   v-bind:class="{
                     'form-control': true,
                     'is-invalid':

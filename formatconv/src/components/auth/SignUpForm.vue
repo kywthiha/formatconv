@@ -278,6 +278,7 @@ export default {
                     <input
                       type="text"
                       v-model.trim="username"
+                      maxlength="63"
                       v-bind:class="{
                         'form-control': true,
                         'is-invalid':
@@ -309,6 +310,7 @@ export default {
                     <input
                       type="email"
                       v-model.trim="email"
+                      maxlength="128"
                       id="email"
                       v-bind:class="{
                         'form-control': true,
@@ -341,6 +343,7 @@ export default {
                       type="password"
                       v-model.trim="password"
                       autocomplete="false"
+                      maxlength="256"
                       id="current-password"
                       v-bind:class="{
                         'form-control': true,
@@ -393,6 +396,7 @@ export default {
                       v-model.trim="confirm_password"
                       autocomplete="false"
                       id="confirm-password"
+                      maxlength="256"
                       v-bind:class="{
                         'form-control': true,
                         'is-invalid':
