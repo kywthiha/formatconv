@@ -10,7 +10,9 @@ import { useRoute, useRouter } from "vue-router";
 import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
 import { validateConfirmationForm } from "../../utils/validator";
 import useAlert from "../../hooks/alert";
+import validation from "../../hooks/validation";
 import { POOL_DATA } from "../../config/cognito";
+import { useI18n } from "vue-i18n";
 
 export default {
   setup() {
@@ -26,9 +28,13 @@ export default {
     const username = ref(route.query.username);
     const errormsg = ref(route.query.errormsg);
     const disableErrorMsg = ref(false);
+    const verificationCodeBlured = ref(false);
+
+    const { validVerificationCode, verificationCodeRequireMsg } = validation();
 
     // メッセージアラートのフックを設定する
-    const { message, messageStyleType, setMessage } = useAlert();
+    const { message, setMessage } = useAlert();
+    const { t } = useI18n();
 
     // コードを再送する
     function resendCode() {
@@ -40,15 +46,46 @@ export default {
       const cognitoUser = new CognitoUser(userData);
 
       cognitoUser.resendConfirmationCode(function (err, result) {
+        console.log("resend code ", err);
         if (result.CodeDeliveryDetails.Destination != null) {
-          disableErrorMsg.value = true;
-          successmsg.value =
-            "確認コードが" + username.value + "に送信されます。";
+          setMessage(t("successMessages.S0001"));
+          // disableErrorMsg.value = true;
+          // successmsg.value =
+          //   "確認コードが" + username.value + "に送信されます。";
         }
-        if (err) {
-          alert(err.message || JSON.stringify(err));
-          return;
+        if (err !== null) {
+          //
+          if (err.name === "NotAuthorizedException") {
+            setMessage("SignUp is not permitted for this user pool");
+          }
+
+          //
+          if (err.name === "UserNotFoundException") {
+            setMessage(t("errorMessages.E0011"));
+          }
+
+          //
+          if (err.name === "LimitExceededException") {
+            setMessage(t("errorMessages.E0012"));
+          }
+
+          //
+          if (err.name === "CodeDeliveryFailureException") {
+            setMessage(t("errorMessages.E0014"));
+          }
+
+          if (err.name === "TooManyRequestsException") {
+            setMessage(t("errorMessages.E0015"));
+          }
+
+          if (err.name === "InternalErrorException") {
+            setMessage(t("errorMessages.E0016"));
+          }
         }
+        // if (err) {
+        //   alert(err.message || JSON.stringify(err));
+        //   return;
+        // }
         console.log("call result: " + result.CodeDeliveryDetails.Destination);
       });
     }
@@ -71,28 +108,50 @@ export default {
 
       // Cognito 確認登録メソッドを呼び出す
       await cognitUser.confirmRegistration(code.value, true, (err, result) => {
-        if (!err) {
-          setMessage(err.message, "alert-danger");
-          return;
-        }
+        console.log("in confirm ", err);
+        if (err !== null) {
+          //
+          if (err.name === "CodeMismatchException") {
+            setMessage(t("errorMessages.E0006"));
+          }
 
-        router.replace({
-          name: "signin",
-          params: {
-            message: "You have successfully confirmed your account",
-          },
-        });
+          if (err.name === "LimitExceededException") {
+            setMessage(t("errorMessages.E0012"));
+          }
+
+          if (err.name === "ExpiredCodeException") {
+            setMessage(t("errorMessages.E0013"));
+          }
+
+          if (err.name === "TooManyRequestsException") {
+            setMessage(t("errorMessages.E0015"));
+          }
+
+          if (err.name === "InternalErrorException") {
+            setMessage(t("errorMessages.E0016"));
+          }
+
+          if (err.name === "UserNotFoundException") {
+            setMessage(t("errorMessages.E0011"));
+          }
+        } else {
+          router.replace({
+            name: "signin",
+            params: {
+              message: "You have successfully confirmed your account",
+            },
+          });
+        }
       });
     }
 
-    function isValid() {
-      const validationData = validateConfirmationForm({
-        code: code.value,
-        username: username.value,
-      });
+    function hideAlert() {
+      message.value = "";
+    }
 
-      if (!validationData.valid) {
-        setMessage(validationData.message, "alert-danger");
+    function isValid() {
+      if (!validVerificationCode(code.value)) {
+        verificationCodeBlured.value = true;
         return false;
       }
 
@@ -105,11 +164,15 @@ export default {
       code,
       username,
       message,
-      messageStyleType,
       isValid,
       errormsg,
       successmsg,
       disableErrorMsg,
+      verificationCodeBlured,
+      validVerificationCode,
+      verificationCodeRequireMsg,
+      hideAlert,
+      message,
     };
   },
 };
@@ -127,14 +190,17 @@ export default {
           <label>{{ $t("screenItemProperties.common.title") }}</label>
         </template>
       </header-display>
+      <!-- Error Alert -->
+      <div
+        v-if="message"
+        class="alert alert-danger alert-dismissible align-items-center fade show"
+        style="text-align: center"
+      >
+        <label>{{ message }}</label>
+        <button type="button" class="btn-close" @click="hideAlert"></button>
+      </div>
       <body-display>
         <template v-slot:body>
-          <div class="text-danger errormsg" v-if="!disableErrorMsg">
-            <label>{{ errormsg }}</label>
-          </div>
-          <div class="text-success errormsg">
-            <label>{{ successmsg }}</label>
-          </div>
           <div class="input-text">
             <!-- メール -->
             <tr>
@@ -160,7 +226,25 @@ export default {
                 }}</label>
               </td>
               <td>
-                <input type="text" v-model.trim="code" autocomplete="false" />
+                <input
+                  type="text"
+                  v-model.trim="code"
+                  v-bind:class="{
+                    'form-control': true,
+                    'is-invalid':
+                      !validVerificationCode(code) && verificationCodeBlured,
+                  }"
+                  v-bind:style="[
+                    !validVerificationCode(code) && verificationCodeBlured
+                      ? { 'margin-bottom': '0px' }
+                      : { 'margin-bottom': '20px' },
+                  ]"
+                  v-on:blur="verificationCodeBlured = true"
+                  autocomplete="false"
+                />
+                <div class="invalid-feedback">
+                  {{ verificationCodeRequireMsg }}
+                </div>
               </td>
             </tr>
           </div>

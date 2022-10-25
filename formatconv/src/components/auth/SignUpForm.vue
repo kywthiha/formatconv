@@ -31,6 +31,7 @@ export default {
     const password = ref("");
     const confirm_password = ref("");
     const username = ref("");
+    const termOfService = ref("");
 
     const isShowing = ref(false);
     const showModal = ref(false);
@@ -40,6 +41,10 @@ export default {
     let changedCheckbox = ref(false);
     const passwordBlured = ref(false);
     const emailBlured = ref(false);
+    const confirmPasswordBlured = ref(false);
+    const termOfServideBlured = ref(false);
+
+    let termOfServiceRequireMsg = ref("");
 
     const { t } = useI18n();
 
@@ -48,11 +53,12 @@ export default {
       usernameRequireMsg,
       validPassword,
       passRequireMsg,
+      validConfirmPassword,
+      confirmPasswordRequireMsg,
       validEmail,
       emailRequireMsg,
     } = validation();
-    const { message, messageStyleType, setMessage, exceptionError } =
-      useAlert();
+    const { message, setMessage, exceptionError } = useAlert();
 
     function hideAlert() {
       message.value = "";
@@ -68,7 +74,7 @@ export default {
         if (modal === true && checked === true) {
           disableBtn.value = false;
         } else if (modal === false && checked === true) {
-          setMessage(t("errorMessages.E0007"), "alert-danger");
+          setMessage(t("errorMessages.E0019"));
         }
       }
     );
@@ -108,11 +114,48 @@ export default {
         attrList,
         null,
         (err, result) => {
-          if (
-            err.message === null ||
-            err.message === "err is null" ||
-            result === null
-          ) {
+          // 例外エラーが発生した場合、エラーメッセージを表示し、処理を終了する。
+          if (err !== null) {
+            //
+            if (err.name === "UsernameExistsException") {
+              setMessage(t("errorMessages.E0010"));
+            }
+
+            //
+            if (err.name === "NotAuthorizedException") {
+              setMessage("SignUp is not permitted for this user pool");
+            }
+
+            //
+            if (err.name === "InvalidPasswordException") {
+              setMessage(
+                t("errorMessages.E0003", {
+                  param1: t("errorParams.password"),
+                })
+              );
+            }
+
+            //
+            if (err.name === "CodeDeliveryFailureException") {
+              setMessage(t("errorMessages.E0014"));
+            }
+
+            //
+            if (err.name === "TooManyRequestsException") {
+              setMessage(t("errorMessages.E0015"));
+            }
+
+            //
+            if (err.name === "InternalErrorException") {
+              setMessage(t("errorMessages.E0016"));
+            }
+          }
+
+          //  err.message === null ||
+          //   err.message === "err is null" ||
+          //   result === null
+
+          if (!err) {
             router.replace({
               name: "confirm",
               query: { username: email.value },
@@ -132,12 +175,30 @@ export default {
     function changeCheckbox(event) {
       changedCheckbox.value = event.target.checked;
       console.log("changeCheckbox ", changedCheckbox.value);
+      if (changedCheckbox.value === false) {
+        console.log("false ");
+        termOfServiceRequireMsg.value = t("errorMessages.E0007");
+      } else {
+        termOfServiceRequireMsg.value = "";
+      }
     }
 
     function isValid() {
-      if (!(validUsername(username.value) && validPassword(password.value))) {
+      if (
+        !(
+          validUsername(username.value) &&
+          validEmail(email.value) &&
+          validPassword(password.value) &&
+          validConfirmPassword(confirm_password.value, password.value) &&
+          changedCheckbox.value
+        )
+      ) {
         usernameBlured.value = true;
         passwordBlured.value = true;
+        emailBlured.value = true;
+        confirmPasswordBlured.value = true;
+        termOfServideBlured.value = true;
+
         return false;
       }
 
@@ -164,11 +225,17 @@ export default {
       changedCheckbox,
       validPassword,
       passwordBlured,
+      validConfirmPassword,
+      confirmPasswordBlured,
       passRequireMsg,
+      confirmPasswordRequireMsg,
       emailBlured,
       hideAlert,
       message,
       isValid,
+      termOfServiceRequireMsg,
+      termOfService,
+      termOfServideBlured,
     };
   },
 };
@@ -306,6 +373,9 @@ export default {
                         $t("screenItemProperties.button.termsOfServiceBtn")
                       }}</a>
                     </div>
+                    <div class="text-danger">
+                      {{ termOfServiceRequireMsg }}
+                    </div>
                   </td>
                 </tr>
               </div>
@@ -323,7 +393,23 @@ export default {
                       v-model.trim="confirm_password"
                       autocomplete="false"
                       id="confirm-password"
+                      v-bind:class="{
+                        'form-control': true,
+                        'is-invalid':
+                          !validConfirmPassword(confirm_password, password) &&
+                          confirmPasswordBlured,
+                      }"
+                      v-bind:style="[
+                        !validConfirmPassword(confirm_password, password) &&
+                        confirmPasswordBlured
+                          ? { 'margin-bottom': '0px' }
+                          : { 'margin-bottom': '20px' },
+                      ]"
+                      v-on:blur="confirmPasswordBlured = true"
                     />
+                    <div class="invalid-feedback">
+                      {{ confirmPasswordRequireMsg }}
+                    </div>
                   </td>
                   <td>
                     <!-- ボタンエリア -->
