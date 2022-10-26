@@ -6,6 +6,7 @@ import store from "./store";
 import "./assets/main.css";
 import "./assets/main.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import "./assets/screen-item.css";
 import messages from "@intlify/unplugin-vue-i18n/messages";
 import HeaderDisplay from "./components/layout/HeaderDisplay.vue";
