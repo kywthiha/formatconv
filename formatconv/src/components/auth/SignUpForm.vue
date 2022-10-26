@@ -167,6 +167,7 @@ export default {
         passwordBlured.value = true;
         emailBlured.value = true;
         confirmPasswordBlured.value = true;
+        disableBtn.value = false;
 
         return false;
       }
