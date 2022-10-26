@@ -27,9 +27,11 @@ const fileItems = computed(
     </div>
   </div>
   <div v-else class="empty-file-list">
-    <h6 class="text-center">No files or folders</h6>
+    <h6 class="text-center">
+      {{ $t("screenItemProperties.fileUpload.emptyFileTitle") }}
+    </h6>
     <p class="text-center">
-      You have not chosen any files or folders to upload.
+      {{ $t("screenItemProperties.fileUpload.emptyFileBody") }}
     </p>
   </div>
 </template>

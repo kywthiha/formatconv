@@ -112,11 +112,15 @@ const deleteFileItem = () =>
     <div class="row justify-content-between">
       <div class="row col">
         <div class="col align-self-center">
-          <div class="fw-bold">フォルダ名</div>
+          <div class="fw-bold">
+            {{ $t("screenItemProperties.fileUpload.fileName") }}
+          </div>
           <div>{{ item.file.name }}</div>
         </div>
         <div class="col align-self-center">
-          <div class="fw-bold">サイズ（{{ unit }}）</div>
+          <div class="fw-bold">
+            {{ $t("screenItemProperties.fileUpload.fileSize") }}（{{ unit }}）
+          </div>
           <div>{{ size }}</div>
         </div>
       </div>
@@ -125,13 +129,16 @@ const deleteFileItem = () =>
           {{ progress.percentage }}%
         </button>
         <div v-else-if="item.download_url" class="download-action">
-          <button class="btn-upload btn-complete">完了</button>
+          <button class="btn-upload btn-complete">
+            {{ $t("screenItemProperties.fileUpload.complete") }}
+          </button>
           <a
             class="btn-upload btn-download-link"
             :href="item.download_url"
             download
             target="_blank"
-            >ダウンロード</a
+          >
+            {{ $t("screenItemProperties.fileUpload.download") }}</a
           >
         </div>
         <div
@@ -150,7 +157,7 @@ const deleteFileItem = () =>
         </div>
 
         <button class="btn btn-danger" v-else @click="deleteFileItem">
-          DELETE
+          {{ $t("screenItemProperties.fileUpload.delete") }}
         </button>
       </div>
     </div>

@@ -50,7 +50,16 @@
     },
     "fileUpload": {
       "fileName": "フォルダ名",
-      "fileSize": "サイズ（GB）"
+      "fileSize": "サイズ",
+      "upload": "Upload",
+      "goToUpload": "Go to Upload",
+      "goToUploadConfirm": "Are you sure?",
+      "fileDropZoneLabel": "Drag and drop files and folders",
+      "emptyFileTitle": "No files or folders",
+      "emptyFileBody": "You have not chosen any files or folders to upload.",
+      "complete": "完了",
+      "download": "ダウンロード",
+      "delete": "DELETE"
     },
     "changePassword": {
       "oldPassword": "現在のパスワード：　",

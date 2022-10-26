@@ -61,10 +61,10 @@ const handleOnDrop = async (event) => {
     :class="{ active: active }"
   >
     <i class="bi bi-cloud-arrow-up" style="font-size: 1.5rem"></i>
-    <div>Drag and drop files and folders</div>
+    <div>{{ $t("screenItemProperties.fileUpload.fileDropZoneLabel") }}</div>
     <label
       :style="{ opacity: active ? 0 : 1 }"
-      class="btn btn-primary col-auto"
+      class="btn btn-primary col-auto btn-browse-file"
       for="file-drop-zone-file-input-mulitple"
     >
       {{ $t("screenItemProperties.button.dataConvertionUploadBtn") }}
@@ -92,5 +92,8 @@ const handleOnDrop = async (event) => {
 }
 .active {
   background-color: #a8a8ca !important;
+}
+.btn-browse-file {
+  background-color: #6c8bc5 !important;
 }
 </style>
