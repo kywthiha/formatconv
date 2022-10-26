@@ -79,6 +79,7 @@ export default {
         if (modal === true && checked === true) {
           disableBtn.value = false;
         } else if (modal === false && checked === true) {
+          // to ask
           setMessage(t("errorMessages.E0019"));
         }
       }
@@ -86,7 +87,8 @@ export default {
 
     // サインアップメソッドを呼び出す
     async function signUp() {
-      alert("signup");
+      // alert("signup");
+      disableBtn.value = true;
 
       if (!isValid()) {
         return;
@@ -122,12 +124,9 @@ export default {
           // 例外エラーが発生した場合、エラーメッセージを表示し、処理を終了する。
           if (err !== null) {
             message.value = exceptionError(err.name);
+            disableBtn.value = false;
             console.log("message ", exceptionError(err.name));
           }
-
-          //  err.message === null ||
-          //   err.message === "err is null" ||
-          //   result === null
 
           if (!err) {
             router.replace({

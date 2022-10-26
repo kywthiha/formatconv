@@ -50,6 +50,11 @@ export function exceptionError(exceptionMessage) {
     case "InternalErrorException":
       message.value = t("errorMessages.E0016");
       break;
+    case "InvalidParameterException":
+      // message.value = t("errorMessages.E0016");
+      message.value =
+        "Cannot reset password for the user as there is no registered/verified email or phone_number";
+      break;
     default:
       message.value = t("errorMessages.E0016");
       break;

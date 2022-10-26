@@ -21,15 +21,6 @@ const i18n = createI18n({
   messages: messages,
 });
 
-export default createI18n({
-  legacy: false,
-  globalInjection: true,
-  locale: "jp",
-  fallbackLocale: "en",
-  availableLocales: ["en", "jp"],
-  messages: messages,
-});
-
 const app = createApp(App);
 app.use(store);
 app.use(router);
@@ -38,3 +29,5 @@ app.mount("#app");
 app.component("header-display", HeaderDisplay);
 app.component("body-display", BodyDisplay);
 import "bootstrap/dist/js/bootstrap.js";
+
+export default i18n;
