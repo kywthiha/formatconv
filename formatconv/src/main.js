@@ -8,8 +8,8 @@ import "./assets/main.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./assets/screen-item.css";
 import messages from "@intlify/unplugin-vue-i18n/messages";
-import HeaderDisplay from "./components/common/HeaderDisplay.vue";
-import BodyDisplay from "./components/common/BodyDisplay.vue";
+import HeaderDisplay from "./components/layout/HeaderDisplay.vue";
+import BodyDisplay from "./components/layout/BodyDisplay.vue";
 
 const i18n = createI18n({
   legacy: false,

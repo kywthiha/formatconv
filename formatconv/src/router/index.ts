@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import SignUp from "../components/auth/SignUpForm.vue";
-import FileUpload from "../components/FileChange/FileUploadForm.vue";
+import FileUpload from "../components/fileConvert/FileUploadForm.vue";
 import MFASettings from "../components/auth/TotpForm.vue";
 import PasswordResetForm from "../components/auth/PasswordResetForm.vue";
 import Confirm from "../components/auth/ConfirmAccountForm.vue";

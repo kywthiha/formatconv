@@ -11,7 +11,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import FileItem from "./FileItem.vue";
 import * as zip from "@zip.js/zip.js";
-import loginHeaderForm from "../auth/LoginHeaderForm.vue";
+import LoginHeaderForm from "../auth/LoginHeaderForm.vue";
 
 const store = useStore();
 let router = useRouter();

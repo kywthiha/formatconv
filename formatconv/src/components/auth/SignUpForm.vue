@@ -14,10 +14,11 @@ import {
   CognitoUserAttribute,
 } from "amazon-cognito-identity-js";
 import { POOL_DATA } from "../../config/cognito";
-import HeaderDisplay from "../common/HeaderDisplay.vue";
+import HeaderDisplay from "../layout/HeaderDisplay.vue";
 import validation from "../../hooks/validation";
 import useAlert from "../../hooks/alert";
 import { useI18n } from "vue-i18n";
+import { handleKeyDown } from "../common/common";
 
 export default {
   components: { HeaderDisplay, TermsAndConditionsForm },
@@ -81,7 +82,7 @@ export default {
 
     // サインアップメソッドを呼び出す
     async function signUp() {
-      alert("signup");
+      // alert("signup");
 
       if (!isValid()) {
         return;
@@ -169,20 +170,19 @@ export default {
     function openModal() {
       showModal.value = true;
       openedModal.value = true;
-      console.log("in open modal ", openedModal.value);
     }
 
+    // 利用規約の未選択対応
     function changeCheckbox(event) {
       changedCheckbox.value = event.target.checked;
-      console.log("changeCheckbox ", changedCheckbox.value);
       if (changedCheckbox.value === false) {
-        console.log("false ");
         termOfServiceRequireMsg.value = t("errorMessages.E0007");
       } else {
         termOfServiceRequireMsg.value = "";
       }
     }
 
+    // 入力チェック対応
     function isValid() {
       if (
         !(
@@ -236,6 +236,7 @@ export default {
       termOfServiceRequireMsg,
       termOfService,
       termOfServideBlured,
+      handleKeyDown,
     };
   },
 };
@@ -243,7 +244,7 @@ export default {
 
 <template v-slot:body>
   <div>
-    <form @submit.prevent="signUp">
+    <form @submit.prevent="signUp" @keydown="handleKeyDown">
       <div v-if="!confirmMFACode">
         <div>
           <header-display>

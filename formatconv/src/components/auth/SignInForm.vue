@@ -17,9 +17,9 @@ import {
 import ResetPassword from "./PasswordResetForm.vue";
 import { POOL_DATA } from "../../config/cognito";
 import MFASettings from "./TotpForm.vue";
-import HeaderDisplay from "../common/HeaderDisplay.vue";
+import HeaderDisplay from "../layout/HeaderDisplay.vue";
 import LocaleSelect from "../LocaleSelect.vue";
-import BodyDisplay from "../common/BodyDisplay.vue";
+import BodyDisplay from "../layout/BodyDisplay.vue";
 import { useI18n } from "vue-i18n";
 import validation from "../../hooks/validation";
 
