@@ -27,6 +27,8 @@ export default function useAlert() {
       message.value = t("errorMessages.E00015");
     } else if (exceptionMessage === "InternalErrorException") {
       message.value = t("errorMessages.E00016");
+    } else if (exceptionMessage === "CodeMismatchException") {
+      message.value = t("errorMessages.E0006");
     }
   }
 

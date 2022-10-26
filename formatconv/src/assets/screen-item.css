@@ -27,7 +27,8 @@
   margin-top: 20px;
   position: relative;
 }
-input[type="text"] {
+input[type="text"],
+input[type="number"] {
   height: 35px;
   width: 250px;
   border-radius: 5px;
@@ -137,6 +138,15 @@ input[type="password"] {
   border: none;
   transition: all 0.5s;
   cursor: pointer;
+}
+/* .sign-in .active-btn {
+  background-color: #3560b1;
+} */
+button[disabled] {
+  border: 0.3px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
 }
 .sign-up {
   padding-top: 20px;

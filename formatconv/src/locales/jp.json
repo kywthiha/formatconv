@@ -62,7 +62,8 @@
     "password": "パスワード",
     "username": "アカウント名",
     "confirmPassword": "パスワード確認",
-    "verificationCode": "検証コード"
+    "verificationCode": "検証コード",
+    "totpCode": "ワンタイムパスワード"
   },
   "successMessages": {
     "S0001": "検証コードを再送信しました。"

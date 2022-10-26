@@ -43,20 +43,34 @@ export default {
     const password = ref("");
     const mfaCode = ref("");
     const { validEmail, emailRequireMsg } = validation();
-    const { message, messageStyleType, setMessage, exceptionError } =
-      useAlert();
+    const { message, setMessage, exceptionError } = useAlert();
     const confirmMFACode = ref(false);
 
     const emailBlured = ref(false);
     const passwordBlured = ref(false);
     let passRequireMsg = ref("");
+    let verifyCodeRequireMsg = ref("");
+    const verifyCodeBlured = ref(false);
     let alertStatus = true;
+    let signinDisable = ref(false);
 
     function validPassword(password) {
-      console.log("pass length", password.length);
+      // console.log("pass length", password.length);
       if (password.length === 0) {
         passRequireMsg.value = t("errorMessages.E0001", {
           param1: t("errorParams.password"),
+        });
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    function validVerificationCode(mfaCode) {
+      // console.log("pass length", password.length);
+      if (mfaCode.length === 0) {
+        verifyCodeRequireMsg.value = t("errorMessages.E0001", {
+          param1: t("errorParams.totpCode"),
         });
         return false;
       } else {
@@ -70,9 +84,13 @@ export default {
 
     // ログインする
     function signIn() {
+      console.log("disable...", signinDisable);
+      signinDisable.value = true;
       if (!isValid()) {
+        alert("valid...");
         return;
       }
+
       const userPool = new CognitoUserPool(POOL_DATA);
       const authData = {
         Username: email.value,
@@ -90,16 +108,20 @@ export default {
 
       cognitoUser.authenticateUser(authDetails, {
         onSuccess(session) {
+          console.log("success disable...", signinDisable);
           // ユーザーセッション情報を Vue 状態システムに保存する
           setUserSessionInfo(session);
 
           router.push({
             name: "fileUpload",
           });
+          signinDisable.value = false;
         },
         onFailure(error) {
-          console.log("error...", error);
-          console.log("type error...", JSON.stringify({ error }));
+          // console.log("error...", error);
+          // console.log("type error...", JSON.stringify({ error }));
+          // console.log("failure disable...", signinDisable);
+
           if (error.message === "User is not confirmed.") {
             router.replace({
               name: "confirm",
@@ -113,19 +135,37 @@ export default {
             setMessage(error.message, "alert-danger");
             exceptionError(error.name);
           }
-          store.dispatch("setIsLoading", false);
+          signinDisable.value = false;
         },
         totpRequired(codeDeliveryDetails) {
+          alert("totp");
+          console.log("totp msg", message.value);
           confirmMFACode.value = true;
-          cognitoUser.sendMFACode(mfaCode.value, this, codeDeliveryDetails);
+          signinDisable.value = false;
+          cognitoUser.sendMFACode(
+            mfaCode.value.toString(),
+            this,
+            codeDeliveryDetails
+          );
         },
       });
     }
 
     function isValid() {
       if (!(validEmail(email.value) && validPassword(password.value))) {
+        // alert("isvalid totp if...");
         emailBlured.value = true;
         passwordBlured.value = true;
+        signinDisable.value = false;
+        return false;
+      }
+      if (
+        !validVerificationCode(mfaCode.value) &&
+        confirmMFACode.value == true
+      ) {
+        // alert("isvalid totp first if...");
+        verifyCodeBlured.value = true;
+        signinDisable.value = false;
         return false;
       }
       return true;
@@ -173,7 +213,6 @@ export default {
       password,
       signIn,
       message,
-      messageStyleType,
       mfaCode,
       autoTimeout,
       confirmMFACode,
@@ -188,6 +227,10 @@ export default {
       hideAlert,
       exceptionError,
       isValid,
+      signinDisable,
+      validVerificationCode,
+      verifyCodeRequireMsg,
+      verifyCodeBlured,
     };
   },
 };
@@ -196,37 +239,37 @@ export default {
 <template>
   <!-- <locale-select></locale-select> -->
   <div>
-    <div v-if="!confirmMFACode">
-      <div>
-        <header-display>
-          <template v-slot:register-slot>
-            <router-link to="/signup"
-              ><button>
-                <span class="figcaption">{{ $t("signup") }}</span>
-              </button></router-link
-            >
-          </template>
-          <template v-slot:titlebar-slot>
-            <div class="logo-icon">
-              <img src="../../assets/logo-icon.png" class="img-fluid" />
-            </div>
-            <!-- タイトル -->
-            <label>{{ $t("screenItemProperties.common.title") }}</label>
-          </template>
-        </header-display>
+    <div>
+      <header-display>
+        <template v-slot:register-slot v-if="!confirmMFACode">
+          <router-link to="/signup"
+            ><button>
+              <span class="figcaption">{{ $t("signup") }}</span>
+            </button></router-link
+          >
+        </template>
+        <template v-slot:titlebar-slot>
+          <div class="logo-icon">
+            <img src="../../assets/logo-icon.png" class="img-fluid" />
+          </div>
+          <!-- タイトル -->
+          <label>{{ $t("screenItemProperties.common.title") }}</label>
+        </template>
+      </header-display>
 
-        <!-- Error Alert -->
-        <div
-          class="alert alert-danger alert-dismissible align-items-center fade show"
-          v-if="message"
-          style="text-align: center"
-        >
-          <label>{{ message }}</label>
-          <button type="button" class="btn-close" @click="hideAlert"></button>
-        </div>
-        <body-display>
-          <template v-slot:body>
-            <form @submit.prevent="signIn">
+      <!-- Error Alert -->
+      <div
+        class="alert alert-danger alert-dismissible align-items-center fade show"
+        v-if="message"
+        style="text-align: center"
+      >
+        <label>{{ message }}</label>
+        <button type="button" class="btn-close" @click="hideAlert"></button>
+      </div>
+      <body-display>
+        <template v-slot:body>
+          <form @submit.prevent="signIn">
+            <div v-if="!confirmMFACode">
               <div class="input-text">
                 <!-- メール -->
                 <tr>
@@ -299,30 +342,13 @@ export default {
               </div>
               <!-- ボタンエリア -->
               <div class="sign-in">
-                <button>
+                <button :disabled="signinDisable">
                   {{ $t("screenItemProperties.button.loginBtn") }}
                 </button>
               </div>
-            </form>
-          </template>
-        </body-display>
-      </div>
-    </div>
-    <!-- mfa を有効にするときに表示する -->
-    <div v-if="confirmMFACode">
-      <div>
-        <header-display>
-          <template v-slot:titlebar-slot>
-            <div class="logo-icon">
-              <img src="../../assets/logo-icon.png" class="img-fluid" />
             </div>
-            <!-- タイトル -->
-            <label>{{ $t("screenItemProperties.common.title") }}</label>
-          </template>
-        </header-display>
-        <form @submit.prevent="signIn">
-          <div class="container">
-            <div>
+            <!-- mfa を有効にするときに表示する -->
+            <div v-if="confirmMFACode">
               <div class="reset-input-text">
                 <!-- ワンタイムパスワード -->
                 <tr>
@@ -333,25 +359,39 @@ export default {
                   </td>
                   <td>
                     <input
-                      type="text"
-                      maxlength="6"
+                      type="number"
+                      max="999999"
                       v-model.trim="mfaCode"
+                      v-bind:class="{
+                        'form-control': true,
+                        'is-invalid':
+                          !validVerificationCode(mfaCode) && verifyCodeBlured,
+                      }"
+                      v-bind:style="[
+                        !validVerificationCode(mfaCode) && verifyCodeBlured
+                          ? { 'margin-bottom': '0px' }
+                          : { 'margin-bottom': '20px' },
+                      ]"
+                      v-on:blur="verifyCodeBlured = true"
                       autocomplete="false"
-                      required
                     />
+                    <div class="invalid-feedback">
+                      {{ verifyCodeRequireMsg }}
+                    </div>
                   </td>
                 </tr>
               </div>
               <!-- ボタンエリア -->
               <div class="sign-in">
-                <button style="margin-left: 170px">
+                <button style="margin-left: 170px" :disabled="signinDisable">
                   {{ $t("login") }}
                 </button>
               </div>
             </div>
-          </div>
-        </form>
-      </div>
+          </form>
+        </template>
+      </body-display>
     </div>
   </div>
 </template>
+<style scoped></style>
