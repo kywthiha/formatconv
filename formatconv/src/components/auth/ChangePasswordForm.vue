@@ -44,6 +44,10 @@ export default {
     console.log("confirm pass ", confirmNewPassParam);
     // 認証済みメールでコードを送信する
     function changePassword() {
+      if (!isValid()) {
+        alert("valid...");
+        return;
+      }
       const userPool = new CognitoUserPool(POOL_DATA);
       const userData = {
         Username: username.value,
@@ -85,6 +89,28 @@ export default {
       );
     }
 
+    function isValid() {
+      if (
+        !(
+          signinValidPassword(oldPassword, currentPassParam) &&
+          validPassword(newPassword, newPassParam) &&
+          validConfirmPassword(
+            confirmNewPassword,
+            newPassword,
+            newPassParam,
+            confirmNewPassParam
+          )
+        )
+      ) {
+        // alert("isvalid totp if...");
+        oldPasswordBlured.value = true;
+        newPasswordBlured.value = true;
+        confirmNewPasswordBlured.value = true;
+        return false;
+      }
+      return true;
+    }
+
     return {
       changePassword,
       oldPassword,
@@ -103,6 +129,7 @@ export default {
       validConfirmPassword,
       confirmPasswordRequireMsg,
       confirmNewPassParam,
+      isValid,
     };
   },
 };
