@@ -10,11 +10,8 @@ import { ref, onBeforeMount, onBeforeUpdate } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import FileItem from "./FileItem.vue";
-import { POOL_DATA } from "../../config/cognito";
-import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
-import disableMFA from "../../hooks/disableMFA";
 import * as zip from "@zip.js/zip.js";
-import loginHeaderForm from "../auth/LoginHeaderForm.vue";
+import LoginHeaderForm from "../auth/LoginHeaderForm.vue";
 
 const store = useStore();
 let router = useRouter();

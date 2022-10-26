@@ -8,12 +8,10 @@ import { useI18n } from "vue-i18n";
 // hooked used to set alert messages in UI
 export default function useAlert() {
   const message = ref("");
-  const messageStyleType = ref("alert-success");
   const { t } = useI18n();
 
-  function setMessage(msg, type) {
+  function setMessage(msg) {
     message.value = msg;
-    messageStyleType.value = type;
   }
 
   function exceptionError(exceptionMessage) {
@@ -29,12 +27,13 @@ export default function useAlert() {
       message.value = t("errorMessages.E00015");
     } else if (exceptionMessage === "InternalErrorException") {
       message.value = t("errorMessages.E00016");
+    } else if (exceptionMessage === "CodeMismatchException") {
+      message.value = t("errorMessages.E0006");
     }
   }
 
   return {
     message,
-    messageStyleType,
     setMessage,
     exceptionError,
   };

@@ -4,16 +4,19 @@ import { onBeforeMount, onBeforeUpdate } from "vue";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import disableMFA from "../../hooks/disableMFA";
+
 export default {
   setup() {
     const router = useRouter();
     const store = useStore();
+
     //　ユーザーに対して MFA が有効か無効かを格納する計算プロパティ
     const mfaValue = computed(() => {
       return store.getters.isMFAEnabled;
     });
 
     const profilename = computed(() => store.state.authModule.name);
+
     const logout = () => {
       store.dispatch("logout");
       router.push({
@@ -21,6 +24,7 @@ export default {
         params: { message: "You have logged out" },
       });
     };
+
     //　ログインしたユーザーの mFA の現在の状態を確認する
     onBeforeMount(function () {
       store.dispatch("fetchMFAValue");
@@ -32,11 +36,12 @@ export default {
 
     function enableMFAStatus(event) {
       if (event.target.checked === true) {
+        store.dispatch("setStatus", event.target.checked);
         router.replace({
           name: "Mfa",
-          query: { checkedValue: event.target.checked },
         });
       } else {
+        store.dispatch("setStatus", event.target.checked);
         disableMFA();
       }
     }
@@ -60,7 +65,7 @@ export default {
 
 <template>
   <header-display>
-    <template v-slot:totp-slot>
+    <!-- <template v-slot:totp-slot>
       <button>
         <div class="form-switch" style="padding-left: 0em">
           <label class="form-check-label" for="flexSwitchCheckDefault">
@@ -77,7 +82,7 @@ export default {
           />
         </div>
       </button>
-    </template>
+    </template> -->
     <template v-slot:register-slot>
       <div class="dropdown">
         <button
@@ -90,6 +95,22 @@ export default {
           {{ profilename }}
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li class="dropdown-item">
+            <div class="form-switch" style="padding-left: 0em">
+              <label class="form-check-label" for="flexSwitchCheckDefault">
+                {{ $t("screenItemProperties.common.mfaOnOff") }}</label
+              >
+              <input
+                class="form-check-input"
+                style="margin-left: 0em"
+                type="checkbox"
+                id="flexSwitchCheckDefault"
+                :value="mfaValue"
+                v-model="mfaValue"
+                @change="enableMFAStatus($event)"
+              />
+            </div>
+          </li>
           <li>
             <a class="dropdown-item" href="#" @click="changePassword">{{
               $t("screenItemProperties.changePassword.changePassword")

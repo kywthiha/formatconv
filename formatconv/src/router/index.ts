@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import SignUp from "../components/auth/SignUpForm.vue";
-import FileUpload from "../components/FileChange/FileUploadForm.vue";
+import FileUpload from "../components/fileConvert/FileUploadForm.vue";
 import MFASettings from "../components/auth/TotpForm.vue";
 import PasswordResetForm from "../components/auth/PasswordResetForm.vue";
 import Confirm from "../components/auth/ConfirmAccountForm.vue";
@@ -16,6 +16,7 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      beforeEnter: isAuthenticated,
     },
     {
       path: "/signin",
@@ -42,27 +43,18 @@ const router = createRouter({
       name: "fileUpload",
       component: FileUpload,
       beforeEnter: isAuthenticated,
-      meta: {
-        requiresAuth: true,
-      },
     },
     {
       path: "/mfa",
       name: "Mfa",
       component: MFASettings,
       beforeEnter: isAuthenticated,
-      meta: {
-        requiresAuth: true,
-      },
     },
     {
       path: "/changePassword",
       name: "ChangePassword",
       component: ChangePasswordForm,
       beforeEnter: isAuthenticated,
-      meta: {
-        requiresAuth: true,
-      },
     },
   ],
 });

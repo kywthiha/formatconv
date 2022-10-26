@@ -12,10 +12,12 @@ import useAlert from "../../hooks/alert";
 import store from "../../store/index";
 import { POOL_DATA } from "../../config/cognito";
 import { useRoute, useRouter } from "vue-router";
+import LoginHeaderForm from "../auth/LoginHeaderForm.vue";
 
 export default {
   components: {
     QrcodeVue,
+    LoginHeaderForm,
   },
   setup() {
     const route = useRoute();
@@ -25,26 +27,18 @@ export default {
     const showQRCode = ref(false);
     const qrCode = ref("");
 
-    const checkedValue = ref(route.query.checkedValue);
+    const checkedValue = computed(() => store.state.authModule.toggleStatus);
+
     console.log("tet ", checkedValue.value);
 
     const { message, messageStyleType, setMessage } = useAlert();
 
-    //　ログインしたユーザーの mFA の現在の状態を確認する
-    onBeforeMount(function () {
-      store.dispatch("fetchMFAValue");
-    });
-
-    onBeforeUpdate(function () {
-      store.dispatch("fetchMFAValue");
-    });
-
-    const profilename = computed(() => store.state.authModule.name);
-
     // 新しい Qr コードを作成する
     function newQRCode() {
+      alert("new qr code");
       //　「MFAを有効にする」のチェックを外すと、MFAが無効になる
       if (mfaValue.value === true) {
+        alert("new qr code true");
         console.log("hello ", mfaValue.value);
         setMFA(false);
         setMessage(
@@ -101,10 +95,7 @@ export default {
         onSuccess: function (result) {
           setMFA(true);
           alert("MFA has successfully been setup for your account.");
-          // setMessage(
-          //   "MFA has successfully been setup for your account.",
-          //   "alert-success"
-          // );
+
           showQRCode.value = false;
         },
         onFailure: function (err) {
@@ -148,19 +139,6 @@ export default {
       );
     }
 
-    //  const checkedValue = computed(() => {
-    //     'checkedValue': function(data) {
-    //       console.log("checkedValue",data)
-    //     // do your stuff here
-    // }
-    //  });
-
-    // onMounted(() => {
-    //   this.$root.$on("checkedValue", (msg) => {
-    //     console.log(msg);
-    //   });
-    // });
-
     //　ユーザーに対して MFA が有効か無効かを格納する計算プロパティ
     const mfaValue = computed(() => {
       console.log(`MFA enabled - ${store.getters.isMFAEnabled}`);
@@ -168,17 +146,27 @@ export default {
     });
 
     function cancel() {
-      showQRCode.value = false;
-      setMessage("MFA setup cancelled", "alert-success");
+      // store.dispatch("setMFA", !store.state.settingsModule.isMFAEnabled);
+
+      alert("cancel");
+      if (checkedValue.value === true) {
+        alert("true");
+        store.dispatch("setStatus", false);
+        store.dispatch("setMFA", false);
+      } else if (checkedValue.value === false) {
+        alert("false");
+        store.dispatch("setStatus", true);
+        store.dispatch("setMFA", true);
+      } else {
+        store.dispatch("setMFA", !store.state.settingsModule.isMFAEnabled);
+      }
+      // store.dispatch("fetchMFAValue");
+      // store.dispatch("setMFA", !checkedValue.value);
     }
 
     if (checkedValue.value !== null || checkedValue.value !== undefined) {
-      newQRCode();
-    }
-
-    function enableMFAStatus(event) {
-      console.log("enableMFAStatus ", event.target.checked);
-      // mfaValue.value = event.target.checked;
+      alert("hello");
+      console.log("in if ", checkedValue.value);
       newQRCode();
     }
 
@@ -187,14 +175,6 @@ export default {
         name: "ChangePassword",
       });
     }
-
-    const logout = () => {
-      store.dispatch("logout");
-      router.push({
-        name: "signin",
-        params: { message: "You have logged out" },
-      });
-    };
 
     return {
       isEnabled,
@@ -209,74 +189,15 @@ export default {
       message,
       messageStyleType,
       setMessage,
-      profilename,
       checkedValue,
-      enableMFAStatus,
       changePassword,
-      logout,
     };
   },
 };
 </script>
 <template>
   <div>
-    <header-display>
-      <template v-slot:totp-slot>
-        <button>
-          <div class="form-switch" style="padding-left: 0em">
-            <label class="form-check-label" for="flexSwitchCheckDefault">
-              {{ $t("screenItemProperties.common.mfaOnOff") }}</label
-            >
-            <input
-              class="form-check-input"
-              style="margin-left: 0em"
-              type="checkbox"
-              id="flexSwitchCheckDefault"
-              :value="mfaValue"
-              v-model="mfaValue"
-              @change="enableMFAStatus($event)"
-            />
-          </div>
-        </button>
-      </template>
-      <template v-slot:register-slot>
-        <div class="dropdown">
-          <button
-            class="btn btn-secondary dropdown-toggle"
-            type="button"
-            id="dropdownMenuButton1"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            {{ profilename }}
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li>
-              <a class="dropdown-item" href="#" @click="changePassword">{{
-                $t("screenItemProperties.changePassword.changePassword")
-              }}</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#">{{
-                $t("screenItemProperties.common.serviceConfirmMenu")
-              }}</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#" @click.prevent="logout"
-                >ログアウト</a
-              >
-            </li>
-          </ul>
-        </div>
-      </template>
-      <template v-slot:titlebar-slot>
-        <div class="logo-icon">
-          <img src="../../assets/logo-icon.png" class="img-fluid" />
-        </div>
-        <!-- タイトル -->
-        <label>{{ $t("screenItemProperties.common.title") }}</label>
-      </template>
-    </header-display>
+    <login-header-form></login-header-form>
     <body-display>
       <template v-slot:body>
         <div class="row">

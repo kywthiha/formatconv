@@ -5,7 +5,7 @@
     作成日 : 2022/10/17　 
 -->
 <script>
-import logs from "./Contents";
+import logs from "../common/contents";
 export default {
   data() {
     return {
@@ -29,7 +29,12 @@ export default {
 
           <div class="modal-body">
             <slot name="body">
-              <textarea class="textarea" v-model="logitems"></textarea>
+              <textarea
+                readonly
+                class="textarea"
+                v-model="logitems"
+                maxlength="2000"
+              ></textarea>
 
               <content />
             </slot>

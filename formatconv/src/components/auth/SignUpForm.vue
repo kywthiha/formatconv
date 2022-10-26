@@ -5,7 +5,8 @@
     作成日 : 2022/10/17　 
 -->
 <script>
-import { ref } from "vue";
+import { computed } from "@vue/reactivity";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import TermsAndConditionsForm from "./TermsAndConditionsForm.vue";
 import {
@@ -13,7 +14,11 @@ import {
   CognitoUserAttribute,
 } from "amazon-cognito-identity-js";
 import { POOL_DATA } from "../../config/cognito";
-import HeaderDisplay from "../common/HeaderDisplay.vue";
+import HeaderDisplay from "../layout/HeaderDisplay.vue";
+import validation from "../../hooks/validation";
+import useAlert from "../../hooks/alert";
+import { useI18n } from "vue-i18n";
+import { handleKeyDown } from "../common/common";
 
 export default {
   components: { HeaderDisplay, TermsAndConditionsForm },
@@ -26,12 +31,66 @@ export default {
     const password = ref("");
     const confirm_password = ref("");
     const username = ref("");
-
-    const isShowing = ref(false);
+    const termOfService = ref("");
     const showModal = ref(false);
+    const usernameBlured = ref(false);
+    let disableBtn = ref(true);
+    let openedModal = ref(false);
+    let changedCheckbox = ref(false);
+    const passwordBlured = ref(false);
+    const emailBlured = ref(false);
+    const confirmPasswordBlured = ref(false);
+    let disableCheckbox = ref(true);
+
+    // 英語変換対応
+    const { t } = useI18n();
+
+    // 入力チェックのため
+    const {
+      validUsername,
+      usernameRequireMsg,
+      validPassword,
+      passRequireMsg,
+      validConfirmPassword,
+      confirmPasswordRequireMsg,
+      validEmail,
+      emailRequireMsg,
+    } = validation();
+
+    // メッセージを表示する
+    const { message, setMessage, exceptionError } = useAlert();
+
+    // メッセージを隠す
+    function hideAlert() {
+      message.value = "";
+    }
+
+    // 登録ボタンを有効にする
+    watch(
+      [openedModal, changedCheckbox],
+      ([modal, checked], [prevModal, prevChecked]) => {
+        // チェックボックスを有効にする
+        if (modal === true) {
+          disableCheckbox.value = false;
+        }
+
+        // 登録ボタンを有効にする
+        if (modal === true && checked === true) {
+          disableBtn.value = false;
+        } else if (modal === false && checked === true) {
+          setMessage(t("errorMessages.E0019"));
+        }
+      }
+    );
 
     // サインアップメソッドを呼び出す
     async function signUp() {
+      alert("signup");
+
+      if (!isValid()) {
+        return;
+      }
+
       /*
       ユーザープール オブジェクトを作成する。
       object パラメーターは、「Cognito ユーザー プールを使用するようにアプリケーションを構成する」セクションで設定した定数に保持されている Cognito ユーザー プール データを参照する。
@@ -59,11 +118,48 @@ export default {
         attrList,
         null,
         (err, result) => {
-          if (
-            err.message === null ||
-            err.message === "err is null" ||
-            result === null
-          ) {
+          // 例外エラーが発生した場合、エラーメッセージを表示し、処理を終了する。
+          if (err !== null) {
+            //
+            if (err.name === "UsernameExistsException") {
+              setMessage(t("errorMessages.E0010"));
+            }
+
+            //
+            if (err.name === "NotAuthorizedException") {
+              setMessage("SignUp is not permitted for this user pool");
+            }
+
+            //
+            if (err.name === "InvalidPasswordException") {
+              setMessage(
+                t("errorMessages.E0003", {
+                  param1: t("errorParams.password"),
+                })
+              );
+            }
+
+            //
+            if (err.name === "CodeDeliveryFailureException") {
+              setMessage(t("errorMessages.E0014"));
+            }
+
+            //
+            if (err.name === "TooManyRequestsException") {
+              setMessage(t("errorMessages.E0015"));
+            }
+
+            //
+            if (err.name === "InternalErrorException") {
+              setMessage(t("errorMessages.E0016"));
+            }
+          }
+
+          //  err.message === null ||
+          //   err.message === "err is null" ||
+          //   result === null
+
+          if (!err) {
             router.replace({
               name: "confirm",
               query: { username: email.value },
@@ -76,6 +172,37 @@ export default {
     // モーダル表示する
     function openModal() {
       showModal.value = true;
+      openedModal.value = true;
+    }
+
+    // 利用規約の未選択対応
+    function changeCheckbox(event) {
+      changedCheckbox.value = event.target.checked;
+      console.log("changeCheckbox ", changedCheckbox.value);
+      if (changedCheckbox.value === false) {
+        disableBtn.value = true;
+      }
+    }
+
+    // 入力チェック対応
+    function isValid() {
+      if (
+        !(
+          validUsername(username.value) &&
+          validEmail(email.value) &&
+          validPassword(password.value) &&
+          validConfirmPassword(confirm_password.value, password.value)
+        )
+      ) {
+        usernameBlured.value = true;
+        passwordBlured.value = true;
+        emailBlured.value = true;
+        confirmPasswordBlured.value = true;
+
+        return false;
+      }
+
+      return true;
     }
 
     return {
@@ -86,7 +213,28 @@ export default {
       password,
       signUp,
       confirm_password,
-      isShowing,
+      validUsername,
+      usernameRequireMsg,
+      usernameBlured,
+      validEmail,
+      emailRequireMsg,
+      disableBtn,
+      openedModal,
+      changeCheckbox,
+      changedCheckbox,
+      validPassword,
+      passwordBlured,
+      validConfirmPassword,
+      confirmPasswordBlured,
+      passRequireMsg,
+      confirmPasswordRequireMsg,
+      emailBlured,
+      hideAlert,
+      message,
+      isValid,
+      termOfService,
+      handleKeyDown,
+      disableCheckbox,
     };
   },
 };
@@ -94,7 +242,7 @@ export default {
 
 <template v-slot:body>
   <div>
-    <form @submit.prevent="signUp">
+    <form @submit.prevent="signUp" @keydown="handleKeyDown">
       <div v-if="!confirmMFACode">
         <div>
           <header-display>
@@ -106,6 +254,15 @@ export default {
               <label>{{ $t("screenItemProperties.common.title") }}</label>
             </template>
           </header-display>
+          <!-- Error Alert -->
+          <div
+            v-if="message"
+            class="alert alert-danger alert-dismissible align-items-center fade show"
+            style="text-align: center"
+          >
+            <label>{{ message }}</label>
+            <button type="button" class="btn-close" @click="hideAlert"></button>
+          </div>
           <body-display>
             <template v-slot:body>
               <div class="reg-input-text">
@@ -120,9 +277,23 @@ export default {
                     <input
                       type="text"
                       v-model.trim="username"
+                      maxlength="63"
+                      v-bind:class="{
+                        'form-control': true,
+                        'is-invalid':
+                          !validUsername(username) && usernameBlured,
+                      }"
+                      v-bind:style="[
+                        !validUsername(username) && usernameBlured
+                          ? { 'margin-bottom': '0px' }
+                          : { 'margin-bottom': '20px' },
+                      ]"
+                      v-on:blur="usernameBlured = true"
                       autocomplete="false"
-                      required
                     />
+                    <div class="invalid-feedback">
+                      {{ usernameRequireMsg }}
+                    </div>
                   </td>
                 </tr>
               </div>
@@ -138,9 +309,23 @@ export default {
                     <input
                       type="email"
                       v-model.trim="email"
+                      maxlength="128"
                       id="email"
+                      v-bind:class="{
+                        'form-control': true,
+                        'is-invalid': !validEmail(email) && emailBlured,
+                      }"
+                      v-bind:style="[
+                        !validEmail(email) && emailBlured
+                          ? { 'margin-bottom': '0px' }
+                          : { 'margin-bottom': '20px' },
+                      ]"
+                      v-on:blur="emailBlured = true"
                       autocomplete="false"
                     />
+                    <div class="invalid-feedback">
+                      {{ emailRequireMsg }}
+                    </div>
                   </td>
                 </tr>
               </div>
@@ -157,13 +342,33 @@ export default {
                       type="password"
                       v-model.trim="password"
                       autocomplete="false"
-                      required="required"
+                      maxlength="256"
                       id="current-password"
+                      v-bind:class="{
+                        'form-control': true,
+                        'is-invalid':
+                          !validPassword(password) && passwordBlured,
+                      }"
+                      v-bind:style="[
+                        !validPassword(password) && passwordBlured
+                          ? { 'margin-bottom': '0px' }
+                          : { 'margin-bottom': '20px' },
+                      ]"
+                      v-on:blur="passwordBlured = true"
                     />
+                    <div class="invalid-feedback">
+                      {{ passRequireMsg }}
+                    </div>
                   </td>
                   <!-- 利用規約 -->
                   <td class="reg-chk-td">
-                    <input type="checkbox" class="reg-checkbox" id="checkbox" />
+                    <input
+                      type="checkbox"
+                      class="reg-checkbox"
+                      id="checkbox"
+                      @change="changeCheckbox"
+                      :disabled="disableCheckbox"
+                    />
                   </td>
                   <td>
                     <div class="terms-of-service-link">
@@ -187,14 +392,30 @@ export default {
                       type="password"
                       v-model.trim="confirm_password"
                       autocomplete="false"
-                      required="required"
                       id="confirm-password"
+                      maxlength="256"
+                      v-bind:class="{
+                        'form-control': true,
+                        'is-invalid':
+                          !validConfirmPassword(confirm_password, password) &&
+                          confirmPasswordBlured,
+                      }"
+                      v-bind:style="[
+                        !validConfirmPassword(confirm_password, password) &&
+                        confirmPasswordBlured
+                          ? { 'margin-bottom': '0px' }
+                          : { 'margin-bottom': '20px' },
+                      ]"
+                      v-on:blur="confirmPasswordBlured = true"
                     />
+                    <div class="invalid-feedback">
+                      {{ confirmPasswordRequireMsg }}
+                    </div>
                   </td>
                   <td>
                     <!-- ボタンエリア -->
                     <div class="sign-up">
-                      <button>
+                      <button :disabled="disableBtn">
                         {{ $t("screenItemProperties.button.registerBtn") }}
                       </button>
                     </div>
