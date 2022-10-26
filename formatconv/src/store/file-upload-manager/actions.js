@@ -46,7 +46,11 @@ export default {
         commit("setFileItems", fileItemsUploadUrl);
       } else {
         console.log(data);
-        alert(data.message);
+        if (data && data.message) {
+          alert(data.message);
+        } else {
+          alert(data);
+        }
       }
     } catch (e) {
       console.log(e);
