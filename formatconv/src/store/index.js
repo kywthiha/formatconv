@@ -5,6 +5,7 @@
 import { createStore } from "vuex";
 import authModule from "./auth/index";
 import settingsModule from "./settings/index";
+import fileUploadManager from "./file-upload-manager";
 
 export default createStore({
   state() {
@@ -25,6 +26,7 @@ export default createStore({
   modules: {
     authModule,
     settingsModule,
+    fileUploadManager,
   },
   getters: {
     getIsLoading(state) {

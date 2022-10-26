@@ -5,37 +5,31 @@
     作成日 : 2022/10/17　 
 -->
 <script setup>
-import { onMounted, reactive, ref } from "vue";
+import { reactive, ref, watch, computed } from "vue";
+import { useStore } from "vuex";
+import { humanFileSize } from "../../utils/FileUtils";
+
+const store = useStore();
 const props = defineProps(["item"]);
 const error_message = ref(null);
 const progress = reactive({
   loaded: {
-    fileSize: 0,
-    fileUnit: "KB",
+    size: 0,
+    unit: "KB",
   },
   speed: {
-    fileSize: 0,
-    fileUnit: "KB",
+    size: 0,
+    unit: "KB",
   },
   percentage: 0,
 });
-const complete = ref(false);
 
-const humanFileSize = (size) => {
-  const i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
-  return {
-    fileSize: (size / Math.pow(1024, i)).toLocaleString(),
-    fileUnit: ["B", "KB", "MB", "GB", "TB"][i],
-  };
-};
-
-const { fileUnit, fileSize } = humanFileSize(props.item.file.size);
+const { unit, size } = humanFileSize(props.item.file.size);
 
 const uploadToS3 = async () => {
   progress.value = 0;
   const started_at = new Date();
   const handlPprogress = (e) => {
-    console.log(e);
     if (
       e.currentTarget &&
       e.currentTarget.readyState == 4 &&
@@ -47,16 +41,20 @@ const uploadToS3 = async () => {
           e.currentTarget.responseText,
           "text/xml"
         );
-        console.log(response);
-        const code = response.getElementsByTagName("Code")[0].textContent;
-        const message = response.getElementsByTagName("Message")[0].textContent;
-        error_message.value = message;
-        console.log(code, message);
-        console.log(response.getElementsByTagName("Code")[0].textContent);
-        console.log(response.getElementsByTagName("Message")[0].textContent);
+        if (
+          response &&
+          response.getElementsByTagName("Message") &&
+          response.getElementsByTagName("Message")[0]
+        ) {
+          // const code = response.getElementsByTagName("Code")[0].textContent;
+          const message =
+            response.getElementsByTagName("Message")[0].textContent;
+          error_message.value = message;
+        } else {
+          error_message.value = e.currentTarget.responseText;
+        }
       } catch (error) {
         error_message.value = error.message;
-        console.log(e.currentTarget.responseText);
       }
     }
     if (e.lengthComputable) {
@@ -70,11 +68,16 @@ const uploadToS3 = async () => {
       progress.percentage = percentage;
     }
     if (e.type == "load") {
-      complete.value = true;
-      console.log("Upload Complete");
+      setTimeout(() => {
+        store.dispatch("fileUploadManager/updateFileItems", {
+          id: props.item.file.name,
+          data: {
+            uploaded: true,
+          },
+        });
+      }, 500);
     }
   };
-  console.log("Start Upload");
   const xhr = new XMLHttpRequest();
   xhr.upload.addEventListener("progress", handlPprogress, false);
   xhr.addEventListener("load", handlPprogress, false);
@@ -85,37 +88,73 @@ const uploadToS3 = async () => {
   xhr.send(props.item.file);
 };
 
-onMounted(async () => {
-  if (props.item.file && props.item.upload_url && !complete.value) {
-    await uploadToS3();
+watch(
+  () => props.item.upload_url,
+  async () => {
+    if (props.item.file && props.item.upload_url && !props.item.uploaded) {
+      await uploadToS3();
+    }
   }
-});
+);
+
+const uploadStatus = computed(
+  () => store.state.fileUploadManager.upload_status
+);
+
+const deleteFileItem = () =>
+  store.dispatch("fileUploadManager/deleteFileItem", props.item);
 </script>
 <template>
-  <div class="file-item">
+  <div class="file-item card">
     <div class="alert alert-danger" role="alert" v-if="error_message">
       {{ error_message }}
     </div>
     <div class="row justify-content-between">
-      <div class="col align-self-center">
-        <div class="fw-bold">フォルダ名</div>
-        <div>{{ item.file.name }}</div>
-      </div>
-      <div class="col align-self-center">
-        <div class="fw-bold">サイズ（{{ fileUnit }}）</div>
-        <div>{{ fileSize }}</div>
+      <div class="row col">
+        <div class="col align-self-center">
+          <div class="fw-bold">フォルダ名</div>
+          <div>{{ item.file.name }}</div>
+        </div>
+        <div class="col align-self-center">
+          <div class="fw-bold">サイズ（{{ unit }}）</div>
+          <div>{{ size }}</div>
+        </div>
       </div>
       <div class="col-auto align-self-center">
-        <button class="btn-upload" v-if="item.upload_url && !complete">
+        <button class="btn-upload" v-if="item.upload_url && !item.uploaded">
           {{ progress.percentage }}%
         </button>
-        <button class="btn-upload btn-complete" v-else-if="complete">
-          完了
+        <div v-else-if="item.download_url" class="download-action">
+          <button class="btn-upload btn-complete">完了</button>
+          <a
+            class="btn-upload btn-download-link"
+            :href="item.download_url"
+            download
+            target="_blank"
+            >ダウンロード</a
+          >
+        </div>
+        <div
+          class="spinner-border text-primary"
+          role="status"
+          v-else-if="uploadStatus"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div
+          class="spinner-border text-secondary"
+          role="status"
+          v-else-if="item.uploaded"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <button class="btn btn-danger" v-else @click="deleteFileItem">
+          DELETE
         </button>
-        <button class="btn-upload" v-else>スタート</button>
       </div>
     </div>
-    <template v-if="item.upload_url && !complete">
+    <template v-if="item.upload_url && !item.uploaded">
       <div class="progress mt-2 mb-1" style="height: 2px">
         <div
           class="progress-bar"
@@ -129,17 +168,17 @@ onMounted(async () => {
       </div>
       <div class="row justify-content-between">
         <div class="col-auto">
-          {{ progress.loaded.fileSize }}{{ progress.loaded.fileUnit }} /
-          {{ fileSize }}{{ fileUnit }}
+          {{ progress.loaded.size }}{{ progress.loaded.unit }} / {{ size
+          }}{{ unit }}
         </div>
         <div class="col-auto">
-          {{ progress.speed.fileSize }}{{ progress.speed.fileUnit }}/s
+          {{ progress.speed.size }}{{ progress.speed.unit }}/s
         </div>
       </div>
     </template>
   </div>
 </template>
-<style>
+<style scoped>
 .file-item {
   border: 1px solid #787878;
   border-radius: 0.375rem;
@@ -153,7 +192,6 @@ onMounted(async () => {
 .file-item .btn-upload {
   border: none;
   outline: none;
-  width: 7rem;
   border-radius: 0.375rem;
   cursor: pointer;
   font-size: 1rem;
@@ -161,5 +199,23 @@ onMounted(async () => {
   display: inline-block;
   background-color: #8cc34a;
   color: #ffffff;
+}
+
+.alert {
+  margin: auto !important;
+  width: 100% !important;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+}
+.download-action a {
+  display: block;
+}
+.download-action {
+  display: flex;
+  gap: 1rem;
+}
+.btn-download-link {
+  background-color: #f54337 !important;
+  text-decoration: none;
 }
 </style>
