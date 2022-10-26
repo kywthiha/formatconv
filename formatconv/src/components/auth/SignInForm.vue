@@ -360,8 +360,8 @@ export default {
                   </td>
                   <td>
                     <input
-                      type="number"
-                      max="999999"
+                      type="text"
+                      maxlength="6"
                       v-model.trim="mfaCode"
                       v-bind:class="{
                         'form-control': true,
