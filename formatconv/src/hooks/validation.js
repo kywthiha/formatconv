@@ -3,6 +3,7 @@ import { useI18n } from "vue-i18n";
 
 // hooked used to set validation messages in UI
 export default function FormValidation() {
+  let signinPassRequireMsg = ref("");
   let passRequireMsg = ref("");
   let confirmPasswordRequireMsg = ref("");
   let emailRequireMsg = ref("");
@@ -13,28 +14,42 @@ export default function FormValidation() {
 
   const { t } = useI18n();
 
-  function validPassword(password) {
-    // var rePassword = /^(?=.{8,}$)[a-z0-9]+$/;
+  function signinValidPassword(password, param) {
+    // console.log("pass length", password.length);
+    if (password.length === 0) {
+      signinPassRequireMsg.value = t("errorMessages.E0001", {
+        param1: param,
+      });
+      return false;
+    } else {
+      return true;
+    }
+  }
 
+  function validPassword(password, param) {
+    // var rePassword = /^(?=.{8,}$)[a-z0-9]+$/;
+    console.log("param...", param);
     var rePassword = /^(?=.*[0-9])(?=.*[a-z])(?!.* ).{8,}$/;
     // var rePassword =
     //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (password.length === 0) {
       passRequireMsg.value = t("errorMessages.E0001", {
-        param1: t("errorParams.password"),
+        param1: param,
       });
     } else if (password.length > 0 && password.length < 8) {
       passRequireMsg.value = t("errorMessages.E0003", {
-        param1: t("errorParams.password"),
+        param1: param,
       });
     }
-
     return rePassword.test(password);
   }
 
-  function validConfirmPassword(confirmPassword, password) {
-    var rePassword = /^(?=.*[0-9])(?=.*[a-z])(?!.* ).{8,}$/;
-
+  function validConfirmPassword(
+    confirmPassword,
+    password,
+    newPassParam,
+    confirmPassParam
+  ) {
     if (confirmPassword.length === 0) {
       validConfirmPwd.value = false;
       confirmPasswordRequireMsg.value = t("errorMessages.E0001", {
@@ -44,13 +59,12 @@ export default function FormValidation() {
       console.log("not same else if");
       validConfirmPwd.value = false;
       confirmPasswordRequireMsg.value = t("errorMessages.E0004", {
-        param1: t("errorParams.password"),
-        param2: t("errorParams.confirmPassword"),
+        param1: newPassParam,
+        param2: confirmPassParam,
       });
     } else {
       validConfirmPwd.value = true;
     }
-
     return validConfirmPwd.value;
   }
 
@@ -101,6 +115,8 @@ export default function FormValidation() {
   }
 
   return {
+    signinValidPassword,
+    signinPassRequireMsg,
     validPassword,
     validConfirmPassword,
     passRequireMsg,

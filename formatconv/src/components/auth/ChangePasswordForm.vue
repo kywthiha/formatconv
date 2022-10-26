@@ -11,6 +11,7 @@ import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
 import { POOL_DATA } from "../../config/cognito";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { useI18n } from "vue-i18n";
 import validation from "../../hooks/validation";
 import disableMFA from "../../hooks/disableMFA";
 import LoginHeaderForm from "../auth/LoginHeaderForm.vue";
@@ -20,16 +21,27 @@ export default {
   setup() {
     const router = useRouter();
     const store = useStore();
+    const { t } = useI18n();
     const oldPassword = ref("");
     let oldPasswordBlured = ref(false);
     const newPassword = ref("");
     let newPasswordBlured = ref(false);
     const confirmNewPassword = ref("");
     let confirmNewPasswordBlured = ref(false);
-    const { validPassword, passRequireMsg } = validation();
+    const {
+      validPassword,
+      passRequireMsg,
+      signinValidPassword,
+      signinPassRequireMsg,
+      validConfirmPassword,
+      confirmPasswordRequireMsg,
+    } = validation();
     const username = computed(() => store.state.authModule.cognitoUserName);
+    const currentPassParam = t("errorParams.currentPassword");
+    const newPassParam = t("errorParams.newPassword");
+    const confirmNewPassParam = t("errorParams.confirmNewPassword");
     console.log("in change password ", username.value);
-
+    console.log("confirm pass ", confirmNewPassParam);
     // 認証済みメールでコードを送信する
     function changePassword() {
       const userPool = new CognitoUserPool(POOL_DATA);
@@ -62,10 +74,8 @@ export default {
             alert(err.message || JSON.stringify(err));
             return;
           }
-
           // call result: SUCCESS
           console.log("call result: " + result);
-
           if (result === "SUCCESS") {
             router.replace({
               name: "fileUpload",
@@ -86,6 +96,13 @@ export default {
       validPassword,
       passRequireMsg,
       username,
+      signinValidPassword,
+      signinPassRequireMsg,
+      currentPassParam,
+      newPassParam,
+      validConfirmPassword,
+      confirmPasswordRequireMsg,
+      confirmNewPassParam,
     };
   },
 };
@@ -123,18 +140,23 @@ export default {
                               v-bind:class="{
                                 'form-control': true,
                                 'is-invalid':
-                                  !validPassword(oldPassword) &&
-                                  oldPasswordBlured,
+                                  !signinValidPassword(
+                                    oldPassword,
+                                    currentPassParam
+                                  ) && oldPasswordBlured,
                               }"
                               v-bind:style="[
-                                !validPassword(oldPassword) && oldPasswordBlured
+                                !signinValidPassword(
+                                  oldPassword,
+                                  currentPassParam
+                                ) && oldPasswordBlured
                                   ? { 'margin-bottom': '0px' }
                                   : { 'margin-bottom': '20px' },
                               ]"
                               v-on:blur="oldPasswordBlured = true"
                             />
                             <div class="invalid-feedback">
-                              {{ passRequireMsg }}
+                              {{ signinPassRequireMsg }}
                             </div>
                           </td>
                         </tr>
@@ -157,11 +179,12 @@ export default {
                               v-bind:class="{
                                 'form-control': true,
                                 'is-invalid':
-                                  !validPassword(newPassword) &&
+                                  !validPassword(newPassword, newPassParam) &&
                                   newPasswordBlured,
                               }"
                               v-bind:style="[
-                                !validPassword(newPassword) && newPasswordBlured
+                                !validPassword(newPassword, newPassParam) &&
+                                newPasswordBlured
                                   ? { 'margin-bottom': '0px' }
                                   : { 'margin-bottom': '20px' },
                               ]"
@@ -191,19 +214,27 @@ export default {
                               v-bind:class="{
                                 'form-control': true,
                                 'is-invalid':
-                                  !validPassword(confirmNewPassword) &&
-                                  confirmNewPasswordBlured,
+                                  !validConfirmPassword(
+                                    confirmNewPassword,
+                                    newPassword,
+                                    newPassParam,
+                                    confirmNewPassParam
+                                  ) && confirmNewPasswordBlured,
                               }"
                               v-bind:style="[
-                                !validPassword(confirmNewPassword) &&
-                                confirmNewPasswordBlured
+                                !validConfirmPassword(
+                                  confirmNewPassword,
+                                  newPassword,
+                                  newPassParam,
+                                  confirmNewPassParam
+                                ) && confirmNewPasswordBlured
                                   ? { 'margin-bottom': '0px' }
                                   : { 'margin-bottom': '20px' },
                               ]"
                               v-on:blur="confirmNewPasswordBlured = true"
                             />
                             <div class="invalid-feedback">
-                              {{ passRequireMsg }}
+                              {{ confirmPasswordRequireMsg }}
                             </div>
                           </td>
                         </tr>
