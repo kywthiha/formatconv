@@ -22,7 +22,6 @@ import { handleKeyDown } from "../common/common";
 
 export default {
   components: { HeaderDisplay, TermsAndConditionsForm },
-
   setup() {
     // Vuex ルーターにアクセスする
     const router = useRouter();
@@ -33,8 +32,6 @@ export default {
     const confirm_password = ref("");
     const username = ref("");
     const termOfService = ref("");
-
-    const isShowing = ref(false);
     const showModal = ref(false);
     const usernameBlured = ref(false);
     let disableBtn = ref(true);
@@ -43,12 +40,12 @@ export default {
     const passwordBlured = ref(false);
     const emailBlured = ref(false);
     const confirmPasswordBlured = ref(false);
-    const termOfServideBlured = ref(false);
+    let disableCheckbox = ref(true);
 
-    let termOfServiceRequireMsg = ref("");
-
+    // 英語変換対応
     const { t } = useI18n();
 
+    // 入力チェックのため
     const {
       validUsername,
       usernameRequireMsg,
@@ -59,8 +56,11 @@ export default {
       validEmail,
       emailRequireMsg,
     } = validation();
+
+    // メッセージを表示する
     const { message, setMessage, exceptionError } = useAlert();
 
+    // メッセージを隠す
     function hideAlert() {
       message.value = "";
     }
@@ -69,9 +69,12 @@ export default {
     watch(
       [openedModal, changedCheckbox],
       ([modal, checked], [prevModal, prevChecked]) => {
-        console.log("modal ", checked);
-        console.log("bar ", checked);
-        console.log("mess ", message.value);
+        // チェックボックスを有効にする
+        if (modal === true) {
+          disableCheckbox.value = false;
+        }
+
+        // 登録ボタンを有効にする
         if (modal === true && checked === true) {
           disableBtn.value = false;
         } else if (modal === false && checked === true) {
@@ -82,7 +85,7 @@ export default {
 
     // サインアップメソッドを呼び出す
     async function signUp() {
-      // alert("signup");
+      alert("signup");
 
       if (!isValid()) {
         return;
@@ -175,10 +178,9 @@ export default {
     // 利用規約の未選択対応
     function changeCheckbox(event) {
       changedCheckbox.value = event.target.checked;
+      console.log("changeCheckbox ", changedCheckbox.value);
       if (changedCheckbox.value === false) {
-        termOfServiceRequireMsg.value = t("errorMessages.E0007");
-      } else {
-        termOfServiceRequireMsg.value = "";
+        disableBtn.value = true;
       }
     }
 
@@ -189,15 +191,13 @@ export default {
           validUsername(username.value) &&
           validEmail(email.value) &&
           validPassword(password.value) &&
-          validConfirmPassword(confirm_password.value, password.value) &&
-          changedCheckbox.value
+          validConfirmPassword(confirm_password.value, password.value)
         )
       ) {
         usernameBlured.value = true;
         passwordBlured.value = true;
         emailBlured.value = true;
         confirmPasswordBlured.value = true;
-        termOfServideBlured.value = true;
 
         return false;
       }
@@ -213,7 +213,6 @@ export default {
       password,
       signUp,
       confirm_password,
-      isShowing,
       validUsername,
       usernameRequireMsg,
       usernameBlured,
@@ -233,10 +232,9 @@ export default {
       hideAlert,
       message,
       isValid,
-      termOfServiceRequireMsg,
       termOfService,
-      termOfServideBlured,
       handleKeyDown,
+      disableCheckbox,
     };
   },
 };
@@ -369,6 +367,7 @@ export default {
                       class="reg-checkbox"
                       id="checkbox"
                       @change="changeCheckbox"
+                      :disabled="disableCheckbox"
                     />
                   </td>
                   <td>
@@ -376,9 +375,6 @@ export default {
                       <a @click="openModal">{{
                         $t("screenItemProperties.button.termsOfServiceBtn")
                       }}</a>
-                    </div>
-                    <div class="text-danger">
-                      {{ termOfServiceRequireMsg }}
                     </div>
                   </td>
                 </tr>
