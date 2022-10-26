@@ -25,7 +25,6 @@ export default {
   setup() {
     // Vuex ルーターにアクセスする
     const router = useRouter();
-
     // データ入力フィールドへの参照
     const email = ref("");
     const password = ref("");
@@ -45,7 +44,8 @@ export default {
 
     // 英語変換対応
     const { t } = useI18n();
-
+    const passParam = t("errorParams.password");
+    const confirmPasswordParam = t("errorParams.confirmPassword");
     // 入力チェックのため
     const {
       validUsername,
@@ -159,7 +159,7 @@ export default {
         !(
           validUsername(username.value) &&
           validEmail(email.value) &&
-          validPassword(password.value) &&
+          validPassword(password.value, passParam) &&
           validConfirmPassword(confirm_password.value, password.value)
         )
       ) {
@@ -205,6 +205,8 @@ export default {
       handleKeyDown,
       disableCheckbox,
       exceptionError,
+      passParam,
+      confirmPasswordParam,
     };
   },
 };
@@ -317,10 +319,10 @@ export default {
                       v-bind:class="{
                         'form-control': true,
                         'is-invalid':
-                          !validPassword(password) && passwordBlured,
+                          !validPassword(password, passParam) && passwordBlured,
                       }"
                       v-bind:style="[
-                        !validPassword(password) && passwordBlured
+                        !validPassword(password, passParam) && passwordBlured
                           ? { 'margin-bottom': '0px' }
                           : { 'margin-bottom': '20px' },
                       ]"
@@ -367,12 +369,20 @@ export default {
                       v-bind:class="{
                         'form-control': true,
                         'is-invalid':
-                          !validConfirmPassword(confirm_password, password) &&
-                          confirmPasswordBlured,
+                          !validConfirmPassword(
+                            confirm_password,
+                            password,
+                            passParam,
+                            confirmPasswordParam
+                          ) && confirmPasswordBlured,
                       }"
                       v-bind:style="[
-                        !validConfirmPassword(confirm_password, password) &&
-                        confirmPasswordBlured
+                        !validConfirmPassword(
+                          confirm_password,
+                          password,
+                          passParam,
+                          confirmPasswordParam
+                        ) && confirmPasswordBlured
                           ? { 'margin-bottom': '0px' }
                           : { 'margin-bottom': '20px' },
                       ]"

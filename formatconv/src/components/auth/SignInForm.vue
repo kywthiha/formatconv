@@ -42,29 +42,23 @@ export default {
     const username = ref("");
     const password = ref("");
     const mfaCode = ref("");
-    const { validEmail, emailRequireMsg } = validation();
+    const {
+      validEmail,
+      emailRequireMsg,
+      signinValidPassword,
+      signinPassRequireMsg,
+    } = validation();
 
     const confirmMFACode = ref(false);
 
     const emailBlured = ref(false);
     const passwordBlured = ref(false);
-    let passRequireMsg = ref("");
     let verifyCodeRequireMsg = ref("");
     const verifyCodeBlured = ref(false);
     let alertStatus = true;
     let signinDisable = ref(false);
-
-    function validPassword(password) {
-      // console.log("pass length", password.length);
-      if (password.length === 0) {
-        passRequireMsg.value = t("errorMessages.E0001", {
-          param1: t("errorParams.password"),
-        });
-        return false;
-      } else {
-        return true;
-      }
-    }
+    const passParam = t("errorParams.password");
+    console.log("pass....", passParam);
 
     function validVerificationCode(mfaCode) {
       // console.log("pass length", password.length);
@@ -152,7 +146,12 @@ export default {
     }
 
     function isValid() {
-      if (!(validEmail(email.value) && validPassword(password.value))) {
+      if (
+        !(
+          validEmail(email.value) &&
+          signinValidPassword(password.value, passParam)
+        )
+      ) {
         // alert("isvalid totp if...");
         emailBlured.value = true;
         passwordBlured.value = true;
@@ -220,9 +219,9 @@ export default {
       emailBlured,
       validEmail,
       passwordBlured,
-      validPassword,
+      signinValidPassword,
       emailRequireMsg,
-      passRequireMsg,
+      signinPassRequireMsg,
       alertStatus,
       hideAlert,
       exceptionError,
@@ -232,6 +231,7 @@ export default {
       verifyCodeRequireMsg,
       verifyCodeBlured,
       handleKeyDown,
+      passParam,
     };
   },
 };
@@ -318,17 +318,21 @@ export default {
                       v-bind:class="{
                         'form-control': true,
                         'is-invalid':
-                          !validPassword(password) && passwordBlured,
+                          !signinValidPassword(password, passParam) &&
+                          passwordBlured,
                       }"
                       v-bind:style="[
-                        !validPassword(password) && passwordBlured
-                          ? { 'margin-bottom': '0px' }
+                        !signinValidPassword(password, passParam) &&
+                        passwordBlured
+                          ? {
+                              'margin-bottom': '0px',
+                            }
                           : { 'margin-bottom': '20px' },
                       ]"
                       v-on:blur="passwordBlured = true"
                     />
                     <div class="invalid-feedback">
-                      {{ passRequireMsg }}
+                      {{ signinPassRequireMsg }}
                     </div>
                   </td>
                 </tr>
