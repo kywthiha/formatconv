@@ -87,7 +87,7 @@ export default {
       console.log("disable...", signinDisable);
       signinDisable.value = true;
       if (!isValid()) {
-        alert("valid...");
+        // alert("valid...");
         return;
       }
 
@@ -138,8 +138,9 @@ export default {
           signinDisable.value = false;
         },
         totpRequired(codeDeliveryDetails) {
-          alert("totp");
+          // alert("totp");
           console.log("totp msg", message.value);
+          hideAlert();
           confirmMFACode.value = true;
           signinDisable.value = false;
           cognitoUser.sendMFACode(
