@@ -6,7 +6,7 @@
 -->
 <script setup>
 import { onMounted, onUnmounted, ref, computed } from "vue";
-import { Toast } from "bootstrap/dist/js/bootstrap.esm.min.js";
+import { Toast } from "bootstrap/dist/js/bootstrap.js";
 import { useStore } from "vuex";
 import { humanFileSize, tranformFileItems } from "../../utils/FileUtils";
 import { filesToZip } from "../../utils/ZipUtils";
