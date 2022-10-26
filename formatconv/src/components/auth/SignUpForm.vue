@@ -18,7 +18,7 @@ import HeaderDisplay from "../layout/HeaderDisplay.vue";
 import validation from "../../hooks/validation";
 import useAlert from "../../hooks/alert";
 import { useI18n } from "vue-i18n";
-import { handleKeyDown } from "../common/common";
+import { handleKeyDown, exceptionError } from "../common/common";
 
 export default {
   components: { HeaderDisplay, TermsAndConditionsForm },
@@ -41,6 +41,7 @@ export default {
     const emailBlured = ref(false);
     const confirmPasswordBlured = ref(false);
     let disableCheckbox = ref(true);
+    let message = ref("");
 
     // 英語変換対応
     const { t } = useI18n();
@@ -58,7 +59,7 @@ export default {
     } = validation();
 
     // メッセージを表示する
-    const { message, setMessage, exceptionError } = useAlert();
+    const { setMessage } = useAlert();
 
     // メッセージを隠す
     function hideAlert() {
@@ -120,39 +121,8 @@ export default {
         (err, result) => {
           // 例外エラーが発生した場合、エラーメッセージを表示し、処理を終了する。
           if (err !== null) {
-            //
-            if (err.name === "UsernameExistsException") {
-              setMessage(t("errorMessages.E0010"));
-            }
-
-            //
-            if (err.name === "NotAuthorizedException") {
-              setMessage("SignUp is not permitted for this user pool");
-            }
-
-            //
-            if (err.name === "InvalidPasswordException") {
-              setMessage(
-                t("errorMessages.E0003", {
-                  param1: t("errorParams.password"),
-                })
-              );
-            }
-
-            //
-            if (err.name === "CodeDeliveryFailureException") {
-              setMessage(t("errorMessages.E0014"));
-            }
-
-            //
-            if (err.name === "TooManyRequestsException") {
-              setMessage(t("errorMessages.E0015"));
-            }
-
-            //
-            if (err.name === "InternalErrorException") {
-              setMessage(t("errorMessages.E0016"));
-            }
+            message.value = exceptionError(err.name);
+            console.log("message ", exceptionError(err.name));
           }
 
           //  err.message === null ||
@@ -235,6 +205,7 @@ export default {
       termOfService,
       handleKeyDown,
       disableCheckbox,
+      exceptionError,
     };
   },
 };
