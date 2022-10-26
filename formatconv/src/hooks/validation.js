@@ -27,13 +27,7 @@ export default function FormValidation() {
       passRequireMsg.value = t("errorMessages.E0003", {
         param1: t("errorParams.password"),
       });
-    } else {
-      passRequireMsg.value = t("errorMessages.E0002", {
-        param1: t("errorParams.password"),
-      });
     }
-
-    console.log("hello test password validation ", rePassword.test(password));
 
     return rePassword.test(password);
   }
@@ -46,22 +40,12 @@ export default function FormValidation() {
       confirmPasswordRequireMsg.value = t("errorMessages.E0001", {
         param1: t("errorParams.confirmPassword"),
       });
-    } else if (confirmPassword.length > 0 && confirmPassword.length < 8) {
-      validConfirmPwd.value = false;
-      confirmPasswordRequireMsg.value = t("errorMessages.E0003", {
-        param1: t("errorParams.confirmPassword"),
-      });
     } else if (confirmPassword !== password) {
       console.log("not same else if");
       validConfirmPwd.value = false;
       confirmPasswordRequireMsg.value = t("errorMessages.E0004", {
         param1: t("errorParams.password"),
         param2: t("errorParams.confirmPassword"),
-      });
-    } else if (!rePassword.test(confirmPassword)) {
-      validConfirmPwd.value = false;
-      confirmPasswordRequireMsg.value = t("errorMessages.E0002", {
-        param1: t("errorParams.confirmPassword"),
       });
     } else {
       validConfirmPwd.value = true;
@@ -105,10 +89,7 @@ export default function FormValidation() {
   }
 
   function validVerificationCode(code) {
-    console.log(code);
-    console.log(code.length);
     if (code.length === 0) {
-      console.log("heelllo");
       isValidVerificationCode.value = false;
       verificationCodeRequireMsg.value = t("errorMessages.E0001", {
         param1: t("errorParams.verificationCode"),
@@ -116,7 +97,6 @@ export default function FormValidation() {
     } else {
       isValidVerificationCode.value = true;
     }
-    console.log(" valid ", isValidVerificationCode.value);
     return isValidVerificationCode.value;
   }
 

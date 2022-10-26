@@ -144,10 +144,11 @@ input[type="password"] {
 } */
 button[disabled] {
   border: 0.3px solid #999999;
-  background-color: #cccccc;
+  background-color: #cccccc !important;
   color: #666666;
   cursor: not-allowed;
 }
+
 .sign-up {
   padding-top: 20px;
   padding-left: 25px;

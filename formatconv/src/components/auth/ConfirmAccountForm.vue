@@ -8,11 +8,10 @@
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
-import { validateConfirmationForm } from "../../utils/validator";
-import useAlert from "../../hooks/alert";
 import validation from "../../hooks/validation";
 import { POOL_DATA } from "../../config/cognito";
 import { useI18n } from "vue-i18n";
+import { handleKeyDown, exceptionError } from "../common/common";
 
 export default {
   setup() {
@@ -24,16 +23,15 @@ export default {
 
     // データ入力フィールドへの参照
     const code = ref("");
-    const successmsg = ref("");
     const username = ref(route.query.username);
-    const errormsg = ref(route.query.errormsg);
-    const disableErrorMsg = ref(false);
     const verificationCodeBlured = ref(false);
+    let disableBtn = ref(false);
+
+    // メッセージアラートのフックを設定する
+    let message = ref("");
 
     const { validVerificationCode, verificationCodeRequireMsg } = validation();
 
-    // メッセージアラートのフックを設定する
-    const { message, setMessage } = useAlert();
     const { t } = useI18n();
 
     // コードを再送する
@@ -48,50 +46,20 @@ export default {
       cognitoUser.resendConfirmationCode(function (err, result) {
         console.log("resend code ", err);
         if (result.CodeDeliveryDetails.Destination != null) {
-          setMessage(t("successMessages.S0001"));
-          // disableErrorMsg.value = true;
-          // successmsg.value =
-          //   "確認コードが" + username.value + "に送信されます。";
+          message.value = t("successMessages.I0001");
         }
         if (err !== null) {
-          //
-          if (err.name === "NotAuthorizedException") {
-            setMessage("SignUp is not permitted for this user pool");
-          }
-
-          //
-          if (err.name === "UserNotFoundException") {
-            setMessage(t("errorMessages.E0011"));
-          }
-
-          //
-          if (err.name === "LimitExceededException") {
-            setMessage(t("errorMessages.E0012"));
-          }
-
-          //
-          if (err.name === "CodeDeliveryFailureException") {
-            setMessage(t("errorMessages.E0014"));
-          }
-
-          if (err.name === "TooManyRequestsException") {
-            setMessage(t("errorMessages.E0015"));
-          }
-
-          if (err.name === "InternalErrorException") {
-            setMessage(t("errorMessages.E0016"));
-          }
+          message.value = exceptionError(err.name);
         }
-        // if (err) {
-        //   alert(err.message || JSON.stringify(err));
-        //   return;
-        // }
+
         console.log("call result: " + result.CodeDeliveryDetails.Destination);
       });
     }
 
     // アカウントのサインアップ時にコードの使用を確認する
     async function confirmCode() {
+      disableBtn.value = true;
+
       if (!isValid()) {
         return;
       }
@@ -110,36 +78,11 @@ export default {
       await cognitUser.confirmRegistration(code.value, true, (err, result) => {
         console.log("in confirm ", err);
         if (err !== null) {
-          //
-          if (err.name === "CodeMismatchException") {
-            setMessage(t("errorMessages.E0006"));
-          }
-
-          if (err.name === "LimitExceededException") {
-            setMessage(t("errorMessages.E0012"));
-          }
-
-          if (err.name === "ExpiredCodeException") {
-            setMessage(t("errorMessages.E0013"));
-          }
-
-          if (err.name === "TooManyRequestsException") {
-            setMessage(t("errorMessages.E0015"));
-          }
-
-          if (err.name === "InternalErrorException") {
-            setMessage(t("errorMessages.E0016"));
-          }
-
-          if (err.name === "UserNotFoundException") {
-            setMessage(t("errorMessages.E0011"));
-          }
+          message.value = exceptionError(err.name);
+          disableBtn.value = false;
         } else {
           router.replace({
             name: "signin",
-            params: {
-              message: "You have successfully confirmed your account",
-            },
           });
         }
       });
@@ -152,6 +95,7 @@ export default {
     function isValid() {
       if (!validVerificationCode(code.value)) {
         verificationCodeBlured.value = true;
+        disableBtn.value = false;
         return false;
       }
 
@@ -163,23 +107,21 @@ export default {
       confirmCode,
       code,
       username,
-      message,
       isValid,
-      errormsg,
-      successmsg,
-      disableErrorMsg,
       verificationCodeBlured,
       validVerificationCode,
       verificationCodeRequireMsg,
       hideAlert,
       message,
+      handleKeyDown,
+      disableBtn,
     };
   },
 };
 </script>
 
 <template>
-  <form @submit.prevent="confirmCode">
+  <form @submit.prevent="confirmCode" @keydown="handleKeyDown">
     <div>
       <header-display>
         <template v-slot:titlebar-slot>
@@ -253,7 +195,7 @@ export default {
           </div>
           <!-- ボタンエリア -->
           <div class="sign-in">
-            <button>
+            <button :disabled="disableBtn">
               {{ $t("screenItemProperties.button.confirmAccountBtn") }}
             </button>
           </div>
