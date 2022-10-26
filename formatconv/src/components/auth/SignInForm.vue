@@ -7,7 +7,6 @@
 <script>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import useAlert from "../../hooks/alert";
 import store from "../../store/index";
 import {
   CognitoUserPool,
@@ -22,6 +21,7 @@ import LocaleSelect from "../LocaleSelect.vue";
 import BodyDisplay from "../layout/BodyDisplay.vue";
 import { useI18n } from "vue-i18n";
 import validation from "../../hooks/validation";
+import { handleKeyDown, exceptionError } from "../common/common";
 
 export default {
   components: {
@@ -37,13 +37,13 @@ export default {
     const route = useRoute();
 
     const { t } = useI18n();
-
+    let message = ref("");
     const email = ref("");
     const username = ref("");
     const password = ref("");
     const mfaCode = ref("");
     const { validEmail, emailRequireMsg } = validation();
-    const { message, setMessage, exceptionError } = useAlert();
+
     const confirmMFACode = ref(false);
 
     const emailBlured = ref(false);
@@ -132,8 +132,7 @@ export default {
             });
           }
           if (!error.message.includes("SOFTWARE_TOKEN_MFA_CODE")) {
-            setMessage(error.message, "alert-danger");
-            exceptionError(error.name);
+            message.value = exceptionError(error.name);
           }
           signinDisable.value = false;
         },
@@ -232,6 +231,7 @@ export default {
       validVerificationCode,
       verifyCodeRequireMsg,
       verifyCodeBlured,
+      handleKeyDown,
     };
   },
 };
@@ -269,7 +269,7 @@ export default {
       </div>
       <body-display>
         <template v-slot:body>
-          <form @submit.prevent="signIn">
+          <form @submit.prevent="signIn" @keydown="handleKeyDown">
             <div v-if="!confirmMFACode">
               <div class="input-text">
                 <!-- メール -->
