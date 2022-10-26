@@ -2,10 +2,12 @@
 import { CognitoUserPool } from "amazon-cognito-identity-js";
 import { useStore } from "vuex";
 import { POOL_DATA } from "./config/cognito";
+import { useSocket } from "./hooks/useSocket";
 
 export default {
   setup() {
     const store = useStore();
+    useSocket();
 
     // Cognito ユーザープールへの参照を取得する
     const userPool = new CognitoUserPool(POOL_DATA);
