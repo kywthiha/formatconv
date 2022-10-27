@@ -110,6 +110,22 @@ input[type="password"] {
   float: right;
 }
 
+.test {
+  height: 35px;
+  display: flex;
+  align-items: center;
+  padding: 1rem 0.95rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  text-align: center;
+  white-space: nowrap;
+  /* background-color: #e9ecef; */
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+}
+
 /* @keyframes check {
   0% {
     tranform: scale(1);

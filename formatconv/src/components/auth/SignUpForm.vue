@@ -41,6 +41,8 @@ export default {
     const confirmPasswordBlured = ref(false);
     let disableCheckbox = ref(true);
     let message = ref("");
+    let passwordFieldType = ref("password");
+    const showPassword = ref(false);
 
     // 英語変換対応
     const { t } = useI18n();
@@ -175,6 +177,11 @@ export default {
       return true;
     }
 
+    function switchVisibility() {
+      passwordFieldType.value =
+        passwordFieldType.value === "password" ? "text" : "password";
+    }
+
     return {
       openModal,
       showModal,
@@ -208,6 +215,9 @@ export default {
       exceptionError,
       passParam,
       confirmPasswordParam,
+      passwordFieldType,
+      switchVisibility,
+      showPassword,
     };
   },
 };
@@ -311,28 +321,45 @@ export default {
                     }}</label>
                   </td>
                   <td style="padding-right: 30px">
-                    <input
-                      type="password"
-                      v-model.trim="password"
-                      autocomplete="false"
-                      maxlength="256"
-                      id="current-password"
-                      v-bind:class="{
-                        'form-control': true,
-                        'is-invalid':
-                          !validPassword(password, passParam) && passwordBlured,
-                      }"
-                      v-bind:style="[
-                        !validPassword(password, passParam) && passwordBlured
-                          ? { 'margin-bottom': '0px' }
-                          : { 'margin-bottom': '20px' },
-                      ]"
-                      v-on:blur="passwordBlured = true"
-                    />
+                    <!-- type="password"
+                      :type="passwordFieldType"
+                      -->
+                    <div class="input-group">
+                      <input
+                        class="form-control"
+                        v-bind:type="[showPassword ? 'text' : 'password']"
+                        v-model.trim="password"
+                        autocomplete="false"
+                        maxlength="256"
+                        id="current-password"
+                        v-bind:class="{
+                          'form-control': true,
+                          'is-invalid':
+                            !validPassword(password, passParam) &&
+                            passwordBlured,
+                        }"
+                        v-bind:style="[
+                          !validPassword(password, passParam) && passwordBlured
+                            ? { 'margin-bottom': '0px' }
+                            : { 'margin-bottom': '20px' },
+                        ]"
+                        v-on:blur="passwordBlured = true"
+                      />
+
+                      <span class="test">
+                        <i
+                          class="bi bi-eye-slash"
+                          id="togglePassword"
+                          style="cursor: pointer"
+                          @click="showPassword = !showPassword"
+                        ></i>
+                      </span>
+                    </div>
                     <div class="invalid-feedback">
                       {{ passRequireMsg }}
                     </div>
                   </td>
+
                   <!-- 利用規約 -->
                   <td class="reg-chk-td">
                     <input
