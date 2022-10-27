@@ -1,3 +1,22 @@
+import { CognitoUserPool } from "amazon-cognito-identity-js";
+import { POOL_DATA } from "../../config/cognito";
+
+const getToken = () =>
+  new Promise((resolve, reject) => {
+    const userPool = new CognitoUserPool(POOL_DATA);
+    const cognitoUser = userPool.getCurrentUser();
+    if (cognitoUser) {
+      cognitoUser.getSession(function (err, session) {
+        if (err) {
+          reject(err);
+        }
+        resolve(session.idToken.jwtToken);
+      });
+    } else {
+      reject("Unauthorized");
+    }
+  });
+
 export default {
   addFileItems(context, payload) {
     context.commit("addFileItems", payload);
@@ -17,15 +36,16 @@ export default {
   setUploadStatus(context, payload) {
     context.commit("setUploadStatus", payload);
   },
-  async requestUploadUrl({ dispatch, commit, getters, rootState }) {
+  async requestUploadUrl({ commit, getters }) {
     try {
+      const token = await getToken();
       const response = await fetch(
         "https://wdduz75b1m.execute-api.us-east-1.amazonaws.com/test/presigned-url-upload",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: rootState.authModule.idToken,
+            Authorization: token,
           },
           body: JSON.stringify({
             service_name: import.meta.env.VITE_SERVICE_NAME,
@@ -52,10 +72,12 @@ export default {
         } else {
           alert(res);
         }
+        commit("setUploadStatus", false);
       }
     } catch (e) {
       console.log(e);
       alert(e);
+      commit("setUploadStatus", false);
     }
   },
 };

@@ -5,7 +5,7 @@
     作成日 : 2022/10/17　 
 -->
 <script setup>
-import { onMounted, onUnmounted, ref, computed, watch } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useStore } from "vuex";
 import { tranformFileItems } from "../../utils/FileUtils";
 import { filesToZip } from "../../utils/ZipUtils";
@@ -13,7 +13,7 @@ import { filesToZip } from "../../utils/ZipUtils";
 const store = useStore();
 const events = ["dragenter", "dragover", "dragleave", "drop"];
 const active = ref(false);
-const allowImageTypes = ["image/tiff", "image/tif"];
+const allowImageTypes = ["image/tiff", "image/tif", "image/jpeg"];
 const compressFiles = ref([]);
 
 const setActive = () => {
