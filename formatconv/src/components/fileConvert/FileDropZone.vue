@@ -116,7 +116,7 @@ const handleOnDrop = async (event) => {
       class="btn btn-primary col-auto btn-browse-file"
       for="file-drop-zone-file-input-mulitple"
     >
-      {{ $t("screenItemProperties.button.dataConvertionUploadBtn") }}
+      {{ $t("screenItemProperties.button.convertBtn") }}
     </label>
     <input
       id="file-drop-zone-file-input-mulitple"

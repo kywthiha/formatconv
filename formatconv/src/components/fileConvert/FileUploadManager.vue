@@ -56,7 +56,7 @@ const handleGotoUpload = () => {
         @click="handleUpload"
         :disabled="uploadStatus || !fileItemsCount"
       >
-        {{ $t("screenItemProperties.fileUpload.upload") }}
+        {{ $t("screenItemProperties.button.uploadBtn") }}
       </button>
     </div>
   </div>

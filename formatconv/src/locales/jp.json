@@ -27,9 +27,10 @@
       "loginBtn": "ログイン",
       "resetPasswordBtn": "リセット",
       "updatePasswordBtn": "パスワード更新",
-      "dataConvertionUploadBtn": "変換データアップロード",
+      "convertBtn": "フォルダー選択",
       "convertingBtn": "変換中",
-      "closeBtn": "閉じる"
+      "closeBtn": "閉じる",
+      "uploadBtn": "アップロード"
     },
     "signup": {
       "userName": "アカウント名：　",
@@ -51,15 +52,14 @@
     "fileUpload": {
       "fileName": "フォルダ名",
       "fileSize": "サイズ",
-      "upload": "Upload",
-      "goToUpload": "Go to Upload",
-      "goToUploadConfirm": "Are you sure?",
-      "fileDropZoneLabel": "Drag and drop files and folders",
-      "emptyFileTitle": "No files or folders",
-      "emptyFileBody": "You have not chosen any files or folders to upload.",
+      "goToUpload": "アップロードへ",
+      "goToUploadConfirm": "このページを離れるとアップロードされた内容がなくなりますが、よろしいでしょうか？",
+      "fileDropZoneLabel": "ここにフォルダーをドロップ\nまたは",
+      "emptyFileTitle": "フォルダー設定なし",
+      "emptyFileBody": "変換データのフォルダーがまだ選択されていません。",
       "complete": "完了",
       "download": "ダウンロード",
-      "delete": "DELETE"
+      "delete": "削除"
     },
     "changePassword": {
       "oldPassword": "現在のパスワード：　",
