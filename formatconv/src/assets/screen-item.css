@@ -104,8 +104,8 @@ input[type="password"] {
   /* position: absolute; */
   top: -16px;
   right: 5px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 16px;
+  /* font-weight: 600; */
   text-decoration: none;
   float: right;
 }
