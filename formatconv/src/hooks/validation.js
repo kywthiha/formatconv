@@ -53,7 +53,7 @@ export default function FormValidation() {
     if (confirmPassword.length === 0) {
       validConfirmPwd.value = false;
       confirmPasswordRequireMsg.value = t("errorMessages.E0001", {
-        param1: t("errorParams.confirmPassword"),
+        param1: confirmPassParam,
       });
     } else if (confirmPassword !== password) {
       console.log("not same else if");
