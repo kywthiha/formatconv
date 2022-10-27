@@ -21,6 +21,10 @@ const processStatus = computed(
   () => store.getters["fileUploadManager/getProcessStatus"]
 );
 
+const fileItemsCount = computed(
+  () => store.getters["fileUploadManager/getfileItemsCount"]
+);
+
 const uploadStatus = computed(
   () => store.state.fileUploadManager.upload_status
 );
@@ -50,7 +54,7 @@ const handleGotoUpload = () => {
       <button
         class="btn btn-primary col-auto btn-upload"
         @click="handleUpload"
-        :disabled="uploadStatus"
+        :disabled="uploadStatus || !fileItemsCount"
       >
         {{ $t("screenItemProperties.fileUpload.upload") }}
       </button>
