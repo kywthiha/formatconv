@@ -47,7 +47,6 @@ export default {
 
     // 認証済みメールでコードを送信する
     function sendCode() {
-      alert("send code");
       disableResetPasswordBtn.value = true;
       if (!isValid()) {
         return;
@@ -78,7 +77,6 @@ export default {
 
     // パスワードの更新
     function resetPassword() {
-      alert("reset Password");
       disableUpdatePasswordBtn.value = true;
       if (!isValidConfrimPassword()) {
         return;
@@ -108,7 +106,6 @@ export default {
     }
 
     function isValidConfrimPassword() {
-      alert("isValidConfrimPassword ");
       if (
         !(
           validVerificationCode(code.value) &&
