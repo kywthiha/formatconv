@@ -11,6 +11,7 @@ import { POOL_DATA } from "../../config/cognito";
 import { useRouter } from "vue-router";
 import validation from "../../hooks/validation";
 import { handleKeyDown, exceptionError } from "../common/common";
+import { useI18n } from "vue-i18n";
 
 export default {
   setup() {
@@ -21,16 +22,31 @@ export default {
     const code = ref("");
     const confirmCode = ref(false);
     const emailBlured = ref(false);
+    const passwordBlured = ref(false);
+    const confirmPasswordBlured = ref(false);
     let message = ref("");
     let disableUpdatePasswordBtn = ref(false);
     let disableResetPasswordBtn = ref(false);
+    const verificationCodeBlured = ref(false);
+    // 英語変換対応
+    const { t } = useI18n();
+    const passParam = t("errorParams.newPassword");
+    const confirmPasswordParam = t("errorParams.confirmNewPassword");
 
     // 入力チェックのため
-    const { validEmail, emailRequireMsg } = validation();
+    const {
+      validEmail,
+      emailRequireMsg,
+      validVerificationCode,
+      verificationCodeRequireMsg,
+      validPassword,
+      passRequireMsg,
+      validConfirmPassword,
+      confirmPasswordRequireMsg,
+    } = validation();
 
     // 認証済みメールでコードを送信する
     function sendCode() {
-      alert("send code");
       disableResetPasswordBtn.value = true;
       if (!isValid()) {
         return;
@@ -61,8 +77,10 @@ export default {
 
     // パスワードの更新
     function resetPassword() {
-      alert("reset Password");
       disableUpdatePasswordBtn.value = true;
+      if (!isValidConfrimPassword()) {
+        return;
+      }
       const userPool = new CognitoUserPool(POOL_DATA);
       const userData = {
         Username: email.value,
@@ -85,6 +103,29 @@ export default {
           }
         },
       });
+    }
+
+    function isValidConfrimPassword() {
+      if (
+        !(
+          validVerificationCode(code.value) &&
+          validPassword(password.value, passParam) &&
+          validConfirmPassword(
+            confirmPassword.value,
+            password.value,
+            passParam,
+            confirmPasswordParam
+          )
+        )
+      ) {
+        console.log("in if");
+        verificationCodeBlured.value = true;
+        passwordBlured.value = true;
+        confirmPasswordBlured.value = true;
+        disableUpdatePasswordBtn.value = false;
+        return false;
+      }
+      return true;
     }
 
     // 入力チェック対応
@@ -120,6 +161,18 @@ export default {
       hideAlert,
       disableUpdatePasswordBtn,
       disableResetPasswordBtn,
+      validVerificationCode,
+      verificationCodeRequireMsg,
+      verificationCodeBlured,
+      isValidConfrimPassword,
+      passParam,
+      confirmPasswordParam,
+      passwordBlured,
+      confirmPasswordBlured,
+      validPassword,
+      validConfirmPassword,
+      passRequireMsg,
+      confirmPasswordRequireMsg,
     };
   },
 };
@@ -229,8 +282,24 @@ export default {
                               type="text"
                               maxlength="6"
                               v-model.trim="code"
+                              v-bind:class="{
+                                'form-control': true,
+                                'is-invalid':
+                                  !validVerificationCode(code) &&
+                                  verificationCodeBlured,
+                              }"
+                              v-bind:style="[
+                                !validVerificationCode(code) &&
+                                verificationCodeBlured
+                                  ? { 'margin-bottom': '0px' }
+                                  : { 'margin-bottom': '20px' },
+                              ]"
+                              v-on:blur="verificationCodeBlured = true"
                               autocomplete="false"
                             />
+                            <div class="invalid-feedback">
+                              {{ verificationCodeRequireMsg }}
+                            </div>
                           </td>
                         </tr>
                       </div>
@@ -250,7 +319,23 @@ export default {
                               v-model.trim="password"
                               maxlength="256"
                               autocomplete="false"
+                              v-bind:class="{
+                                'form-control': true,
+                                'is-invalid':
+                                  !validPassword(password, passParam) &&
+                                  passwordBlured,
+                              }"
+                              v-bind:style="[
+                                !validPassword(password, passParam) &&
+                                passwordBlured
+                                  ? { 'margin-bottom': '0px' }
+                                  : { 'margin-bottom': '20px' },
+                              ]"
+                              v-on:blur="passwordBlured = true"
                             />
+                            <div class="invalid-feedback">
+                              {{ passRequireMsg }}
+                            </div>
                           </td>
                         </tr>
                       </div>
@@ -270,7 +355,31 @@ export default {
                               v-model.trim="confirmPassword"
                               maxlength="256"
                               autocomplete="false"
+                              v-bind:class="{
+                                'form-control': true,
+                                'is-invalid':
+                                  !validConfirmPassword(
+                                    confirmPassword,
+                                    password,
+                                    passParam,
+                                    confirmPasswordParam
+                                  ) && confirmPasswordBlured,
+                              }"
+                              v-bind:style="[
+                                !validConfirmPassword(
+                                  confirmPassword,
+                                  password,
+                                  passParam,
+                                  confirmPasswordParam
+                                ) && confirmPasswordBlured
+                                  ? { 'margin-bottom': '0px' }
+                                  : { 'margin-bottom': '20px' },
+                              ]"
+                              v-on:blur="confirmPasswordBlured = true"
                             />
+                            <div class="invalid-feedback">
+                              {{ confirmPasswordRequireMsg }}
+                            </div>
                           </td>
                         </tr>
                       </div>
