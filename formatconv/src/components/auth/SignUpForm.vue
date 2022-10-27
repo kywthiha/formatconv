@@ -41,7 +41,6 @@ export default {
     const confirmPasswordBlured = ref(false);
     let disableCheckbox = ref(true);
     let message = ref("");
-    let passwordFieldType = ref("password");
     const showPassword = ref(false);
 
     // 英語変換対応
@@ -177,11 +176,6 @@ export default {
       return true;
     }
 
-    function switchVisibility() {
-      passwordFieldType.value =
-        passwordFieldType.value === "password" ? "text" : "password";
-    }
-
     return {
       openModal,
       showModal,
@@ -215,8 +209,7 @@ export default {
       exceptionError,
       passParam,
       confirmPasswordParam,
-      passwordFieldType,
-      switchVisibility,
+
       showPassword,
     };
   },
