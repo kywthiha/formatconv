@@ -33,8 +33,9 @@ export default {
           }),
         }
       );
-      const { data, connection_id } = await response.json();
+      const res = await response.json();
       if (response.ok) {
+        const { data, connection_id } = res;
         // update state files list
         const fileItemsUploadUrl = getters.getfileItems.map((fileItem) => {
           return {
@@ -45,11 +46,11 @@ export default {
         commit("setConnectionId", connection_id);
         commit("setFileItems", fileItemsUploadUrl);
       } else {
-        console.log(data);
-        if (data && data.message) {
-          alert(data.message);
+        console.log(res);
+        if (res && res.message) {
+          alert(res.message);
         } else {
-          alert(data);
+          alert(res);
         }
       }
     } catch (e) {
