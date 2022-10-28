@@ -92,7 +92,7 @@ export default {
     }
 
     // MFA を確認する
-    function verifyMFA(e) {
+    function verifyMFA() {
       disableBtn.value = true;
 
       if (!isValid()) {
