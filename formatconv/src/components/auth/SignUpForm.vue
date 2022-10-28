@@ -42,6 +42,7 @@ export default {
     let disableCheckbox = ref(true);
     let message = ref("");
     const showPassword = ref(false);
+    let messageType = ref("");
 
     // 英語変換対応
     const { t } = useI18n();
@@ -82,6 +83,7 @@ export default {
         } else if (modal === false && checked === true) {
           // to ask
           setMessage(t("errorMessages.E0018"));
+          messageType.value = "danger";
         }
       }
     );
@@ -124,9 +126,9 @@ export default {
         (err, result) => {
           // 例外エラーが発生した場合、エラーメッセージを表示し、処理を終了する。
           if (err !== null) {
+            messageType.value = "danger";
             message.value = exceptionError(err.name);
             disableBtn.value = false;
-            console.log("message ", exceptionError(err.name));
           }
 
           if (!err) {
@@ -148,7 +150,6 @@ export default {
     // 利用規約の未選択対応
     function changeCheckbox(event) {
       changedCheckbox.value = event.target.checked;
-      console.log("changeCheckbox ", changedCheckbox.value);
       if (changedCheckbox.value === false) {
         disableBtn.value = true;
       }
@@ -209,8 +210,8 @@ export default {
       exceptionError,
       passParam,
       confirmPasswordParam,
-
       showPassword,
+      messageType,
     };
   },
 };
@@ -232,8 +233,11 @@ export default {
           </header-display>
           <!-- Error Alert -->
           <div
+            class="alert alert-dismissible align-items-center fade show"
+            :class="[
+              messageType == 'danger' ? 'alert-danger' : 'alert-success',
+            ]"
             v-if="message"
-            class="alert alert-danger alert-dismissible align-items-center fade show"
             style="text-align: center"
           >
             <label>{{ message }}</label>
@@ -316,10 +320,10 @@ export default {
                   <td style="padding-right: 30px">
                     <!-- type="password"
                       :type="passwordFieldType"
+                      class="input-group"
                       -->
                     <div class="input-group">
                       <input
-                        class="form-control"
                         v-bind:type="[showPassword ? 'text' : 'password']"
                         v-model.trim="password"
                         autocomplete="false"
@@ -338,19 +342,55 @@ export default {
                         ]"
                         v-on:blur="passwordBlured = true"
                       />
-
-                      <span class="test">
+                      <!--
+                      <span>
                         <i
                           class="bi bi-eye-slash"
                           id="togglePassword"
-                          style="cursor: pointer"
+                          style="margin-left: -30px; cursor: pointer"
                           @click="showPassword = !showPassword"
                         ></i>
                       </span>
+                     -->
+                      <!-- <span class="test">  -->
+                      <i
+                        class="bi bi-eye-slash test"
+                        id="togglePassword"
+                        @click="showPassword = !showPassword"
+                      ></i>
+
+                      <!--  </span>-->
                     </div>
                     <div class="invalid-feedback">
                       {{ passRequireMsg }}
                     </div>
+                    <!--
+                    
+                    <div class="input-group w-50">
+                      <span class="input-group-text" id="basic-addon1">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          class="bi bi-eye"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM1.173 8a13.133 13.133 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.133 13.133 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5c-2.12 0-3.879-1.168-5.168-2.457A13.134 13.134 0 0 1 1.172 8z"
+                          ></path>
+                          <path
+                            d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"
+                          ></path>
+                        </svg>
+                      </span>
+                      <input
+                        type="text"
+                        class="form-control"
+                        aria-describedby="basic-addon1"
+                      />
+                    </div>
+                     -->
                   </td>
 
                   <!-- 利用規約 -->

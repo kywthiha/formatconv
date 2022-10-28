@@ -29,6 +29,7 @@ export default {
 
     // メッセージアラートのフックを設定する
     let message = ref("");
+    let messageType = ref("");
 
     const { validVerificationCode, verificationCodeRequireMsg } = validation();
 
@@ -44,15 +45,14 @@ export default {
       const cognitoUser = new CognitoUser(userData);
 
       cognitoUser.resendConfirmationCode(function (err, result) {
-        console.log("resend code ", err);
         if (result.CodeDeliveryDetails.Destination != null) {
+          messageType.value = "success";
           message.value = t("successMessages.I0001");
         }
         if (err !== null) {
+          messageType.value = "danger";
           message.value = exceptionError(err.name);
         }
-
-        console.log("call result: " + result.CodeDeliveryDetails.Destination);
       });
     }
 
@@ -76,8 +76,8 @@ export default {
 
       // Cognito 確認登録メソッドを呼び出す
       await cognitUser.confirmRegistration(code.value, true, (err, result) => {
-        console.log("in confirm ", err);
         if (err !== null) {
+          messageType.value = "danger";
           message.value = exceptionError(err.name);
           disableBtn.value = false;
         } else {
@@ -115,6 +115,7 @@ export default {
       message,
       handleKeyDown,
       disableBtn,
+      messageType,
     };
   },
 };
@@ -134,8 +135,9 @@ export default {
       </header-display>
       <!-- Error Alert -->
       <div
+        class="alert alert-dismissible align-items-center fade show"
+        :class="[messageType == 'danger' ? 'alert-danger' : 'alert-success']"
         v-if="message"
-        class="alert alert-danger alert-dismissible align-items-center fade show"
         style="text-align: center"
       >
         <label>{{ message }}</label>

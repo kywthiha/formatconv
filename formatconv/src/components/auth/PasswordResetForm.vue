@@ -32,6 +32,7 @@ export default {
     const { t } = useI18n();
     const passParam = t("errorParams.newPassword");
     const confirmPasswordParam = t("errorParams.confirmNewPassword");
+    let messageType = ref("");
 
     // 入力チェックのため
     const {
@@ -68,6 +69,7 @@ export default {
         },
         onFailure: function (err) {
           if (err !== null) {
+            messageType.value = "danger";
             message.value = exceptionError(
               err.name,
               t("errorParams.mailAddress")
@@ -99,8 +101,8 @@ export default {
           });
         },
         onFailure(err) {
-          console.log("err in reset funtion ", err.message);
           if (err !== null) {
+            messageType.value = "danger";
             message.value = exceptionError(
               err.name,
               t("errorParams.mailAddress")
@@ -124,7 +126,6 @@ export default {
           )
         )
       ) {
-        console.log("in if");
         verificationCodeBlured.value = true;
         passwordBlured.value = true;
         confirmPasswordBlured.value = true;
@@ -179,6 +180,7 @@ export default {
       validConfirmPassword,
       passRequireMsg,
       confirmPasswordRequireMsg,
+      messageType,
     };
   },
 };
@@ -198,8 +200,9 @@ export default {
         </header-display>
         <!-- Error Alert -->
         <div
+          class="alert alert-dismissible align-items-center fade show"
+          :class="[messageType == 'danger' ? 'alert-danger' : 'alert-success']"
           v-if="message"
-          class="alert alert-danger alert-dismissible align-items-center fade show"
           style="text-align: center"
         >
           <label>{{ message }}</label>
