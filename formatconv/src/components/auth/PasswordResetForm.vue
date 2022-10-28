@@ -68,7 +68,10 @@ export default {
         },
         onFailure: function (err) {
           if (err !== null) {
-            message.value = exceptionError(err.name);
+            message.value = exceptionError(
+              err.name,
+              t("errorParams.mailAddress")
+            );
             disableResetPasswordBtn.value = false;
           }
         },
@@ -98,7 +101,10 @@ export default {
         onFailure(err) {
           console.log("err in reset funtion ", err.message);
           if (err !== null) {
-            message.value = exceptionError(err.name);
+            message.value = exceptionError(
+              err.name,
+              t("errorParams.mailAddress")
+            );
             disableUpdatePasswordBtn.value = false;
           }
         },

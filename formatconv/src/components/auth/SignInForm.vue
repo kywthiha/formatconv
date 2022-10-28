@@ -126,7 +126,10 @@ export default {
             });
           }
           if (!error.message.includes("SOFTWARE_TOKEN_MFA_CODE")) {
-            message.value = exceptionError(error.name);
+            message.value = exceptionError(
+              error.name,
+              t("errorParams.mailAndPass")
+            );
           }
           signinDisable.value = false;
         },

@@ -15,6 +15,7 @@ import { useI18n } from "vue-i18n";
 import validation from "../../hooks/validation";
 import disableMFA from "../../hooks/disableMFA";
 import LoginHeaderForm from "../auth/LoginHeaderForm.vue";
+import { handleKeyDown, exceptionError, getToken } from "../common/common";
 
 export default {
   components: { LoginHeaderForm },
@@ -22,12 +23,13 @@ export default {
     const router = useRouter();
     const store = useStore();
     const { t } = useI18n();
-    const oldPassword = ref("");
+    let oldPassword = ref("");
     let oldPasswordBlured = ref(false);
-    const newPassword = ref("");
+    let newPassword = ref("");
     let newPasswordBlured = ref(false);
-    const confirmNewPassword = ref("");
+    let confirmNewPassword = ref("");
     let confirmNewPasswordBlured = ref(false);
+
     const {
       validPassword,
       passRequireMsg,
@@ -36,16 +38,24 @@ export default {
       validConfirmPassword,
       confirmPasswordRequireMsg,
     } = validation();
+
     const username = computed(() => store.state.authModule.cognitoUserName);
     const currentPassParam = t("errorParams.currentPassword");
     const newPassParam = t("errorParams.newPassword");
     const confirmNewPassParam = t("errorParams.confirmNewPassword");
+    let message = ref("");
+    let messageType = ref("");
+    let changePasswordDisable = ref(false);
     console.log("in change password ", username.value);
     console.log("confirm pass ", confirmNewPassParam);
+    console.log("getToken ", getToken);
+
+    // sendMail();
     // 認証済みメールでコードを送信する
     function changePassword() {
+      console.log("...", isValid());
+      changePasswordDisable.value = true;
       if (!isValid()) {
-        alert("valid...");
         return;
       }
       const userPool = new CognitoUserPool(POOL_DATA);
@@ -65,6 +75,11 @@ export default {
         console.log("in Change pass session", session);
         if (err) {
           alert(err);
+          message.value = exceptionError(
+            err.name,
+            t("errorParams.currentPassword")
+          );
+          messageType.value = "danger";
           return;
         }
       });
@@ -76,27 +91,74 @@ export default {
         function (err, result) {
           if (err) {
             alert(err.message || JSON.stringify(err));
+            message.value = exceptionError(
+              err.name,
+              t("errorParams.currentPassword")
+            );
+            messageType.value = "danger";
+            changePasswordDisable.value = false;
             return;
           }
           // call result: SUCCESS
           console.log("call result: " + result);
           if (result === "SUCCESS") {
-            router.replace({
-              name: "fileUpload",
+            // router.replace({
+            //   name: "fileUpload",
+            // });
+
+            oldPassword.value = "";
+            newPassword.value = "";
+            confirmNewPassword.value = "";
+            oldPasswordBlured.value = false;
+            newPasswordBlured.value = false;
+            confirmNewPasswordBlured.value = false;
+            message.value = t("successMessages.I0002", {
+              param1: t("errorParams.changePassword"),
             });
+            changePasswordDisable.value = false;
+            messageType.value = "success";
           }
         }
       );
     }
 
+    async function sendMail() {
+      try {
+        const token = await getToken();
+        const response = await fetch(
+          "https://wdduz75b1m.execute-api.us-east-1.amazonaws.com/test/change-password-mail",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token,
+            },
+          }
+        );
+        const res = await response.json();
+        if (response.ok) {
+          alert("OK");
+        } else {
+          alert("!OK");
+        }
+      } catch (e) {
+        console.log(e);
+        alert(e);
+      }
+    }
+
+    function hideAlert() {
+      message.value = "";
+    }
+
     function isValid() {
       if (
         !(
-          signinValidPassword(oldPassword, currentPassParam) &&
-          validPassword(newPassword, newPassParam) &&
+          signinValidPassword(oldPassword.value, currentPassParam) &&
+          validPassword(newPassword.value, newPassParam) &&
           validConfirmPassword(
-            confirmNewPassword,
-            newPassword,
+            confirmNewPassword.value,
+            newPassword.value,
             newPassParam,
             confirmNewPassParam
           )
@@ -106,6 +168,7 @@ export default {
         oldPasswordBlured.value = true;
         newPasswordBlured.value = true;
         confirmNewPasswordBlured.value = true;
+        changePasswordDisable.value = false;
         return false;
       }
       return true;
@@ -130,6 +193,14 @@ export default {
       confirmPasswordRequireMsg,
       confirmNewPassParam,
       isValid,
+      exceptionError,
+      message,
+      handleKeyDown,
+      hideAlert,
+      changePasswordDisable,
+      messageType,
+      getToken,
+      sendMail,
     };
   },
 };
@@ -139,11 +210,21 @@ export default {
     <div>
       <div>
         <login-header-form></login-header-form>
+        <!-- Error Alert -->
+        <div
+          class="alert alert-dismissible align-items-center fade show"
+          :class="[messageType == 'danger' ? 'alert-danger' : 'alert-success']"
+          v-if="message"
+          style="text-align: center"
+        >
+          <label>{{ message }}</label>
+          <button type="button" class="btn-close" @click="hideAlert"></button>
+        </div>
         <body-display>
           <template v-slot:body>
             <!-- 認証済みメールでコードを送信する -->
             <div>
-              <form @submit.prevent="changePassword">
+              <form @submit.prevent="changePassword" @keydown="handleKeyDown">
                 <body-display>
                   <template v-slot:body style="margin-right: 170px">
                     <div style="margin-right: 70px">
@@ -162,6 +243,7 @@ export default {
                           <td>
                             <input
                               type="password"
+                              maxlength="256"
                               v-model.trim="oldPassword"
                               autocomplete="false"
                               v-bind:class="{
@@ -201,6 +283,7 @@ export default {
                           <td>
                             <input
                               type="password"
+                              maxlength="256"
                               v-model.trim="newPassword"
                               autocomplete="false"
                               v-bind:class="{
@@ -236,6 +319,7 @@ export default {
                           <td>
                             <input
                               type="password"
+                              maxlength="256"
                               v-model.trim="confirmNewPassword"
                               autocomplete="false"
                               v-bind:class="{
@@ -268,7 +352,7 @@ export default {
                       </div>
                       <!-- ボタンエリア -->
                       <div class="sign-in" style="margin-left: 70px">
-                        <button>
+                        <button :disabled="changePasswordDisable">
                           {{
                             $t(
                               "screenItemProperties.changePassword.changePassword"

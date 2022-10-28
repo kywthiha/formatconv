@@ -81,7 +81,7 @@ export default {
           disableBtn.value = false;
         } else if (modal === false && checked === true) {
           // to ask
-          setMessage(t("errorMessages.E0019"));
+          setMessage(t("errorMessages.E0018"));
         }
       }
     );

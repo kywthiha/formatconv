@@ -1,5 +1,7 @@
 import { ref } from "vue";
 import i18n from "../../main";
+import { CognitoUserPool } from "amazon-cognito-identity-js";
+import { POOL_DATA } from "../../config/cognito";
 
 // Enterキーイベント対応
 export function handleKeyDown(e) {
@@ -9,9 +11,9 @@ export function handleKeyDown(e) {
 }
 
 // 例外エラー対応
-export function exceptionError(exceptionMessage) {
+export function exceptionError(exceptionMessage, param) {
   // alert("helo");
-
+  console.log("err param", param);
   const { t } = i18n.global;
   const message = ref("");
   switch (exceptionMessage) {
@@ -19,7 +21,9 @@ export function exceptionError(exceptionMessage) {
       message.value = t("errorMessages.E0008");
       break;
     case "NotAuthorizedException":
-      message.value = t("errorMessages.E0005");
+      message.value = t("errorMessages.E0005", {
+        param1: param,
+      });
       break;
     case "UsernameExistsException":
       message.value = t("errorMessages.E0010");
@@ -61,3 +65,20 @@ export function exceptionError(exceptionMessage) {
   }
   return message.value;
 }
+
+// getToken
+export const getToken = () =>
+  new Promise((resolve, reject) => {
+    const userPool = new CognitoUserPool(POOL_DATA);
+    const cognitoUser = userPool.getCurrentUser();
+    if (cognitoUser) {
+      cognitoUser.getSession(function (err, session) {
+        if (err) {
+          reject(err);
+        }
+        resolve(session.idToken.jwtToken);
+      });
+    } else {
+      reject("Unauthorized");
+    }
+  });
