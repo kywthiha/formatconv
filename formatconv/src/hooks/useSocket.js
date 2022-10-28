@@ -1,5 +1,6 @@
 import { onMounted, computed, watch } from "vue";
 import { useStore } from "vuex";
+import { getToken } from "../components/common/common";
 
 export const useSocket = () => {
   const store = useStore();
@@ -11,7 +12,20 @@ export const useSocket = () => {
     () => store.getters["fileUploadManager/getConnectionId"]
   );
 
-  watch(connectionId, () => {
+  const idToken = computed(() => store.getters.idToken);
+
+  watch(idToken, async () => {
+    if (idToken.value) {
+      await socketConnect();
+    } else if (
+      window.socket &&
+      window.socket.readyState == window.socket.OPEN
+    ) {
+      window.socket.close();
+    }
+  });
+
+  watch(connectionId, async () => {
     if (window.socket && window.socket.readyState === window.socket.OPEN) {
       window.socket.send(
         JSON.stringify({
@@ -20,14 +34,15 @@ export const useSocket = () => {
         })
       );
     } else {
-      socketConnect();
+      await socketConnect();
     }
   });
 
-  const socketConnect = () => {
+  const socketConnect = async () => {
     // Create WebSocket connection.
+    const token = await getToken();
     window.socket = new WebSocket(
-      "wss://4m0y1f0f55.execute-api.us-east-1.amazonaws.com/production"
+      `wss://4m0y1f0f55.execute-api.us-east-1.amazonaws.com/production?Authorization=${token}`
     );
 
     // Connection opened
@@ -77,12 +92,9 @@ export const useSocket = () => {
     });
 
     // Connection
-    window.socket.addEventListener("close", () => {
+    window.socket.addEventListener("close", async () => {
       interval.forEach((item) => clearInterval(item));
-      socketConnect();
+      if (idToken.value) await socketConnect();
     });
   };
-  onMounted(() => {
-    socketConnect();
-  });
 };

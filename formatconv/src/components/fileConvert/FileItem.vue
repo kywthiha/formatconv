@@ -60,7 +60,7 @@ const uploadToS3 = async () => {
     if (e.lengthComputable) {
       const seconds_elapsed =
         (new Date().getTime() - started_at.getTime()) / 1000;
-      const percentage = Math.round((e.loaded / e.total) * 90) + 10;
+      const percentage = Math.round((e.loaded / e.total) * 100);
       progress.loaded = humanFileSize(e.loaded);
       progress.speed = humanFileSize(
         seconds_elapsed ? e.loaded / seconds_elapsed : 0

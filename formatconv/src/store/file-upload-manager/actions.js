@@ -1,21 +1,4 @@
-import { CognitoUserPool } from "amazon-cognito-identity-js";
-import { POOL_DATA } from "../../config/cognito";
-
-const getToken = () =>
-  new Promise((resolve, reject) => {
-    const userPool = new CognitoUserPool(POOL_DATA);
-    const cognitoUser = userPool.getCurrentUser();
-    if (cognitoUser) {
-      cognitoUser.getSession(function (err, session) {
-        if (err) {
-          reject(err);
-        }
-        resolve(session.idToken.jwtToken);
-      });
-    } else {
-      reject("Unauthorized");
-    }
-  });
+import { getToken } from "../../components/common/common";
 
 export default {
   addFileItems(context, payload) {

@@ -43,7 +43,7 @@ export default {
     localStorage.clear();
 
     cognitoUser.signOut();
-
+    context.commit("setIDToken");
     context.commit("logout");
   },
   tryLogin(payload) {
