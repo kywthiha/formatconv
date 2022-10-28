@@ -5,14 +5,16 @@
     作成日 : 2022/10/17　 
 -->
 <script>
-import { ref, computed, onBeforeMount, onBeforeUpdate } from "vue";
+import { ref, computed } from "vue";
 import QrcodeVue from "qrcode.vue";
 import { CognitoUserPool } from "amazon-cognito-identity-js";
-import useAlert from "../../hooks/alert";
 import store from "../../store/index";
 import { POOL_DATA } from "../../config/cognito";
 import { useRoute, useRouter } from "vue-router";
 import LoginHeaderForm from "../auth/LoginHeaderForm.vue";
+import { useI18n } from "vue-i18n";
+import { handleKeyDown, exceptionError } from "../common/common";
+import validation from "../../hooks/validation";
 
 export default {
   components: {
@@ -26,25 +28,36 @@ export default {
     const qrData = ref("");
     const showQRCode = ref(false);
     const qrCode = ref("");
-
     const checkedValue = computed(() => store.state.authModule.toggleStatus);
+    // 英語変換対応
+    const { t } = useI18n();
+    let message = ref("");
+    let messageType = ref("");
+    const { validVerificationCode, verificationCodeRequireMsg } = validation();
+    const qrCodeBlured = ref(false);
+    let param = t("screenItemProperties.totpForm.mfaCode");
+    let disableBtn = ref(false);
 
-    console.log("tet ", checkedValue.value);
+    // メッセージを隠す
+    function hideAlert() {
+      message.value = "";
+    }
 
-    const { message, messageStyleType, setMessage } = useAlert();
+    function isValid() {
+      if (!validVerificationCode(qrCode.value, param)) {
+        qrCodeBlured.value = true;
+        disableBtn.value = false;
+        return false;
+      }
+
+      return true;
+    }
 
     // 新しい Qr コードを作成する
     function newQRCode() {
-      alert("new qr code");
       //　「MFAを有効にする」のチェックを外すと、MFAが無効になる
       if (mfaValue.value === true) {
-        alert("new qr code true");
-        console.log("hello ", mfaValue.value);
         setMFA(false);
-        setMessage(
-          "MFA has successfully been disabled for your account.",
-          "alert-success"
-        );
         return;
       }
 
@@ -55,6 +68,7 @@ export default {
 
       //　現在ログインしているユーザーを取得する
       const cognitoUser = userPool.getCurrentUser();
+      // cognitoUser.setSignInUserSession(store.getters.session);
       cognitoUser.setSignInUserSession(store.getters.session);
 
       //　ユーザーがスキャンするQRコードの画像データを作成する
@@ -71,39 +85,40 @@ export default {
             "&issuer=CognitoJSPOC";
         },
         onFailure: function (err) {
-          console.log(err);
-          setMessage(
-            "There was a problem generating MFA QR Code.",
-            "alert-danger"
-          );
+          messageType.value = "danger";
+          message.value = exceptionError(err.name);
         },
       });
     }
 
     // MFA を確認する
     function verifyMFA() {
+      disableBtn.value = true;
+
+      if (!isValid()) {
+        return;
+      }
       // Cognito ユーザープールへの参照を取得する
       const userPool = new CognitoUserPool(POOL_DATA);
 
       //　現在ログインしているユーザーを取得する
       const cognitoUser = userPool.getCurrentUser();
       cognitoUser.setSignInUserSession(store.getters.session);
-      console.log(" store.getters.email ", store.getters.email);
 
       // MFA コードを検証し、ソフトウェア トークンをユーザー プロファイルにリンクする
       cognitoUser.verifySoftwareToken(qrCode.value, "SoftwareToken", {
         onSuccess: function (result) {
           setMFA(true);
-          alert("MFA has successfully been setup for your account.");
-
+          message.value = t("successMessages.I0002", {
+            param1: t("screenItemProperties.totpForm.enableMultiFactorAuth"),
+          });
           showQRCode.value = false;
+          disableBtn.value = false;
         },
         onFailure: function (err) {
-          console.log(err);
-          setMessage(
-            err.message || "There was a problem confirming MFA Code.",
-            "alert-danger"
-          );
+          messageType.value = "danger";
+          message.value = exceptionError(err.name);
+          disableBtn.value = false;
         },
       });
     }
@@ -128,9 +143,10 @@ export default {
         null,
         totpMfaSettings,
         function (err, result) {
-          console.log("sets a users MFA preference ", totpMfaSettings);
           if (err) {
-            console.log(err);
+            messageType.value = "danger";
+            message.value = exceptionError(err.name);
+            disableBtn.value = false;
           }
 
           store.dispatch("setMFA", isEnabled);
@@ -141,39 +157,17 @@ export default {
 
     //　ユーザーに対して MFA が有効か無効かを格納する計算プロパティ
     const mfaValue = computed(() => {
-      console.log(`MFA enabled - ${store.getters.isMFAEnabled}`);
       return store.getters.isMFAEnabled;
     });
 
     function cancel() {
-      // store.dispatch("setMFA", !store.state.settingsModule.isMFAEnabled);
-
-      alert("cancel");
-      if (checkedValue.value === true) {
-        alert("true");
-        store.dispatch("setStatus", false);
-        store.dispatch("setMFA", false);
-      } else if (checkedValue.value === false) {
-        alert("false");
-        store.dispatch("setStatus", true);
-        store.dispatch("setMFA", true);
-      } else {
-        store.dispatch("setMFA", !store.state.settingsModule.isMFAEnabled);
-      }
-      // store.dispatch("fetchMFAValue");
-      // store.dispatch("setMFA", !checkedValue.value);
+      router.replace({
+        name: "fileUpload",
+      });
     }
 
     if (checkedValue.value !== null || checkedValue.value !== undefined) {
-      alert("hello");
-      console.log("in if ", checkedValue.value);
       newQRCode();
-    }
-
-    function changePassword() {
-      router.replace({
-        name: "ChangePassword",
-      });
     }
 
     return {
@@ -187,10 +181,16 @@ export default {
       verifyMFA,
       cancel,
       message,
-      messageStyleType,
-      setMessage,
+      messageType,
       checkedValue,
-      changePassword,
+      hideAlert,
+      handleKeyDown,
+      validVerificationCode,
+      verificationCodeRequireMsg,
+      qrCodeBlured,
+      param,
+      isValid,
+      disableBtn,
     };
   },
 };
@@ -198,69 +198,82 @@ export default {
 <template>
   <div>
     <login-header-form></login-header-form>
+    <!-- Error Alert -->
+    <div
+      class="alert alert-dismissible align-items-center fade show"
+      :class="[messageType == 'danger' ? 'alert-danger' : 'alert-success']"
+      v-if="message"
+      style="text-align: center"
+    >
+      <label>{{ message }}</label>
+      <button type="button" class="btn-close" @click="hideAlert"></button>
+    </div>
     <body-display>
       <template v-slot:body>
-        <div class="row">
-          <div class="col-12 text-start">
-            <div>
-              <div class="row">
-                <!-- <div class="row" v-if="!showQRCode">
-                  <table> -->
-                <!-- Enabled MFA checkbox -->
-                <!-- <tr>
-                      <td><label class="enable-label">Enabled MFA</label></td>
-                      <td> -->
-                <!-- <input
-                          type="checkbox"
-                          :value="mfaValue"
-                          v-model="mfaValue"
-                          @change="newQRCode($event)"
-                        /> -->
-                <!-- </td>
-                    </tr>
-                  </table>
-                </div> -->
-                <div class="mb-3 text-center">
-                  <div class="scanner-lbl">
-                    Authy, Microsoft Authenticator 又は Google Authenticator
-                    を利用して、QAコードをスキャンします。
-                  </div>
-                  <div class="mt-3">
-                    <qrcode-vue
-                      :value="qrData"
-                      :size="200"
-                      level="H"
-                    ></qrcode-vue>
-                  </div>
-                </div>
-                <hr />
-                <div class="mt-1 text-center">
-                  <p>MFAコード</p>
-                  <div class="row text-center">
-                    <div class="col-4 offset-md-4 mb-2">
-                      <div class="input-group">
-                        <input
-                          type="text"
-                          v-model="qrCode"
-                          class="form-control form-control-sm"
-                          maxlength="6"
-                          required
-                        />
-                      </div>
+        <form @submit.prevent="verifyMFA" @keydown="handleKeyDown">
+          <div class="row">
+            <div class="col-12 text-start">
+              <div>
+                <div class="row">
+                  <div class="mb-3 text-center">
+                    <div class="scanner-lbl">
+                      {{ $t("screenItemProperties.totpForm.title") }}
+                    </div>
+                    <div class="mt-3">
+                      <qrcode-vue
+                        :value="qrData"
+                        :size="200"
+                        level="H"
+                      ></qrcode-vue>
                     </div>
                   </div>
-                  <!-- ボタンエリア -->
-                  <button class="mfa-cancel-btn mt-2 me-2" @click="cancel">
-                    キャンセル
-                  </button>
-                  <button class="mfa-confirm-btn mt-2 me-2" @click="verifyMFA">
-                    送信
-                  </button>
+                  <hr />
+                  <div class="mt-1 text-center">
+                    <p>{{ $t("screenItemProperties.totpForm.mfaCode") }}</p>
+                    <div class="row text-center">
+                      <div class="col-4 offset-md-4 mb-2">
+                        <div class="input-group">
+                          <input
+                            type="text"
+                            v-model.trim="qrCode"
+                            maxlength="6"
+                            v-bind:class="{
+                              'form-control': true,
+                              'is-invalid':
+                                !validVerificationCode(qrCode, param) &&
+                                qrCodeBlured,
+                            }"
+                            v-bind:style="[
+                              !validVerificationCode(qrCode, param) &&
+                              qrCodeeBlured
+                                ? { 'margin-bottom': '0px' }
+                                : { 'margin-bottom': '20px' },
+                            ]"
+                            v-on:blur="qrCodeBlured = true"
+                            autocomplete="false"
+                          />
+                          <div class="invalid-feedback">
+                            {{ verificationCodeRequireMsg }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- ボタンエリア -->
+                    <button class="mfa-cancel-btn mt-2 me-2" @click="cancel">
+                      {{ $t("screenItemProperties.button.cancelBtn") }}
+                    </button>
+                    <button
+                      class="mfa-confirm-btn mt-2 me-2"
+                      :disabled="disableBtn"
+                    >
+                      {{ $t("screenItemProperties.button.sendBtn") }}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </form>
       </template>
     </body-display>
   </div>

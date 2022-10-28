@@ -12,8 +12,6 @@ export function handleKeyDown(e) {
 
 // 例外エラー対応
 export function exceptionError(exceptionMessage, param) {
-  // alert("helo");
-  console.log("err param", param);
   const { t } = i18n.global;
   const message = ref("");
   switch (exceptionMessage) {
@@ -56,8 +54,14 @@ export function exceptionError(exceptionMessage, param) {
       break;
     case "InvalidParameterException":
       // message.value = t("errorMessages.E0016");
+      // confirm(when edit manually in user pool )
       message.value =
         "Cannot reset password for the user as there is no registered/verified email or phone_number";
+      break;
+    case "EnableSoftwareTokenMFAException":
+      // message.value = ;
+      // code ko 1 lone 2 lone wrong htae yin
+      message.value = t("errorMessages.E0006");
       break;
     default:
       message.value = t("errorMessages.E0016");

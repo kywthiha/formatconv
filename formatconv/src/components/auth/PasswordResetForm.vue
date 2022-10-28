@@ -33,6 +33,7 @@ export default {
     const passParam = t("errorParams.newPassword");
     const confirmPasswordParam = t("errorParams.confirmNewPassword");
     let messageType = ref("");
+    let param = t("errorParams.verificationCode");
 
     // 入力チェックのため
     const {
@@ -117,7 +118,7 @@ export default {
     function isValidConfrimPassword() {
       if (
         !(
-          validVerificationCode(code.value) &&
+          validVerificationCode(code.value, param) &&
           validPassword(password.value, passParam) &&
           validConfirmPassword(
             confirmPassword.value,
@@ -182,6 +183,7 @@ export default {
       passRequireMsg,
       confirmPasswordRequireMsg,
       messageType,
+      param,
     };
   },
 };
@@ -295,11 +297,11 @@ export default {
                               v-bind:class="{
                                 'form-control': true,
                                 'is-invalid':
-                                  !validVerificationCode(code) &&
+                                  !validVerificationCode(code, param) &&
                                   verificationCodeBlured,
                               }"
                               v-bind:style="[
-                                !validVerificationCode(code) &&
+                                !validVerificationCode(code, param) &&
                                 verificationCodeBlured
                                   ? { 'margin-bottom': '0px' }
                                   : { 'margin-bottom': '20px' },

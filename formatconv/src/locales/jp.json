@@ -21,7 +21,9 @@
       "convertBtn": "フォルダー選択",
       "convertingBtn": "変換中",
       "closeBtn": "閉じる",
-      "uploadBtn": "アップロード"
+      "uploadBtn": "アップロード",
+      "cancelBtn": "キャンセル",
+      "sendBtn": "送信"
     },
     "signup": {
       "userName": "アカウント名：　",
@@ -55,6 +57,11 @@
     "changePassword": {
       "oldPassword": "現在のパスワード：　",
       "changePassword": "パスワード変更"
+    },
+    "totpForm": {
+      "title": "Authy, Microsoft Authenticator 又は Google Authenticatorを利用して、QAコードをスキャンします。",
+      "mfaCode": "MFAコード",
+      "enableMultiFactorAuth": "多要素認証の有効設定"
     }
   },
   "errorParams": {

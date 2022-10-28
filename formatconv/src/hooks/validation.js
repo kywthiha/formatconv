@@ -102,11 +102,11 @@ export default function FormValidation() {
     return reUsername.test(username);
   }
 
-  function validVerificationCode(code) {
+  function validVerificationCode(code, param) {
     if (code.length === 0) {
       isValidVerificationCode.value = false;
       verificationCodeRequireMsg.value = t("errorMessages.E0001", {
-        param1: t("errorParams.verificationCode"),
+        param1: param,
       });
     } else {
       isValidVerificationCode.value = true;

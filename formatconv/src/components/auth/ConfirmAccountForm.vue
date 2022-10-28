@@ -34,6 +34,7 @@ export default {
     const { validVerificationCode, verificationCodeRequireMsg } = validation();
 
     const { t } = useI18n();
+    let param = t("errorParams.verificationCode");
 
     // コードを再送する
     function resendCode() {
@@ -93,7 +94,7 @@ export default {
     }
 
     function isValid() {
-      if (!validVerificationCode(code.value)) {
+      if (!validVerificationCode(code.value, param)) {
         verificationCodeBlured.value = true;
         disableBtn.value = false;
         return false;
@@ -116,6 +117,7 @@ export default {
       handleKeyDown,
       disableBtn,
       messageType,
+      param,
     };
   },
 };
@@ -179,10 +181,12 @@ export default {
                   v-bind:class="{
                     'form-control': true,
                     'is-invalid':
-                      !validVerificationCode(code) && verificationCodeBlured,
+                      !validVerificationCode(code, param) &&
+                      verificationCodeBlured,
                   }"
                   v-bind:style="[
-                    !validVerificationCode(code) && verificationCodeBlured
+                    !validVerificationCode(code, param) &&
+                    verificationCodeBlured
                       ? { 'margin-bottom': '0px' }
                       : { 'margin-bottom': '20px' },
                   ]"
