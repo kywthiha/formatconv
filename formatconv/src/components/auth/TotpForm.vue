@@ -68,12 +68,12 @@ export default {
 
       //　現在ログインしているユーザーを取得する
       const cognitoUser = userPool.getCurrentUser();
-      // cognitoUser.setSignInUserSession(store.getters.session);
       cognitoUser.setSignInUserSession(store.getters.session);
 
       //　ユーザーがスキャンするQRコードの画像データを作成する
       cognitoUser.associateSoftwareToken({
         onSuccess: function (result) {
+          messageType.value = "success";
           console.log(result);
         },
         associateSecretCode: function (secretCode) {
@@ -109,6 +109,7 @@ export default {
       cognitoUser.verifySoftwareToken(qrCode.value, "SoftwareToken", {
         onSuccess: function (result) {
           setMFA(true);
+          messageType.value = "success";
           message.value = t("successMessages.I0002", {
             param1: t("screenItemProperties.totpForm.enableMultiFactorAuth"),
           });
