@@ -248,7 +248,9 @@ export default {
         <template v-slot:register-slot v-if="!confirmMFACode">
           <router-link to="/signup"
             ><button>
-              <span class="figcaption">{{ $t("signup") }}</span>
+              <span class="figcaption">{{
+                $t("screenItemProperties.common.register")
+              }}</span>
             </button></router-link
           >
         </template>

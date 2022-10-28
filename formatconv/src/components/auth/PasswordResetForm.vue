@@ -66,6 +66,7 @@ export default {
         onSuccess: function (data) {
           confirmCode.value = true;
           disableResetPasswordBtn.value = false;
+          message.value = "";
         },
         onFailure: function (err) {
           if (err !== null) {

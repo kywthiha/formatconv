@@ -1,13 +1,4 @@
 {
-  "title": "撮影データ変換サービス",
-  "email": "メール：　",
-  "password": "パスワード：　",
-  "login": "ログイン",
-  "signup": "アカウント登録",
-  "resetpassword": "パスワードリセット",
-  "sendNewCode": "再送信する",
-  "notReceivedCode": "検証コードが届かない場合は、以下より再度送信してください。",
-  "E001": "検証コードをまず入力してください。",
   "screenItemProperties": {
     "common": {
       "title": "撮影データ変換サービス",
