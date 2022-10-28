@@ -92,7 +92,7 @@ export default {
     }
 
     // MFA を確認する
-    function verifyMFA() {
+    function verifyMFA(e) {
       disableBtn.value = true;
 
       if (!isValid()) {
@@ -114,6 +114,8 @@ export default {
           });
           showQRCode.value = false;
           disableBtn.value = false;
+          qrCode.value = "";
+          qrCodeBlured.value = false;
         },
         onFailure: function (err) {
           messageType.value = "danger";
