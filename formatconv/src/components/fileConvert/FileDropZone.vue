@@ -7,13 +7,13 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from "vue";
 import { useStore } from "vuex";
-import { tranformFileItems } from "../../utils/FileUtils";
+import { getAllFileEntries } from "../../utils/FileUtils";
 import { filesToZip } from "../../utils/ZipUtils";
 
 const store = useStore();
 const events = ["dragenter", "dragover", "dragleave", "drop"];
 const active = ref(false);
-const allowImageTypes = ["image/tiff", "image/tif", "image/jpeg"];
+const allowImageTypes = ["image/tiff", "image/tif"];
 const compressFiles = ref([]);
 
 const setActive = () => {
@@ -46,37 +46,69 @@ const compressFileName = (compressFile) => {
   return compressFile && `${compressFile.webkitRelativePath.split("/")[0]}.zip`;
 };
 
-const handleInputFileChange = async (event) => {
-  const files = Array.from(event.target.files).filter((file) =>
+const compressFolder = async (files, fileName) => {
+  const filterFiles = files.filter((file) =>
     allowImageTypes.includes(file.type)
   );
-  if (files.length > 0) {
-    compressFiles.value.push(compressFileName(files[0]));
+  if (filterFiles.length > 0) {
+    compressFiles.value.push({
+      fileName,
+      message: "Compressing...",
+    });
     const zipFile = await filesToZip(
-      files.map((file) => ({
+      filterFiles.map((file) => ({
         file,
-        options: {
-          // onprogress: (current, total) => {
-          //   console.log(current, total);
-          // },
-        },
+        options: {},
       })),
-      `${files[0].webkitRelativePath.split("/")[0]}.zip`
+      fileName
     );
     compressFiles.value = compressFiles.value.filter(
-      (fileName) => fileName != zipFile.name
+      (item) => item.fileName != zipFile.name
     );
+    return zipFile;
+  } else {
+    return false;
+  }
+};
+
+const handleInputFileChange = async (event) => {
+  const zipFile = await compressFolder(
+    Array.from(event.target.files),
+    compressFileName(event.target.files[0])
+  );
+  if (zipFile) {
     setFileItems([zipFile].map((file) => ({ file })));
   } else {
-    alert("Empty Tiff File");
+    alert("Empty File");
   }
   event.target.value = null;
 };
 
 const handleOnDrop = async (event) => {
   setInactive();
-  const items = await tranformFileItems(event.dataTransfer.items);
-  setFileItems(items);
+  Array.from(event.dataTransfer.items).forEach(async (dataTransferItem) => {
+    const item = dataTransferItem.webkitGetAsEntry();
+    if (item && item.isDirectory) {
+      const folderName = `${item.fullPath.split("/")[1]}.zip`;
+      compressFiles.value.push({
+        fileName: folderName,
+        message: "Reading...",
+      });
+      const fileItems = await getAllFileEntries(item);
+      compressFiles.value = compressFiles.value.filter(
+        (item) => item.fileName != folderName
+      );
+      const zipFile = await compressFolder(fileItems, folderName);
+      if (zipFile) {
+        setFileItems([zipFile].map((file) => ({ file })));
+      } else {
+        compressFiles.value.push({
+          fileName: folderName,
+          error: "This folder is empty",
+        });
+      }
+    }
+  });
 };
 </script>
 <template>
@@ -99,12 +131,25 @@ const handleOnDrop = async (event) => {
           aria-live="assertive"
           aria-atomic="true"
           data-bs-autohide="false"
-          :key="compressFile.name"
+          :key="compressFile.fileName"
         >
           <div class="toast-header">
-            <strong class="me-auto">{{ compressFile }}</strong>
+            <strong class="me-auto">{{ compressFile.fileName }}</strong>
+            <button
+              v-if="compressFile.error"
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
           </div>
-          <div class="toast-body">Compressing...</div>
+
+          <div class="toast-body text-danger" v-if="compressFile.error">
+            {{ compressFile.error }}
+          </div>
+          <div class="toast-body" v-else-if="compressFile.message">
+            {{ compressFile.message }}
+          </div>
         </div>
       </div>
     </Teleport>
