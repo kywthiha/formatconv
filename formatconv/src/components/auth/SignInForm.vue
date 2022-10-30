@@ -275,11 +275,11 @@ export default {
       <body-display>
         <template v-slot:body>
           <form @submit.prevent="signIn" @keydown="handleKeyDown">
-            <div v-if="!confirmMFACode">
-              <div class="input-text">
+            <div v-if="!confirmMFACode" style="margin-right: 38px">
+              <table>
                 <!-- メール -->
                 <tr>
-                  <td class="mail-label">
+                  <td class="signin-mail-label">
                     <label>{{ $t("screenItemProperties.common.email") }}</label>
                   </td>
                   <td>
@@ -304,15 +304,13 @@ export default {
                     </div>
                   </td>
                 </tr>
-              </div>
 
-              <div class="input-text">
                 <!-- パスワード -->
-                <tr>
+                <tr class="table-row">
                   <td class="password-label">
-                    <label>{{
-                      $t("screenItemProperties.common.password")
-                    }}</label>
+                    <label
+                      >{{ $t("screenItemProperties.common.password") }}
+                    </label>
                   </td>
                   <td>
                     <input
@@ -341,15 +339,22 @@ export default {
                     </div>
                   </td>
                 </tr>
-                <!-- リンク -->
-                <router-link to="/resetPassword"
-                  ><span class="figcaption"
-                    ><u>{{
-                      $t("screenItemProperties.signin.resetPassword")
-                    }}</u></span
-                  ></router-link
-                >
-              </div>
+                <tr></tr>
+                <tr>
+                  <td></td>
+                  <td style="text-align: right">
+                    <!-- リンク -->
+                    <router-link to="/resetPassword"
+                      ><span class="figcaption"
+                        ><u>{{
+                          $t("screenItemProperties.signin.resetPassword")
+                        }}</u></span
+                      ></router-link
+                    >
+                  </td>
+                </tr>
+              </table>
+
               <!-- ボタンエリア -->
               <div class="sign-in">
                 <button :disabled="signinDisable">

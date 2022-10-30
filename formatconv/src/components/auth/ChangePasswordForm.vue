@@ -102,21 +102,7 @@ export default {
           // call result: SUCCESS
           console.log("call result: " + result);
           if (result === "SUCCESS") {
-            // router.replace({
-            //   name: "fileUpload",
-            // });
-
-            oldPassword.value = "";
-            newPassword.value = "";
-            confirmNewPassword.value = "";
-            oldPasswordBlured.value = false;
-            newPasswordBlured.value = false;
-            confirmNewPasswordBlured.value = false;
-            message.value = t("successMessages.I0002", {
-              param1: t("errorParams.changePassword"),
-            });
-            changePasswordDisable.value = false;
-            messageType.value = "success";
+            sendMail();
           }
         }
       );
@@ -135,15 +121,25 @@ export default {
             },
           }
         );
-        const res = await response.json();
         if (response.ok) {
-          alert("OK");
+          oldPassword.value = "";
+          newPassword.value = "";
+          confirmNewPassword.value = "";
+          oldPasswordBlured.value = false;
+          newPasswordBlured.value = false;
+          confirmNewPasswordBlured.value = false;
+          message.value = t("successMessages.I0002", {
+            param1: t("errorParams.changePassword"),
+          });
+          changePasswordDisable.value = false;
+          messageType.value = "success";
         } else {
-          alert("!OK");
+          message.value = t("errorMessages.E0019");
+          messageType.value = "danger";
         }
       } catch (e) {
-        console.log(e);
-        alert(e);
+        message.value = t("errorMessages.E0016");
+        messageType.value = "danger";
       }
     }
 

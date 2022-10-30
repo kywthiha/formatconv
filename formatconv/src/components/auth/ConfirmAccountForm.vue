@@ -54,6 +54,8 @@ export default {
           messageType.value = "danger";
           message.value = exceptionError(err.name);
         }
+
+        console.log("call result: " + result.CodeDeliveryDetails.Destination);
       });
     }
 
@@ -77,6 +79,7 @@ export default {
 
       // Cognito 確認登録メソッドを呼び出す
       await cognitUser.confirmRegistration(code.value, true, (err, result) => {
+        console.log("in confirm ", err);
         if (err !== null) {
           messageType.value = "danger";
           message.value = exceptionError(err.name);
@@ -147,68 +150,67 @@ export default {
       </div>
       <body-display>
         <template v-slot:body>
-          <div class="input-text">
-            <!-- メール -->
-            <tr>
-              <td class="mail-label">
-                <label>{{ $t("screenItemProperties.common.email") }}</label>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  maxlength="128"
-                  v-model.trim="username"
-                  disabled="true"
-                  autocomplete="false"
-                />
-              </td>
-            </tr>
-          </div>
+          <div style="margin-left: 135px">
+            <div class="input-text">
+              <!-- メール -->
+              <tr>
+                <td class="mail-label">
+                  <label>{{ $t("screenItemProperties.common.email") }}</label>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    maxlength="128"
+                    v-model.trim="username"
+                    disabled="true"
+                    autocomplete="false"
+                  />
+                </td>
+              </tr>
+            </div>
 
-          <div class="input-text">
-            <!-- 検証コード -->
-            <tr>
-              <td class="password-label">
-                <label>{{
-                  $t("screenItemProperties.common.verificationCode")
-                }}</label>
-              </td>
-              <td>
-                <input
-                  type="text"
-                  v-model.trim="code"
-                  maxlength="6"
-                  v-bind:class="{
-                    'form-control': true,
-                    'is-invalid':
-                      !validVerificationCode(code, param) &&
-                      verificationCodeBlured,
-                  }"
-                  v-bind:style="[
-                    !validVerificationCode(code, param) &&
-                    verificationCodeBlured
-                      ? { 'margin-bottom': '0px' }
-                      : { 'margin-bottom': '20px' },
-                  ]"
-                  v-on:blur="verificationCodeBlured = true"
-                  autocomplete="false"
-                />
-                <div class="invalid-feedback">
-                  {{ verificationCodeRequireMsg }}
-                </div>
-              </td>
-            </tr>
-          </div>
-          <!-- ボタンエリア -->
-          <div class="sign-in">
-            <button :disabled="disableBtn">
-              {{ $t("screenItemProperties.button.confirmAccountBtn") }}
-            </button>
-          </div>
-          <!-- 新しいコードを送るエリア -->
-          <div class="resend-code">
-            {{ $t("screenItemProperties.confirmAccount.sentNewCodeLabel") }}
-            <div>
+            <div class="input-text">
+              <!-- 検証コード -->
+              <tr>
+                <td class="password-label">
+                  <label>{{
+                    $t("screenItemProperties.common.verificationCode")
+                  }}</label>
+                </td>
+                <td>
+                  <input
+                    type="text"
+                    v-model.trim="code"
+                    maxlength="6"
+                    v-bind:class="{
+                      'form-control': true,
+                      'is-invalid':
+                        !validVerificationCode(code) && verificationCodeBlured,
+                    }"
+                    v-bind:style="[
+                      !validVerificationCode(code) && verificationCodeBlured
+                        ? { 'margin-bottom': '0px' }
+                        : { 'margin-bottom': '20px' },
+                    ]"
+                    v-on:blur="verificationCodeBlured = true"
+                    autocomplete="false"
+                  />
+                  <div class="invalid-feedback">
+                    {{ verificationCodeRequireMsg }}
+                  </div>
+                </td>
+              </tr>
+            </div>
+            <!-- ボタンエリア -->
+            <div class="sign-in">
+              <button :disabled="disableBtn">
+                {{ $t("screenItemProperties.button.confirmAccountBtn") }}
+              </button>
+            </div>
+            <!-- 新しいコードを送るエリア -->
+            <div class="resend-code">
+              {{ $t("screenItemProperties.confirmAccount.sentNewCodeLabel") }}
+
               <a @click="resendCode" class="resend-code-atag"
                 ><span class="figcaption"
                   ><u>
