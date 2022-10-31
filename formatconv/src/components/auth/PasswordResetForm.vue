@@ -218,10 +218,10 @@ export default {
               <form @submit.prevent="sendCode" @keydown="handleKeyDown">
                 <body-display>
                   <template v-slot:body>
-                    <div class="input-text">
+                    <table class="reset-pass-table">
                       <!-- メール -->
                       <tr>
-                        <td class="mail-label">
+                        <td class="signin-mail-label">
                           <label>{{
                             $t("screenItemProperties.common.email")
                           }}</label>
@@ -249,10 +249,9 @@ export default {
                         </td>
                       </tr>
                       <tr>
-                        <td></td>
                         <td colspan="2">
                           <router-link to="/signin"
-                            ><span class="figcaption" style="font-size: 14px"
+                            ><span class="figcaption" style="float: right"
                               ><u>{{
                                 $t("screenItemProperties.button.loginBtn")
                               }}</u></span
@@ -260,10 +259,13 @@ export default {
                           >
                         </td>
                       </tr>
-                    </div>
+                    </table>
                     <!-- ボタンエリア -->
                     <div class="sign-in">
-                      <button :disabled="disableResetPasswordBtn">
+                      <button
+                        :disabled="disableResetPasswordBtn"
+                        style="margin-left: 113px"
+                      >
                         {{ $t("screenItemProperties.button.resetPasswordBtn") }}
                       </button>
                     </div>
@@ -275,12 +277,12 @@ export default {
             <div v-if="confirmCode">
               <form @submit.prevent="resetPassword" @keydown="handleKeyDown">
                 <body-display>
-                  <template v-slot:body style="margin-right: 170px">
+                  <template v-slot:body>
                     <div style="margin-right: 70px">
-                      <div class="input-text">
+                      <table class="reset-pass-table">
                         <!-- 検証コード -->
                         <tr>
-                          <td class="mail-label">
+                          <td class="signin-mail-label">
                             <label style="width: 170px">
                               {{
                                 $t(
@@ -314,11 +316,10 @@ export default {
                             </div>
                           </td>
                         </tr>
-                      </div>
-                      <div class="input-text">
+
                         <!-- 新しいパスワード -->
                         <tr>
-                          <td class="mail-label">
+                          <td class="password-label">
                             <label style="width: 170px">{{
                               $t(
                                 "screenItemProperties.passwordReset.newPassword"
@@ -350,11 +351,10 @@ export default {
                             </div>
                           </td>
                         </tr>
-                      </div>
-                      <div class="input-text">
+
                         <!-- 新しいパスワード確認 -->
                         <tr>
-                          <td class="mail-label">
+                          <td class="password-label">
                             <label style="width: 170px">{{
                               $t(
                                 "screenItemProperties.passwordReset.confirmNewPassword"
@@ -394,7 +394,7 @@ export default {
                             </div>
                           </td>
                         </tr>
-                      </div>
+                      </table>
                       <!-- ボタンエリア -->
                       <div class="sign-in" style="margin-left: 70px">
                         <button :disabled="disableUpdatePasswordBtn">

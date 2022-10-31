@@ -87,8 +87,21 @@ input[type="email"] {
   padding-right: 10px;
 }
 .totp-label {
-  width: 170px;
   text-align: left;
+  padding-bottom: 20px;
+  padding-right: 10px;
+}
+.confirm-mail-label {
+  width: 110px;
+  text-align: right;
+  padding-bottom: 30px;
+  padding-right: 10px;
+}
+.totp-table {
+  margin-right: 85px;
+}
+.reset-pass-table {
+  margin-right: 35px;
 }
 .reg-accname-label {
   width: 200px;
@@ -499,7 +512,6 @@ button[disabled] {
 
 /* resend-code start */
 .resend-code {
-  margin: 15px 0 15px 100px;
   padding-top: 15px;
 }
 

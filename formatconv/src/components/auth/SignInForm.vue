@@ -364,8 +364,8 @@ export default {
             </div>
             <!-- mfa を有効にするときに表示する -->
             <div v-if="confirmMFACode">
-              <div class="reset-input-text">
-                <!-- ワンタイムパスワード -->
+              <!-- ワンタイムパスワード -->
+              <table class="totp-table">
                 <tr>
                   <td class="totp-label">
                     <label>{{
@@ -395,11 +395,11 @@ export default {
                     </div>
                   </td>
                 </tr>
-              </div>
+              </table>
               <!-- ボタンエリア -->
               <div class="sign-in">
-                <button style="margin-left: 170px" :disabled="signinDisable">
-                  {{ $t("login") }}
+                <button style="margin-left: 165px" :disabled="signinDisable">
+                  {{ $t("screenItemProperties.button.loginBtn") }}
                 </button>
               </div>
             </div>

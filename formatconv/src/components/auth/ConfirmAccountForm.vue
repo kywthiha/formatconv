@@ -150,11 +150,11 @@ export default {
       </div>
       <body-display>
         <template v-slot:body>
-          <div style="margin-left: 135px">
-            <div class="input-text">
+          <div style="margin-left: 105px">
+            <table>
               <!-- メール -->
               <tr>
-                <td class="mail-label">
+                <td class="confirm-mail-label">
                   <label>{{ $t("screenItemProperties.common.email") }}</label>
                 </td>
                 <td>
@@ -163,16 +163,14 @@ export default {
                     maxlength="128"
                     v-model.trim="username"
                     disabled="true"
+                    style="margin-bottom: 30px"
                     autocomplete="false"
                   />
                 </td>
               </tr>
-            </div>
-
-            <div class="input-text">
               <!-- 検証コード -->
-              <tr>
-                <td class="password-label">
+              <tr class="table-row">
+                <td class="signin-mail-label">
                   <label>{{
                     $t("screenItemProperties.common.verificationCode")
                   }}</label>
@@ -200,7 +198,7 @@ export default {
                   </div>
                 </td>
               </tr>
-            </div>
+            </table>
             <!-- ボタンエリア -->
             <div class="sign-in">
               <button :disabled="disableBtn">
