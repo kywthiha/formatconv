@@ -124,11 +124,7 @@ export default {
           hideAlert();
           confirmMFACode.value = true;
           signinDisable.value = false;
-          cognitoUser.sendMFACode(
-            mfaCode.value.toString(),
-            this,
-            codeDeliveryDetails
-          );
+          cognitoUser.sendMFACode(mfaCode.value, this, codeDeliveryDetails);
         },
       });
     }
