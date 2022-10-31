@@ -52,7 +52,7 @@ export default {
         }
         if (err !== null) {
           messageType.value = "danger";
-          message.value = exceptionError(err.name);
+          message.value = exceptionError(err.name, param);
         }
 
         console.log("call result: " + result.CodeDeliveryDetails.Destination);
@@ -82,7 +82,7 @@ export default {
         console.log("in confirm ", err);
         if (err !== null) {
           messageType.value = "danger";
-          message.value = exceptionError(err.name);
+          message.value = exceptionError(err.name, param);
           disableBtn.value = false;
         } else {
           router.replace({
@@ -183,10 +183,12 @@ export default {
                     v-bind:class="{
                       'form-control': true,
                       'is-invalid':
-                        !validVerificationCode(code) && verificationCodeBlured,
+                        !validVerificationCode(code, param) &&
+                        verificationCodeBlured,
                     }"
                     v-bind:style="[
-                      !validVerificationCode(code) && verificationCodeBlured
+                      !validVerificationCode(code, param) &&
+                      verificationCodeBlured
                         ? { 'margin-bottom': '0px' }
                         : { 'margin-bottom': '20px' },
                     ]"

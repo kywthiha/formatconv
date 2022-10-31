@@ -375,7 +375,7 @@ button[disabled] {
 }
 
 .mfa-confirm-btn {
-  width: 140px;
+  width: 110px;
   height: 37px;
   border-radius: 5px;
   background-color: #6c8bc5;
@@ -542,4 +542,8 @@ table {
 
 .signup-tbl {
   margin-left: 100px;
+}
+
+.confirm-newpass-label {
+  width: 170px;
 }

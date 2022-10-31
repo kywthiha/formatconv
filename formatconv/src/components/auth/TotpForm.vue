@@ -235,30 +235,31 @@ export default {
                     <p>{{ $t("screenItemProperties.totpForm.mfaCode") }}</p>
                     <div class="row text-center">
                       <div class="col-4 offset-md-4 mb-2">
-                        <div class="input-group">
-                          <input
-                            type="text"
-                            v-model.trim="qrCode"
-                            maxlength="6"
-                            v-bind:class="{
-                              'form-control': true,
-                              'is-invalid':
-                                !validVerificationCode(qrCode, param) &&
-                                qrCodeBlured,
-                            }"
-                            v-bind:style="[
+                        <!-- <div class="input-group"> -->
+                        <input
+                          type="text"
+                          v-model.trim="qrCode"
+                          maxlength="6"
+                          v-bind:class="{
+                            'form-control': true,
+                            'is-invalid':
                               !validVerificationCode(qrCode, param) &&
-                              qrCodeeBlured
-                                ? { 'margin-bottom': '0px' }
-                                : { 'margin-bottom': '20px' },
-                            ]"
-                            v-on:blur="qrCodeBlured = true"
-                            autocomplete="false"
-                          />
-                          <div class="invalid-feedback">
-                            {{ verificationCodeRequireMsg }}
-                          </div>
+                              qrCodeBlured,
+                          }"
+                          v-bind:style="[
+                            !validVerificationCode(qrCode, param) &&
+                            qrCodeeBlured
+                              ? { 'margin-bottom': '0px' }
+                              : { 'margin-bottom': '20px' },
+                          ]"
+                          v-on:blur="qrCodeBlured = true"
+                          style="margin-left: 30px"
+                          autocomplete="false"
+                        />
+                        <div class="invalid-feedback">
+                          {{ verificationCodeRequireMsg }}
                         </div>
+                        <!-- </div> -->
                       </div>
                     </div>
                     <!-- ボタンエリア -->

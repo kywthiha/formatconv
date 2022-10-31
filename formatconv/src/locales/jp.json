@@ -55,7 +55,7 @@
       "delete": "削除"
     },
     "changePassword": {
-      "oldPassword": "現在のパスワード：　",
+      "oldPassword": "現在のパスワード:",
       "changePassword": "パスワード変更"
     },
     "totpForm": {

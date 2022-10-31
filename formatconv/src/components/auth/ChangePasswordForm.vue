@@ -222,13 +222,13 @@ export default {
             <div>
               <form @submit.prevent="changePassword" @keydown="handleKeyDown">
                 <body-display>
-                  <template v-slot:body style="margin-right: 170px">
-                    <div style="margin-right: 70px">
-                      <div class="input-text">
+                  <template v-slot:body>
+                    <div>
+                      <table style="margin-right: 105px">
                         <!-- メール -->
                         <tr>
                           <td class="mail-label">
-                            <label style="width: 170px">
+                            <label>
                               {{
                                 $t(
                                   "screenItemProperties.changePassword.oldPassword"
@@ -265,12 +265,11 @@ export default {
                             </div>
                           </td>
                         </tr>
-                      </div>
-                      <div class="input-text">
+
                         <!-- 新しいパスワード -->
                         <tr>
                           <td class="mail-label">
-                            <label style="width: 170px">{{
+                            <label>{{
                               $t(
                                 "screenItemProperties.passwordReset.newPassword"
                               )
@@ -301,12 +300,11 @@ export default {
                             </div>
                           </td>
                         </tr>
-                      </div>
-                      <div class="input-text">
+
                         <!-- 新しいパスワード確認 -->
                         <tr>
                           <td class="mail-label">
-                            <label style="width: 170px">{{
+                            <label class="confirm-newpass-label">{{
                               $t(
                                 "screenItemProperties.passwordReset.confirmNewPassword"
                               )
@@ -345,7 +343,7 @@ export default {
                             </div>
                           </td>
                         </tr>
-                      </div>
+                      </table>
                       <!-- ボタンエリア -->
                       <div class="sign-in" style="margin-left: 70px">
                         <button :disabled="changePasswordDisable">
