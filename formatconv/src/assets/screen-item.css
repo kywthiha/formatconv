@@ -3,9 +3,10 @@
   min-height: 35vh;
   /* width: 700px; */
   /* background-color: #f8f6f5; */
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
+  margin-left: 200px;
 }
 .alert {
   text-align: center;
@@ -15,6 +16,9 @@
   /* align-items: center; */
   margin-left: 380px;
   margin-top: 30px;
+}
+.signin-table {
+  margin-left: 200px;
 }
 .profile-btn {
   display: flex;
@@ -52,7 +56,6 @@ input[type="email"] {
   transition: all 0.5s;
   margin-top: 10px;
 }
-
 .reg-input-text {
   margin-top: 20px;
   padding-left: 100px;
@@ -91,6 +94,9 @@ input[type="email"] {
   padding-bottom: 20px;
   padding-right: 10px;
 }
+.signin-totp-btn {
+  margin-left: 310px;
+}
 .confirm-mail-label {
   width: 110px;
   text-align: right;
@@ -98,10 +104,19 @@ input[type="email"] {
   padding-right: 10px;
 }
 .totp-table {
-  margin-right: 85px;
+  margin-left: 145px;
+}
+.change-pass-table {
+  margin-left: 128px;
+}
+.change-pass-btn {
+  margin-left: 240px;
 }
 .reset-pass-table {
-  margin-right: 35px;
+  margin-left: 200px;
+}
+.reset-pass-tbl {
+  margin-left: 127px;
 }
 .reg-accname-label {
   width: 200px;
@@ -179,7 +194,7 @@ input[type="password"] {
   padding-top: 15px;
 }
 .sign-in button {
-  margin-left: 110px;
+  margin-left: 310px;
   width: 150px;
   height: 37px;
   border-radius: 5px;
@@ -513,6 +528,7 @@ button[disabled] {
 /* resend-code start */
 .resend-code {
   padding-top: 15px;
+  margin-left: 200px;
 }
 
 .resend-code-atag {
@@ -546,4 +562,20 @@ table {
 
 .confirm-newpass-label {
   width: 170px;
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-input i {
+  position: absolute;
+  left: 210px;
+  top: -2px;
+  padding: 9px 8px;
+  color: #aaa;
+}
+.form-control.is-invalid,
+.was-validated .form-control:invalid {
+  background-image: none !important;
 }

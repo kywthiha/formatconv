@@ -259,7 +259,7 @@ export default {
         <template v-slot:body>
           <form @submit.prevent="signIn" @keydown="handleKeyDown">
             <div v-if="!confirmMFACode" style="margin-right: 38px">
-              <table>
+              <table class="signin-table">
                 <!-- メール -->
                 <tr>
                   <td class="signin-mail-label">
@@ -383,7 +383,7 @@ export default {
               </table>
               <!-- ボタンエリア -->
               <div class="sign-in">
-                <button style="margin-left: 165px" :disabled="signinDisable">
+                <button :disabled="signinDisable">
                   {{ $t("screenItemProperties.button.loginBtn") }}
                 </button>
               </div>

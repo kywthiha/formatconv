@@ -150,8 +150,8 @@ export default {
       </div>
       <body-display>
         <template v-slot:body>
-          <div style="margin-left: 105px">
-            <table>
+          <div>
+            <table class="reset-pass-table">
               <!-- メール -->
               <tr>
                 <td class="confirm-mail-label">

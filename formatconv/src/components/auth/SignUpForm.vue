@@ -176,6 +176,9 @@ export default {
 
       return true;
     }
+    function iconClick() {
+      alert("Click me!!!");
+    }
 
     return {
       openModal,
@@ -210,9 +213,9 @@ export default {
       exceptionError,
       passParam,
       confirmPasswordParam,
-
       showPassword,
       messageType,
+      iconClick,
     };
   },
 };
@@ -323,7 +326,15 @@ export default {
                     <!-- type="password"
                       :type="passwordFieldType"
                       -->
-                    <div class="input-group">
+                    <!-- <div class="inputWithIcon">
+                      <input type="text" placeholder="Email" />
+                      <i
+                        class="bi bi-envelope bi-lg bi-fw"
+                        aria-hidden="true"
+                        @click="iconClick"
+                      ></i>
+                    </div> -->
+                    <div class="password-input">
                       <input
                         class="form-control"
                         v-bind:type="[showPassword ? 'text' : 'password']"
@@ -344,18 +355,22 @@ export default {
                         ]"
                         v-on:blur="passwordBlured = true"
                       />
-
-                      <span class="test">
+                      <i
+                        class="bi bi-eye-slash"
+                        aria-hidden="true"
+                        @click="showPassword = !showPassword"
+                      ></i>
+                      <div class="invalid-feedback">
+                        {{ passRequireMsg }}
+                      </div>
+                      <!-- <span class="test">
                         <i
                           class="bi bi-eye-slash"
                           id="togglePassword"
                           style="cursor: pointer"
                           @click="showPassword = !showPassword"
                         ></i>
-                      </span>
-                    </div>
-                    <div class="invalid-feedback">
-                      {{ passRequireMsg }}
+                      </span> -->
                     </div>
                   </td>
 

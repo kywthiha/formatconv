@@ -219,146 +219,135 @@ export default {
         <body-display>
           <template v-slot:body>
             <!-- 認証済みメールでコードを送信する -->
-            <div>
-              <form @submit.prevent="changePassword" @keydown="handleKeyDown">
-                <body-display>
-                  <template v-slot:body>
-                    <div>
-                      <table style="margin-right: 105px">
-                        <!-- メール -->
-                        <tr>
-                          <td class="mail-label">
-                            <label>
-                              {{
-                                $t(
-                                  "screenItemProperties.changePassword.oldPassword"
-                                )
-                              }}</label
-                            >
-                          </td>
-                          <td>
-                            <input
-                              type="password"
-                              maxlength="256"
-                              v-model.trim="oldPassword"
-                              autocomplete="false"
-                              v-bind:class="{
-                                'form-control': true,
-                                'is-invalid':
-                                  !signinValidPassword(
-                                    oldPassword,
-                                    currentPassParam
-                                  ) && oldPasswordBlured,
-                              }"
-                              v-bind:style="[
-                                !signinValidPassword(
-                                  oldPassword,
-                                  currentPassParam
-                                ) && oldPasswordBlured
-                                  ? { 'margin-bottom': '0px' }
-                                  : { 'margin-bottom': '20px' },
-                              ]"
-                              v-on:blur="oldPasswordBlured = true"
-                            />
-                            <div class="invalid-feedback">
-                              {{ signinPassRequireMsg }}
-                            </div>
-                          </td>
-                        </tr>
-
-                        <!-- 新しいパスワード -->
-                        <tr>
-                          <td class="mail-label">
-                            <label>{{
-                              $t(
-                                "screenItemProperties.passwordReset.newPassword"
-                              )
-                            }}</label>
-                          </td>
-                          <td>
-                            <input
-                              type="password"
-                              maxlength="256"
-                              v-model.trim="newPassword"
-                              autocomplete="false"
-                              v-bind:class="{
-                                'form-control': true,
-                                'is-invalid':
-                                  !validPassword(newPassword, newPassParam) &&
-                                  newPasswordBlured,
-                              }"
-                              v-bind:style="[
-                                !validPassword(newPassword, newPassParam) &&
-                                newPasswordBlured
-                                  ? { 'margin-bottom': '0px' }
-                                  : { 'margin-bottom': '20px' },
-                              ]"
-                              v-on:blur="newPasswordBlured = true"
-                            />
-                            <div class="invalid-feedback">
-                              {{ passRequireMsg }}
-                            </div>
-                          </td>
-                        </tr>
-
-                        <!-- 新しいパスワード確認 -->
-                        <tr>
-                          <td class="mail-label">
-                            <label class="confirm-newpass-label">{{
-                              $t(
-                                "screenItemProperties.passwordReset.confirmNewPassword"
-                              )
-                            }}</label>
-                          </td>
-                          <td>
-                            <input
-                              type="password"
-                              maxlength="256"
-                              v-model.trim="confirmNewPassword"
-                              autocomplete="false"
-                              v-bind:class="{
-                                'form-control': true,
-                                'is-invalid':
-                                  !validConfirmPassword(
-                                    confirmNewPassword,
-                                    newPassword,
-                                    newPassParam,
-                                    confirmNewPassParam
-                                  ) && confirmNewPasswordBlured,
-                              }"
-                              v-bind:style="[
-                                !validConfirmPassword(
-                                  confirmNewPassword,
-                                  newPassword,
-                                  newPassParam,
-                                  confirmNewPassParam
-                                ) && confirmNewPasswordBlured
-                                  ? { 'margin-bottom': '0px' }
-                                  : { 'margin-bottom': '20px' },
-                              ]"
-                              v-on:blur="confirmNewPasswordBlured = true"
-                            />
-                            <div class="invalid-feedback">
-                              {{ confirmPasswordRequireMsg }}
-                            </div>
-                          </td>
-                        </tr>
-                      </table>
-                      <!-- ボタンエリア -->
-                      <div class="sign-in" style="margin-left: 70px">
-                        <button :disabled="changePasswordDisable">
-                          {{
-                            $t(
-                              "screenItemProperties.changePassword.changePassword"
-                            )
-                          }}
-                        </button>
+            <form @submit.prevent="changePassword" @keydown="handleKeyDown">
+              <div>
+                <table class="change-pass-table">
+                  <!-- メール -->
+                  <tr>
+                    <td class="mail-label">
+                      <label>
+                        {{
+                          $t("screenItemProperties.changePassword.oldPassword")
+                        }}</label
+                      >
+                    </td>
+                    <td>
+                      <input
+                        type="password"
+                        maxlength="256"
+                        v-model.trim="oldPassword"
+                        autocomplete="false"
+                        v-bind:class="{
+                          'form-control': true,
+                          'is-invalid':
+                            !signinValidPassword(
+                              oldPassword,
+                              currentPassParam
+                            ) && oldPasswordBlured,
+                        }"
+                        v-bind:style="[
+                          !signinValidPassword(oldPassword, currentPassParam) &&
+                          oldPasswordBlured
+                            ? { 'margin-bottom': '0px' }
+                            : { 'margin-bottom': '20px' },
+                        ]"
+                        v-on:blur="oldPasswordBlured = true"
+                      />
+                      <div class="invalid-feedback">
+                        {{ signinPassRequireMsg }}
                       </div>
-                    </div>
-                  </template>
-                </body-display>
-              </form>
-            </div>
+                    </td>
+                  </tr>
+
+                  <!-- 新しいパスワード -->
+                  <tr>
+                    <td class="mail-label">
+                      <label>{{
+                        $t("screenItemProperties.passwordReset.newPassword")
+                      }}</label>
+                    </td>
+                    <td>
+                      <input
+                        type="password"
+                        maxlength="256"
+                        v-model.trim="newPassword"
+                        autocomplete="false"
+                        v-bind:class="{
+                          'form-control': true,
+                          'is-invalid':
+                            !validPassword(newPassword, newPassParam) &&
+                            newPasswordBlured,
+                        }"
+                        v-bind:style="[
+                          !validPassword(newPassword, newPassParam) &&
+                          newPasswordBlured
+                            ? { 'margin-bottom': '0px' }
+                            : { 'margin-bottom': '20px' },
+                        ]"
+                        v-on:blur="newPasswordBlured = true"
+                      />
+                      <div class="invalid-feedback">
+                        {{ passRequireMsg }}
+                      </div>
+                    </td>
+                  </tr>
+
+                  <!-- 新しいパスワード確認 -->
+                  <tr>
+                    <td class="mail-label">
+                      <label class="confirm-newpass-label">{{
+                        $t(
+                          "screenItemProperties.passwordReset.confirmNewPassword"
+                        )
+                      }}</label>
+                    </td>
+                    <td>
+                      <input
+                        type="password"
+                        maxlength="256"
+                        v-model.trim="confirmNewPassword"
+                        autocomplete="false"
+                        v-bind:class="{
+                          'form-control': true,
+                          'is-invalid':
+                            !validConfirmPassword(
+                              confirmNewPassword,
+                              newPassword,
+                              newPassParam,
+                              confirmNewPassParam
+                            ) && confirmNewPasswordBlured,
+                        }"
+                        v-bind:style="[
+                          !validConfirmPassword(
+                            confirmNewPassword,
+                            newPassword,
+                            newPassParam,
+                            confirmNewPassParam
+                          ) && confirmNewPasswordBlured
+                            ? { 'margin-bottom': '0px' }
+                            : { 'margin-bottom': '20px' },
+                        ]"
+                        v-on:blur="confirmNewPasswordBlured = true"
+                      />
+                      <div class="invalid-feedback">
+                        {{ confirmPasswordRequireMsg }}
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+                <!-- ボタンエリア -->
+                <div class="sign-in">
+                  <button
+                    class="change-pass-btn"
+                    :disabled="changePasswordDisable"
+                  >
+                    {{
+                      $t("screenItemProperties.changePassword.changePassword")
+                    }}
+                  </button>
+                </div>
+              </div>
+            </form>
           </template>
         </body-display>
       </div>
