@@ -47,6 +47,8 @@ export default {
       emailRequireMsg,
       signinValidPassword,
       signinPassRequireMsg,
+      validVerificationCode,
+      verificationCodeRequireMsg,
     } = validation();
 
     const confirmMFACode = ref(false);
@@ -58,19 +60,8 @@ export default {
     let alertStatus = true;
     let signinDisable = ref(false);
     const passParam = t("errorParams.password");
-    console.log("pass....", passParam);
-
-    function validVerificationCode(mfaCode) {
-      // console.log("pass length", password.length);
-      if (mfaCode.length === 0) {
-        verifyCodeRequireMsg.value = t("errorMessages.E0001", {
-          param1: t("errorParams.totpCode"),
-        });
-        return false;
-      } else {
-        return true;
-      }
-    }
+    const pass = t("errorParams.totpCode");
+    const digitpass = t("screenItemProperties.signin.onlyDigit");
 
     function hideAlert() {
       message.value = "";
@@ -78,10 +69,8 @@ export default {
 
     // ログインする
     function signIn() {
-      console.log("disable...", signinDisable);
       signinDisable.value = true;
       if (!isValid()) {
-        // alert("valid...");
         return;
       }
 
@@ -102,7 +91,6 @@ export default {
 
       cognitoUser.authenticateUser(authDetails, {
         onSuccess(session) {
-          console.log("success disable...", signinDisable);
           // ユーザーセッション情報を Vue 状態システムに保存する
           setUserSessionInfo(session);
 
@@ -112,9 +100,13 @@ export default {
           signinDisable.value = false;
         },
         onFailure(error) {
-          // console.log("error...", error);
-          // console.log("type error...", JSON.stringify({ error }));
-          // console.log("failure disable...", signinDisable);
+          if (!error.message.includes("SOFTWARE_TOKEN_MFA_CODE")) {
+            message.value = exceptionError(
+              error.name,
+              t("errorParams.mailAndPass"),
+              error.message
+            );
+          }
 
           if (error.message === "User is not confirmed.") {
             router.replace({
@@ -125,17 +117,10 @@ export default {
               },
             });
           }
-          if (!error.message.includes("SOFTWARE_TOKEN_MFA_CODE")) {
-            message.value = exceptionError(
-              error.name,
-              t("errorParams.mailAndPass")
-            );
-          }
+
           signinDisable.value = false;
         },
         totpRequired(codeDeliveryDetails) {
-          // alert("totp");
-          console.log("totp msg", message.value);
           hideAlert();
           confirmMFACode.value = true;
           signinDisable.value = false;
@@ -155,7 +140,6 @@ export default {
           signinValidPassword(password.value, passParam)
         )
       ) {
-        // alert("isvalid totp if...");
         emailBlured.value = true;
         passwordBlured.value = true;
         signinDisable.value = false;
@@ -165,7 +149,6 @@ export default {
         !validVerificationCode(mfaCode.value) &&
         confirmMFACode.value == true
       ) {
-        // alert("isvalid totp first if...");
         verifyCodeBlured.value = true;
         signinDisable.value = false;
         return false;
@@ -235,6 +218,10 @@ export default {
       verifyCodeBlured,
       handleKeyDown,
       passParam,
+      pass,
+      digitpass,
+      validVerificationCode,
+      verificationCodeRequireMsg,
     };
   },
 };
@@ -380,10 +367,12 @@ export default {
                       v-bind:class="{
                         'form-control': true,
                         'is-invalid':
-                          !validVerificationCode(mfaCode) && verifyCodeBlured,
+                          !validVerificationCode(mfaCode, pass, digitpass) &&
+                          verifyCodeBlured,
                       }"
                       v-bind:style="[
-                        !validVerificationCode(mfaCode) && verifyCodeBlured
+                        !validVerificationCode(mfaCode, pass, digitpass) &&
+                        verifyCodeBlured
                           ? { 'margin-bottom': '0px' }
                           : { 'margin-bottom': '20px' },
                       ]"
@@ -391,7 +380,7 @@ export default {
                       autocomplete="false"
                     />
                     <div class="invalid-feedback">
-                      {{ verifyCodeRequireMsg }}
+                      {{ verificationCodeRequireMsg }}
                     </div>
                   </td>
                 </tr>

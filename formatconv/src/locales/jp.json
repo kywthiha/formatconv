@@ -36,7 +36,8 @@
     },
     "signin": {
       "resetPassword": "パスワードリセット",
-      "onetimePassword": "ワンタイムパスワード:"
+      "onetimePassword": "ワンタイムパスワード:",
+      "onlyDigit": "半角数字のみ"
     },
     "passwordReset": {
       "newPassword": "新しいパスワード:",

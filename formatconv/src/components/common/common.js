@@ -11,7 +11,7 @@ export function handleKeyDown(e) {
 }
 
 // 例外エラー対応
-export function exceptionError(exceptionMessage, param) {
+export function exceptionError(exceptionMessage, param, errrorMessage) {
   const { t } = i18n.global;
   const message = ref("");
   switch (exceptionMessage) {
@@ -19,9 +19,14 @@ export function exceptionError(exceptionMessage, param) {
       message.value = t("errorMessages.E0008");
       break;
     case "NotAuthorizedException":
-      message.value = t("errorMessages.E0005", {
-        param1: param,
-      });
+      if (errrorMessage === "Password attempts exceeded") {
+        message.value = t("errorMessages.E0012");
+      } else {
+        message.value = t("errorMessages.E0005", {
+          param1: param,
+        });
+      }
+
       break;
     case "UsernameExistsException":
       message.value = t("errorMessages.E0010");
