@@ -5,8 +5,8 @@
     作成日 : 2022/10/17　 
 -->
 <script>
-import { ref, onMounted } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 import store from "../../store/index";
 import {
   CognitoUserPool,
@@ -34,14 +34,27 @@ export default {
   setup() {
     // Vue ルーターへの参照を作成する
     const router = useRouter();
-    const route = useRoute();
-
-    const { t } = useI18n();
     let message = ref("");
     const email = ref("");
     const username = ref("");
     const password = ref("");
     const mfaCode = ref("");
+    const confirmMFACode = ref(false);
+    const emailBlured = ref(false);
+    const passwordBlured = ref(false);
+    let verifyCodeRequireMsg = ref("");
+    const verifyCodeBlured = ref(false);
+    let alertStatus = true;
+    let signinDisable = ref(false);
+    const showPassword = ref(false);
+
+    // 英語変換対応
+    const { t } = useI18n();
+    const passParam = t("errorParams.password");
+    const pass = t("errorParams.totpCode");
+    const digitpass = t("screenItemProperties.signin.onlyDigit");
+
+    // 入力チェックのため
     const {
       validEmail,
       emailRequireMsg,
@@ -51,30 +64,21 @@ export default {
       verificationCodeRequireMsg,
     } = validation();
 
-    const confirmMFACode = ref(false);
-
-    const emailBlured = ref(false);
-    const passwordBlured = ref(false);
-    let verifyCodeRequireMsg = ref("");
-    const verifyCodeBlured = ref(false);
-    let alertStatus = true;
-    let signinDisable = ref(false);
-    const passParam = t("errorParams.password");
-    const pass = t("errorParams.totpCode");
-    const digitpass = t("screenItemProperties.signin.onlyDigit");
-    const showPassword = ref(false);
-
+    // メッセージを隠す
     function hideAlert() {
       message.value = "";
     }
 
     // ログインする
     function signIn() {
+      // 連続ボタン対応
       signinDisable.value = true;
+
       if (!isValid()) {
         return;
       }
 
+      // Cognito ユーザープールデータをセットアップする
       const userPool = new CognitoUserPool(POOL_DATA);
       const authData = {
         Username: email.value,
@@ -88,8 +92,10 @@ export default {
         Pool: userPool,
       };
 
+      // ユーザー名とユーザープール情報に基づいて Cognito User オブジェクトを作成する
       const cognitoUser = new CognitoUser(userData);
 
+      // authenticateUser APIを呼び出す
       cognitoUser.authenticateUser(authDetails, {
         onSuccess(session) {
           // ユーザーセッション情報を Vue 状態システムに保存する
@@ -109,6 +115,7 @@ export default {
             );
           }
 
+          // ユーザーのMFAステータスが確認されていない場合、
           if (error.message === "User is not confirmed.") {
             router.replace({
               name: "confirm",
@@ -130,6 +137,7 @@ export default {
       });
     }
 
+    // 入力チェック対応
     function isValid() {
       if (
         !(
@@ -153,8 +161,11 @@ export default {
       return true;
     }
 
+    //
     function autoTimeout(result) {
-      const seconds_timeout = 3600;
+      console.log("time out", result);
+      // const seconds_timeout = 3600;
+      const seconds_timeout = 60;
       // ユーザーのログインが 1 時間後に期限切れになるように設定する
       const expirationDate =
         +result.idToken.payload["auth_time"] + seconds_timeout;
@@ -165,7 +176,10 @@ export default {
       return expires_millseconds;
     }
 
+    //　ログインユーザーの情報を保存する
     function setUserSessionInfo(session) {
+      console.log("set ", session);
+      //
       setTimeout(function () {
         store.dispatch("autoLogout");
         router.replace("/signin");
@@ -182,12 +196,6 @@ export default {
       store.dispatch("setEmail", session.idToken.payload.email);
       store.dispatch("setName", session.idToken.payload.name);
     }
-
-    onMounted(function () {
-      if (route.params.message) {
-        message.value = route.params.message;
-      }
-    });
 
     return {
       email,
@@ -403,4 +411,3 @@ export default {
     </div>
   </div>
 </template>
-<style scoped></style>
