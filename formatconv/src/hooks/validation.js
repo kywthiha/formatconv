@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 
-// hooked used to set validation messages in UI
+// UI で検証メッセージを設定するために使用されるフック
 export default function FormValidation() {
   let signinPassRequireMsg = ref("");
   let passRequireMsg = ref("");
@@ -15,7 +15,6 @@ export default function FormValidation() {
   const { t } = useI18n();
 
   function signinValidPassword(password, param) {
-    // console.log("pass length", password.length);
     if (password.length === 0) {
       signinPassRequireMsg.value = t("errorMessages.E0001", {
         param1: param,
@@ -27,11 +26,8 @@ export default function FormValidation() {
   }
 
   function validPassword(password, param) {
-    // var rePassword = /^(?=.{8,}$)[a-z0-9]+$/;
-    console.log("param...", param);
     var rePassword = /^(?=.*[0-9])(?=.*[a-z])(?!.* ).{8,}$/;
-    // var rePassword =
-    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
     if (password.length === 0) {
       passRequireMsg.value = t("errorMessages.E0001", {
         param1: param,
@@ -56,7 +52,6 @@ export default function FormValidation() {
         param1: confirmPassParam,
       });
     } else if (confirmPassword !== password) {
-      console.log("not same else if");
       validConfirmPwd.value = false;
       confirmPasswordRequireMsg.value = t("errorMessages.E0004", {
         param1: newPassParam,
@@ -85,12 +80,9 @@ export default function FormValidation() {
   }
 
   function validUsername(username) {
-    // var reUsername = /^(?=.{3,63}$)(?![_.])(?!.*[_.]{2})[a-z0-9._]+(?<![_.])$/;
-
     var reUsername = /^(?=.{3,63}$)[a-z0-9]+$/;
 
     if (username.length === 0) {
-      console.log(" in required errror");
       usernameRequireMsg.value = t("errorMessages.E0001", {
         param1: t("errorParams.username"),
       });

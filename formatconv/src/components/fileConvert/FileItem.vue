@@ -1,7 +1,7 @@
 <!--
     クラス名 : FileUploadForm
     概要 : 変換ファイルアップロード処理画面
-    作成者 : GICM_MHK
+    作成者 : GICM_KTH
     作成日 : 2022/10/17　 
 -->
 <script setup>
@@ -46,7 +46,6 @@ const uploadToS3 = async () => {
           response.getElementsByTagName("Message") &&
           response.getElementsByTagName("Message")[0]
         ) {
-          // const code = response.getElementsByTagName("Code")[0].textContent;
           const message =
             response.getElementsByTagName("Message")[0].textContent;
           error_message.value = message;

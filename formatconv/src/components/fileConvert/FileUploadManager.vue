@@ -1,7 +1,7 @@
 <!--
     クラス名 : FileUploadForm
     概要 : 変換ファイルアップロード処理画面
-    作成者 : GICM_MHK
+    作成者 : GICM_KTH
     作成日 : 2022/10/17　 
 -->
 <script setup>

@@ -26,7 +26,6 @@ export function exceptionError(exceptionMessage, param, errrorMessage) {
           param1: param,
         });
       }
-
       break;
     case "UsernameExistsException":
       message.value = t("errorMessages.E0010");
@@ -75,7 +74,7 @@ export function exceptionError(exceptionMessage, param, errrorMessage) {
   return message.value;
 }
 
-// getToken
+// トークンを取得する
 export const getToken = () =>
   new Promise((resolve, reject) => {
     const userPool = new CognitoUserPool(POOL_DATA);

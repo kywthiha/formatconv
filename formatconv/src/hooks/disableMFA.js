@@ -1,6 +1,8 @@
 import { POOL_DATA } from "../config/cognito";
 import { CognitoUserPool } from "amazon-cognito-identity-js";
 import store from "../store/index";
+
+// MFA ステータスを無効にする
 function disableMFA() {
   // Cognito ユーザープールへの参照を取得する
   const userPool = new CognitoUserPool(POOL_DATA);
