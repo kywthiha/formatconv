@@ -5,22 +5,19 @@
     作成日 : 2022/10/18　 
 -->
 <script>
-import { ref, onBeforeMount, onBeforeUpdate } from "vue";
+import { ref } from "vue";
 import { computed } from "@vue/reactivity";
 import { CognitoUserPool, CognitoUser } from "amazon-cognito-identity-js";
 import { POOL_DATA } from "../../config/cognito";
-import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
 import validation from "../../hooks/validation";
-import disableMFA from "../../hooks/disableMFA";
 import LoginHeaderForm from "../auth/LoginHeaderForm.vue";
 import { handleKeyDown, exceptionError, getToken } from "../common/common";
 
 export default {
   components: { LoginHeaderForm },
   setup() {
-    const router = useRouter();
     const store = useStore();
     const { t } = useI18n();
     let oldPassword = ref("");
@@ -46,18 +43,15 @@ export default {
     let message = ref("");
     let messageType = ref("");
     let changePasswordDisable = ref(false);
-    console.log("in change password ", username.value);
-    console.log("confirm pass ", confirmNewPassParam);
-    console.log("getToken ", getToken);
 
-    // sendMail();
     // 認証済みメールでコードを送信する
     function changePassword() {
-      console.log("...", isValid());
       changePasswordDisable.value = true;
+
       if (!isValid()) {
         return;
       }
+
       const userPool = new CognitoUserPool(POOL_DATA);
       const userData = {
         Username: username.value,
@@ -65,16 +59,12 @@ export default {
       };
 
       const cognitoUser = new CognitoUser(userData);
-      console.log(" cognito user in change password ", cognitoUser);
 
       // ユーザーを認証するには getSession を呼び出す必要がある
       // cognito ユーザーのセッションを取得する
       // 取得できないと、「User is not authenticated」エラーが発生した
       cognitoUser.getSession(function (err, session) {
-        console.log("in Change pass", err);
-        console.log("in Change pass session", session);
         if (err) {
-          alert(err);
           message.value = exceptionError(
             err.name,
             t("errorParams.currentPassword")
@@ -90,7 +80,6 @@ export default {
         newPassword.value,
         function (err, result) {
           if (err) {
-            alert(err.message || JSON.stringify(err));
             message.value = exceptionError(
               err.name,
               t("errorParams.currentPassword")
@@ -99,8 +88,8 @@ export default {
             changePasswordDisable.value = false;
             return;
           }
+
           // call result: SUCCESS
-          console.log("call result: " + result);
           if (result === "SUCCESS") {
             sendMail();
           }
@@ -108,6 +97,7 @@ export default {
       );
     }
 
+    //　パスワード変更処理が終わった後、完了メールを送信する。
     async function sendMail() {
       try {
         const token = await getToken();
@@ -143,10 +133,12 @@ export default {
       }
     }
 
+    // メッセージを隠す
     function hideAlert() {
       message.value = "";
     }
 
+    // 入力チェック対応
     function isValid() {
       if (
         !(
@@ -160,7 +152,6 @@ export default {
           )
         )
       ) {
-        // alert("isvalid totp if...");
         oldPasswordBlured.value = true;
         newPasswordBlured.value = true;
         confirmNewPasswordBlured.value = true;
