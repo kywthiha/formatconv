@@ -28,14 +28,15 @@ export default {
     let disableUpdatePasswordBtn = ref(false);
     let disableResetPasswordBtn = ref(false);
     const verificationCodeBlured = ref(false);
+    const showNewPassword = ref(false);
+    const showNewConfirmPassword = ref(false);
+
     // 英語変換対応
     const { t } = useI18n();
     const passParam = t("errorParams.newPassword");
     const confirmPasswordParam = t("errorParams.confirmNewPassword");
     let messageType = ref("");
     let param = t("errorParams.verificationCode");
-    const showNewPassword = ref(false);
-    const showNewConfirmPassword = ref(false);
 
     // 入力チェックのため
     const {
@@ -86,10 +87,13 @@ export default {
 
     // パスワードの更新
     function resetPassword() {
+      // 連続ボタン対応
       disableUpdatePasswordBtn.value = true;
+
       if (!isValidConfrimPassword()) {
         return;
       }
+
       const userPool = new CognitoUserPool(POOL_DATA);
       const userData = {
         Username: email.value,
@@ -98,6 +102,7 @@ export default {
 
       const cognitoUser = new CognitoUser(userData);
 
+      //confirmPassword APIを呼び出す
       cognitoUser.confirmPassword(code.value, password.value, {
         onSuccess() {
           router.replace({
@@ -117,6 +122,7 @@ export default {
       });
     }
 
+    // 入力チェック対応
     function isValidConfrimPassword() {
       if (
         !(

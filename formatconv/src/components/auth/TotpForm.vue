@@ -43,13 +43,13 @@ export default {
       message.value = "";
     }
 
+    // 入力チェック対応
     function isValid() {
       if (!validVerificationCode(qrCode.value, param)) {
         qrCodeBlured.value = true;
         disableBtn.value = false;
         return false;
       }
-
       return true;
     }
 
@@ -93,6 +93,7 @@ export default {
 
     // MFA を確認する
     function verifyMFA() {
+      // 連続ボタン対応
       disableBtn.value = true;
 
       if (!isValid()) {
@@ -153,7 +154,6 @@ export default {
           }
 
           store.dispatch("setMFA", isEnabled);
-          console.log("setUserMfaPreference call result " + result);
         }
       );
     }
@@ -163,12 +163,14 @@ export default {
       return store.getters.isMFAEnabled;
     });
 
+    // キャンセルボタン
     function cancel() {
       router.replace({
         name: "fileUpload",
       });
     }
 
+    // 新しいQRコードを出す
     if (checkedValue.value !== null || checkedValue.value !== undefined) {
       newQRCode();
     }
@@ -235,7 +237,6 @@ export default {
                     <p>{{ $t("screenItemProperties.totpForm.mfaCode") }}</p>
                     <div class="row text-center">
                       <div class="col-4 offset-md-4 mb-2">
-                        <!-- <div class="input-group"> -->
                         <input
                           type="text"
                           v-model.trim="qrCode"
@@ -259,7 +260,6 @@ export default {
                         <div class="invalid-feedback">
                           {{ verificationCodeRequireMsg }}
                         </div>
-                        <!-- </div> -->
                       </div>
                     </div>
                     <!-- ボタンエリア -->
@@ -282,9 +282,3 @@ export default {
     </body-display>
   </div>
 </template>
-
-<style>
-.mfa {
-  width: 900px;
-}
-</style>

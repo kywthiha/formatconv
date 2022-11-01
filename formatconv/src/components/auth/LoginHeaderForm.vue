@@ -15,8 +15,10 @@ export default {
       return store.getters.isMFAEnabled;
     });
 
+    // プロファイル名
     const profilename = computed(() => store.state.authModule.name);
 
+    // ログアウト
     const logout = () => {
       store.dispatch("logout");
       router.push({
@@ -30,10 +32,12 @@ export default {
       store.dispatch("fetchMFAValue");
     });
 
+    //　ログインしたユーザーの mFA の現在の状態を確認する
     onBeforeUpdate(function () {
       store.dispatch("fetchMFAValue");
     });
 
+    //MFA ステータスを変更する
     function enableMFAStatus(event) {
       if (event.target.checked === true) {
         store.dispatch("setStatus", event.target.checked);
@@ -46,6 +50,7 @@ export default {
       }
     }
 
+    //　パスワード変更画面へ移動する
     function changePassword() {
       router.replace({
         name: "ChangePassword",
@@ -65,24 +70,6 @@ export default {
 
 <template>
   <header-display>
-    <!-- <template v-slot:totp-slot>
-      <button>
-        <div class="form-switch" style="padding-left: 0em">
-          <label class="form-check-label" for="flexSwitchCheckDefault">
-            {{ $t("screenItemProperties.common.mfaOnOff") }}</label
-          >
-          <input
-            class="form-check-input"
-            style="margin-left: 0em"
-            type="checkbox"
-            id="flexSwitchCheckDefault"
-            :value="mfaValue"
-            v-model="mfaValue"
-            @change="enableMFAStatus($event)"
-          />
-        </div>
-      </button>
-    </template> -->
     <template v-slot:register-slot>
       <div class="row">
         <div class="col-6">
