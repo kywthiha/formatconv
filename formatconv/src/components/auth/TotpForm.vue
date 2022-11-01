@@ -37,6 +37,8 @@ export default {
     const qrCodeBlured = ref(false);
     let param = t("screenItemProperties.totpForm.mfaCode");
     let disableBtn = ref(false);
+    // 半角数字のみ
+    const digitpass = t("screenItemProperties.signin.onlyDigit");
 
     // メッセージを隠す
     function hideAlert() {
@@ -196,6 +198,7 @@ export default {
       param,
       isValid,
       disableBtn,
+      digitpass,
     };
   },
 };
@@ -244,11 +247,14 @@ export default {
                           v-bind:class="{
                             'form-control': true,
                             'is-invalid':
-                              !validVerificationCode(qrCode, param) &&
-                              qrCodeBlured,
+                              !validVerificationCode(
+                                qrCode,
+                                param,
+                                digitpass
+                              ) && qrCodeBlured,
                           }"
                           v-bind:style="[
-                            !validVerificationCode(qrCode, param) &&
+                            !validVerificationCode(qrCode, param, digitpass) &&
                             qrCodeeBlured
                               ? { 'margin-bottom': '0px' }
                               : { 'margin-bottom': '20px' },

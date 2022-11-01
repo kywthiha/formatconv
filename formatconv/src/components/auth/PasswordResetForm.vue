@@ -37,6 +37,8 @@ export default {
     const confirmPasswordParam = t("errorParams.confirmNewPassword");
     let messageType = ref("");
     let param = t("errorParams.verificationCode");
+    // 半角数字のみ
+    const digitpass = t("screenItemProperties.signin.onlyDigit");
 
     // 入力チェックのため
     const {
@@ -194,6 +196,7 @@ export default {
       param,
       showNewPassword,
       showNewConfirmPassword,
+      digitpass,
     };
   },
 };
@@ -304,11 +307,11 @@ export default {
                         v-bind:class="{
                           'form-control': true,
                           'is-invalid':
-                            !validVerificationCode(code, param) &&
+                            !validVerificationCode(code, param, digitpass) &&
                             verificationCodeBlured,
                         }"
                         v-bind:style="[
-                          !validVerificationCode(code, param) &&
+                          !validVerificationCode(code, param, digitpass) &&
                           verificationCodeBlured
                             ? { 'margin-bottom': '0px' }
                             : { 'margin-bottom': '20px' },

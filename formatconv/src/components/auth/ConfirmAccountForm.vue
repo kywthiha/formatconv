@@ -38,6 +38,8 @@ export default {
     // 英語変換対応
     const { t } = useI18n();
     let param = t("errorParams.verificationCode");
+    // 半角数字のみ
+    const digitpass = t("screenItemProperties.signin.onlyDigit");
 
     if (route.query.errormsg != null) {
       messageType.value = "danger";
@@ -134,6 +136,7 @@ export default {
       disableBtn,
       messageType,
       param,
+      digitpass,
     };
   },
 };
@@ -196,11 +199,11 @@ export default {
                     v-bind:class="{
                       'form-control': true,
                       'is-invalid':
-                        !validVerificationCode(code, param) &&
+                        !validVerificationCode(code, param, digitpass) &&
                         verificationCodeBlured,
                     }"
                     v-bind:style="[
-                      !validVerificationCode(code, param) &&
+                      !validVerificationCode(code, param, digitpass) &&
                       verificationCodeBlured
                         ? { 'margin-bottom': '0px' }
                         : { 'margin-bottom': '20px' },
