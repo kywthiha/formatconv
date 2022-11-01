@@ -333,7 +333,9 @@ export default {
                         v-on:blur="passwordBlured = true"
                       />
                       <i
-                        class="bi bi-eye-slash"
+                        :class="[
+                          showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill',
+                        ]"
                         aria-hidden="true"
                         @click="showPassword = !showPassword"
                       ></i>
@@ -400,7 +402,11 @@ export default {
                         v-on:blur="confirmPasswordBlured = true"
                       />
                       <i
-                        class="bi bi-eye-slash"
+                        :class="[
+                          showConfirmPassword
+                            ? 'bi-eye-fill'
+                            : 'bi-eye-slash-fill',
+                        ]"
                         aria-hidden="true"
                         @click="showConfirmPassword = !showConfirmPassword"
                       ></i>
