@@ -15,13 +15,6 @@
 .alert-dismissible .btn-close {
   padding-top: revert;
 }
-/* .alert {
-  margin: auto !important;
-  width: 100% !important;
-  padding: 0.5rem;
-  font-size: 0.85rem;
-  margin-top: 30px;
-} */
 input[type="text"],
 input[type="password"] {
   height: 35px;
