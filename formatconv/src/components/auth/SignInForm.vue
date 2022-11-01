@@ -161,31 +161,8 @@ export default {
       return true;
     }
 
-    //
-    function autoTimeout(result) {
-      console.log("time out", result);
-      // const seconds_timeout = 3600;
-      const seconds_timeout = 6000;
-      // ユーザーのログインが 1 時間後に期限切れになるように設定する
-      const expirationDate =
-        +result.idToken.payload["auth_time"] + seconds_timeout;
-
-      var expires_millseconds =
-        (expirationDate - +result.idToken.payload["auth_time"]) * 1000;
-
-      return expires_millseconds;
-    }
-
     //　ログインユーザーの情報を保存する
     function setUserSessionInfo(session) {
-      console.log("set ", session);
-      //
-      setTimeout(function () {
-        store.dispatch("autoLogout");
-        router.replace("/signin");
-        alert("You have been automatically logged out");
-      }, autoTimeout(session));
-
       store.dispatch("setSession", session);
       store.dispatch("setIDToken", session.getIdToken().getJwtToken());
       store.dispatch(
@@ -204,7 +181,6 @@ export default {
       signIn,
       message,
       mfaCode,
-      autoTimeout,
       confirmMFACode,
       setUserSessionInfo,
       emailBlured,
