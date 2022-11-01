@@ -44,6 +44,17 @@ input[type="number"] {
   transition: all 0.5s;
 }
 
+input[type="password"] {
+  height: 35px;
+  width: 250px;
+  border-radius: 5px;
+  border: 1px solid #cacacd;
+  outline: 0;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  transition: all 0.5s;
+}
+
 input[type="email"] {
   height: 35px;
   width: 250px;
@@ -137,17 +148,6 @@ input[type="email"] {
   font-size: 12px;
   font-weight: 600;
 } */
-input[type="password"] {
-  height: 35px;
-  width: 250px;
-  border-radius: 5px;
-  border: 1px solid #cacacd;
-  outline: 0;
-  margin-bottom: 20px;
-  box-sizing: border-box;
-  transition: all 0.5s;
-  margin-top: 10px;
-}
 
 .input-text a {
   /* position: absolute; */
@@ -566,6 +566,7 @@ table {
 
 .password-input {
   position: relative;
+  margin-top: 10px;
 }
 
 .password-input i {

@@ -42,6 +42,7 @@ export default {
     let disableCheckbox = ref(true);
     let message = ref("");
     const showPassword = ref(false);
+    const showConfirmPassword = ref(false);
     let messageType = ref("");
 
     // 英語変換対応
@@ -214,6 +215,7 @@ export default {
       passParam,
       confirmPasswordParam,
       showPassword,
+      showConfirmPassword,
       messageType,
       iconClick,
     };
@@ -323,21 +325,10 @@ export default {
                     }}</label>
                   </td>
                   <td>
-                    <!-- type="password"
-                      :type="passwordFieldType"
-                      -->
-                    <!-- <div class="inputWithIcon">
-                      <input type="text" placeholder="Email" />
-                      <i
-                        class="bi bi-envelope bi-lg bi-fw"
-                        aria-hidden="true"
-                        @click="iconClick"
-                      ></i>
-                    </div> -->
                     <div class="password-input">
                       <input
                         class="form-control"
-                        v-bind:type="[showPassword ? 'text' : 'password']"
+                        :type="[showPassword ? 'text' : 'password']"
                         v-model.trim="password"
                         autocomplete="false"
                         maxlength="256"
@@ -363,14 +354,6 @@ export default {
                       <div class="invalid-feedback">
                         {{ passRequireMsg }}
                       </div>
-                      <!-- <span class="test">
-                        <i
-                          class="bi bi-eye-slash"
-                          id="togglePassword"
-                          style="cursor: pointer"
-                          @click="showPassword = !showPassword"
-                        ></i>
-                      </span> -->
                     </div>
                   </td>
 
@@ -404,36 +387,43 @@ export default {
                     }}</label>
                   </td>
                   <td>
-                    <input
-                      type="password"
-                      v-model.trim="confirm_password"
-                      autocomplete="false"
-                      id="confirm-password"
-                      maxlength="256"
-                      v-bind:class="{
-                        'form-control': true,
-                        'is-invalid':
+                    <div class="password-input">
+                      <input
+                        :type="[showConfirmPassword ? 'text' : 'password']"
+                        v-model.trim="confirm_password"
+                        autocomplete="false"
+                        id="confirm-password"
+                        maxlength="256"
+                        v-bind:class="{
+                          'form-control': true,
+                          'is-invalid':
+                            !validConfirmPassword(
+                              confirm_password,
+                              password,
+                              passParam,
+                              confirmPasswordParam
+                            ) && confirmPasswordBlured,
+                        }"
+                        v-bind:style="[
                           !validConfirmPassword(
                             confirm_password,
                             password,
                             passParam,
                             confirmPasswordParam
-                          ) && confirmPasswordBlured,
-                      }"
-                      v-bind:style="[
-                        !validConfirmPassword(
-                          confirm_password,
-                          password,
-                          passParam,
-                          confirmPasswordParam
-                        ) && confirmPasswordBlured
-                          ? { 'margin-bottom': '0px' }
-                          : { 'margin-bottom': '20px' },
-                      ]"
-                      v-on:blur="confirmPasswordBlured = true"
-                    />
-                    <div class="invalid-feedback">
-                      {{ confirmPasswordRequireMsg }}
+                          ) && confirmPasswordBlured
+                            ? { 'margin-bottom': '0px' }
+                            : { 'margin-bottom': '20px' },
+                        ]"
+                        v-on:blur="confirmPasswordBlured = true"
+                      />
+                      <i
+                        class="bi bi-eye-slash"
+                        aria-hidden="true"
+                        @click="showConfirmPassword = !showConfirmPassword"
+                      ></i>
+                      <div class="invalid-feedback">
+                        {{ confirmPasswordRequireMsg }}
+                      </div>
                     </div>
                   </td>
                   <td colspan="2" style="padding-left: 30px">
