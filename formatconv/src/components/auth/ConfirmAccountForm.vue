@@ -24,6 +24,7 @@ export default {
     // データ入力フィールドへの参照
     const code = ref("");
     const username = ref(route.query.username);
+
     const verificationCodeBlured = ref(false);
     let disableBtn = ref(false);
 
@@ -37,6 +38,11 @@ export default {
     // 英語変換対応
     const { t } = useI18n();
     let param = t("errorParams.verificationCode");
+
+    if (route.query.errormsg != null) {
+      messageType.value = "danger";
+      message.value = route.query.errormsg;
+    }
 
     // コードを再送する
     function resendCode() {

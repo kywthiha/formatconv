@@ -116,11 +116,12 @@ export default {
           }
 
           // ユーザーのMFAステータスが確認されていない場合、
-          if (error.message === "User is not confirmed.") {
+          if (error.name === "UserNotConfirmedException") {
             router.replace({
               name: "confirm",
               query: {
                 username: email.value,
+                errormsg: t("errorMessages.E0008"),
               },
             });
           }
