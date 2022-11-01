@@ -254,22 +254,22 @@ export default {
                               : { 'margin-bottom': '20px' },
                           ]"
                           v-on:blur="qrCodeBlured = true"
-                          style="margin-left: 30px"
+                          style="margin-left: 60px"
                           autocomplete="false"
                         />
-                        <div class="invalid-feedback">
+                        <div
+                          class="invalid-feedback"
+                          style="margin-top: -15px; margin-left: -30px"
+                        >
                           {{ verificationCodeRequireMsg }}
                         </div>
                       </div>
                     </div>
                     <!-- ボタンエリア -->
-                    <button class="mfa-cancel-btn mt-2 me-2" @click="cancel">
+                    <button class="mfa-cancel-btn mt-2" @click="cancel">
                       {{ $t("screenItemProperties.button.cancelBtn") }}
                     </button>
-                    <button
-                      class="mfa-confirm-btn mt-2 me-2"
-                      :disabled="disableBtn"
-                    >
+                    <button class="mfa-confirm-btn mt-2" :disabled="disableBtn">
                       {{ $t("screenItemProperties.button.sendBtn") }}
                     </button>
                   </div>

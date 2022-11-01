@@ -61,25 +61,4 @@ const handleGotoUpload = () => {
     </div>
   </div>
 </template>
-<style scoped>
-.file-list {
-  margin-bottom: 1rem;
-}
-.file-drop-zone {
-  margin-bottom: 1rem;
-}
-.file-upload-manager {
-  margin: 1rem;
-  min-height: 50vh;
-}
-.file-action-group {
-  display: flex;
-  justify-content: flex-end;
-}
-.go-to-upload {
-  margin-bottom: 1rem;
-}
-.btn-upload {
-  background-color: #6c8bc5 !important;
-}
-</style>
+<style scoped></style>

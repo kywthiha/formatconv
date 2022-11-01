@@ -267,13 +267,20 @@ export default {
                       >
                     </td>
                   </tr>
+                  <tr>
+                    <td></td>
+                    <td>
+                      <!-- ボタンエリア -->
+                      <div class="sign-in">
+                        <button :disabled="disableResetPasswordBtn">
+                          {{
+                            $t("screenItemProperties.button.resetPasswordBtn")
+                          }}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 </table>
-                <!-- ボタンエリア -->
-                <div class="sign-in">
-                  <button :disabled="disableResetPasswordBtn">
-                    {{ $t("screenItemProperties.button.resetPasswordBtn") }}
-                  </button>
-                </div>
               </form>
             </div>
             <!-- パスワードリセット -->
@@ -344,7 +351,11 @@ export default {
                           v-on:blur="passwordBlured = true"
                         />
                         <i
-                          class="bi bi-eye-slash"
+                          :class="[
+                            showNewPassword
+                              ? 'bi-eye-fill'
+                              : 'bi-eye-slash-fill',
+                          ]"
                           aria-hidden="true"
                           @click="showNewPassword = !showNewPassword"
                         ></i>
@@ -394,7 +405,11 @@ export default {
                           v-on:blur="confirmPasswordBlured = true"
                         />
                         <i
-                          class="bi bi-eye-slash"
+                          :class="[
+                            showNewConfirmPassword
+                              ? 'bi-eye-fill'
+                              : 'bi-eye-slash-fill',
+                          ]"
                           aria-hidden="true"
                           @click="
                             showNewConfirmPassword = !showNewConfirmPassword
@@ -406,13 +421,20 @@ export default {
                       </div>
                     </td>
                   </tr>
+                  <tr>
+                    <td></td>
+                    <td>
+                      <!-- ボタンエリア -->
+                      <div class="sign-in">
+                        <button :disabled="disableUpdatePasswordBtn">
+                          {{
+                            $t("screenItemProperties.button.updatePasswordBtn")
+                          }}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 </table>
-                <!-- ボタンエリア -->
-                <div class="sign-in">
-                  <button :disabled="disableUpdatePasswordBtn">
-                    {{ $t("screenItemProperties.button.updatePasswordBtn") }}
-                  </button>
-                </div>
               </form>
             </div>
           </template>

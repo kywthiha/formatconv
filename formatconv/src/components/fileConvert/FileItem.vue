@@ -184,44 +184,4 @@ const deleteFileItem = () =>
     </template>
   </div>
 </template>
-<style scoped>
-.file-item {
-  border: 1px solid #787878;
-  border-radius: 0.375rem;
-  padding: 0.5rem;
-}
-
-.file-item .btn-complete {
-  background-color: #2097f3 !important;
-}
-
-.file-item .btn-upload {
-  border: none;
-  outline: none;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 0.375rem 0.75rem;
-  display: inline-block;
-  background-color: #8cc34a;
-  color: #ffffff;
-}
-
-.alert {
-  margin: auto !important;
-  width: 100% !important;
-  padding: 0.5rem;
-  font-size: 0.85rem;
-}
-.download-action a {
-  display: block;
-}
-.download-action {
-  display: flex;
-  gap: 1rem;
-}
-.btn-download-link {
-  background-color: #f54337 !important;
-  text-decoration: none;
-}
-</style>
+<style scoped></style>

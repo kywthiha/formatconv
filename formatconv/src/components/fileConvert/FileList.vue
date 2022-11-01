@@ -35,19 +35,4 @@ const fileItems = computed(
     </p>
   </div>
 </template>
-<style scoped>
-.file-list-container {
-  background-color: #f7f7f9;
-  padding: 0.5rem;
-}
-
-.file-list-container .file-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.empty-file-list {
-  background-color: #f7f7f9;
-  padding: 3rem 1rem;
-}
-</style>
+<style scoped></style>

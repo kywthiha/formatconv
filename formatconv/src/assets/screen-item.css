@@ -1,49 +1,28 @@
-/* signin-form start */
+/* common start */
 .container {
   min-height: 35vh;
-  /* width: 700px; */
-  /* background-color: #f8f6f5; */
-  /* display: flex; */
   justify-content: center;
   align-items: center;
-  margin-left: 200px;
 }
 .alert {
   text-align: center;
-  width: 500px;
-  /* display: flex; */
+  width: 500px !important;
+  padding: 0.5rem;
   align-content: stretch;
-  /* align-items: center; */
   margin-left: 380px;
   margin-top: 30px;
 }
-.signin-table {
-  margin-left: 200px;
+.alert-dismissible .btn-close {
+  padding-top: revert;
 }
-.profile-btn {
-  display: flex;
-}
-.reset-input-text {
-  position: relative;
-  margin-right: 100px;
-}
-.input-text {
-  margin-top: 20px;
-  position: relative;
-}
+/* .alert {
+  margin: auto !important;
+  width: 100% !important;
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  margin-top: 30px;
+} */
 input[type="text"],
-input[type="number"] {
-  height: 35px;
-  width: 250px;
-  border-radius: 5px;
-  border: 1px solid #cacacd;
-  outline: 0;
-  margin-bottom: 20px;
-  /* padding: 0 20px 0 10px; */
-  box-sizing: border-box;
-  transition: all 0.5s;
-}
-
 input[type="password"] {
   height: 35px;
   width: 250px;
@@ -54,39 +33,45 @@ input[type="password"] {
   box-sizing: border-box;
   transition: all 0.5s;
 }
-
-input[type="email"] {
-  height: 35px;
-  width: 250px;
-  border-radius: 5px;
-  border: 1px solid #cacacd;
-  outline: 0;
-  margin-bottom: 20px;
-  /* padding: 0 20px 0 10px; */
-  box-sizing: border-box;
-  transition: all 0.5s;
-  margin-top: 10px;
-}
-.reg-input-text {
-  margin-top: 20px;
-  padding-left: 100px;
-  position: relative;
-}
-.confirm-password-input {
-  padding-left: 100px;
-  position: relative;
-}
-.account-name-label {
-  width: 110px;
-  text-align: right;
-  padding-bottom: 20px;
-  padding-right: 10px;
-}
 .mail-label {
   width: 110px;
   text-align: right;
   padding-bottom: 10px;
   padding-right: 10px;
+}
+button[disabled] {
+  border: 0.3px solid #999999;
+  background-color: #cccccc !important;
+  color: #666666;
+  cursor: not-allowed;
+}
+.img-fluid {
+  max-width: 100%;
+  height: 100%;
+}
+table {
+  margin-top: 30px;
+}
+.password-input {
+  position: relative;
+  margin-top: 10px;
+}
+.password-input i {
+  position: absolute;
+  left: 210px;
+  top: -2px;
+  padding: 9px 8px;
+  color: #aaa;
+}
+.form-control.is-invalid,
+.was-validated .form-control:invalid {
+  background-image: none !important;
+}
+/* common end */
+
+/* sign-in start */
+.signin-table {
+  margin-left: 400px;
 }
 .signin-mail-label {
   width: 110px;
@@ -105,96 +90,14 @@ input[type="email"] {
   padding-bottom: 20px;
   padding-right: 10px;
 }
-.signin-totp-btn {
-  margin-left: 310px;
-}
-.confirm-mail-label {
-  width: 110px;
-  text-align: right;
-  padding-bottom: 30px;
-  padding-right: 10px;
-}
 .totp-table {
-  margin-left: 145px;
+  margin-left: 345px;
 }
-.change-pass-table {
-  margin-left: 128px;
-}
-.change-pass-btn {
-  margin-left: 240px;
-}
-.reset-pass-table {
-  margin-left: 200px;
-}
-.reset-pass-tbl {
-  margin-left: 127px;
-}
-.reg-accname-label {
-  width: 200px;
-}
-.sign-up-label {
-  width: 200px;
-}
-/* .input-text span {
-  position: absolute;
-  top: 6px;
-  left: 10px;
-  font-size: 14px;
-  transition: all 0.5s;
-} */
-/* .input-text input:focus ~ span,
-.input-text input:valid ~ span {
-  top: -16px;
-  font-size: 12px;
-  font-weight: 600;
-} */
-
-.input-text a {
-  /* position: absolute; */
-  top: -16px;
-  right: 5px;
-  font-size: 16px;
-  /* font-weight: 600; */
-  text-decoration: none;
-  float: right;
-}
-
-.test {
-  height: 35px;
-  display: flex;
-  align-items: center;
-  padding: 1rem 0.95rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #212529;
-  text-align: center;
-  white-space: nowrap;
-  /* background-color: #e9ecef; */
-  border: 1px solid #ced4da;
-  border-radius: 0.375rem;
-  margin-top: 10px;
-}
-
-/* @keyframes check {
-  0% {
-    tranform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.01);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-} */
 .sign-in {
   margin: 15px 0 15px 0;
   padding-top: 15px;
 }
 .sign-in button {
-  margin-left: 310px;
   width: 150px;
   height: 37px;
   border-radius: 5px;
@@ -205,16 +108,24 @@ input[type="email"] {
   transition: all 0.5s;
   cursor: pointer;
 }
-/* .sign-in .active-btn {
-  background-color: #3560b1;
-} */
-button[disabled] {
-  border: 0.3px solid #999999;
-  background-color: #cccccc !important;
-  color: #666666;
-  cursor: not-allowed;
-}
+/* sign-in end */
 
+/* sign-up start */
+.signup-mail {
+  margin-top: 10px;
+}
+.account-name-label {
+  width: 110px;
+  text-align: right;
+  padding-bottom: 20px;
+  padding-right: 10px;
+}
+.reg-accname-label {
+  width: 200px;
+}
+.sign-up-label {
+  width: 200px;
+}
 .sign-up {
   padding-bottom: 10px;
 }
@@ -230,17 +141,71 @@ button[disabled] {
   cursor: pointer;
   margin-right: 50px;
 }
-.otp-sign-in {
-  margin: 15px 0 15px 0;
-  padding-top: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
+.reg-checkbox {
+  transform: scale(2);
+  border: none;
+  outline-offset: 1px solid #3636db;
 }
-.otp-sign-in button {
-  margin-left: 120px;
-  width: 200px;
+.terms-of-service-link {
+  border-radius: 5px;
+  background-color: white;
+  border: 1px solid #6c8bc5;
+  border-style: solid;
+  width: 110px;
+  height: 35px;
+  text-align: center;
+  padding-top: 4px;
+}
+.signup-link {
+  margin-left: 180px;
+  margin-top: 30px;
+}
+.signup-tbl {
+  margin-left: 300px;
+}
+/* sign-up end */
+
+/* signup modal popup start */
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+.modal-container {
+  height: 550px;
+  width: 500px;
+  margin: 0px auto;
+  padding: 20px 30px;
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  transition: all 0.3s ease;
+}
+.modal-header {
+  text-align: center;
+  display: contents;
+}
+.modal-header h3 {
+  margin-top: 0;
+  color: #6c8bc5;
+}
+.modal-body {
+  margin: 20px 0;
+}
+.modal-default-button {
+  float: right;
+  margin-top: -15px;
+  width: 120px;
   height: 37px;
   border-radius: 5px;
   background-color: #6c8bc5;
@@ -250,12 +215,56 @@ button[disabled] {
   transition: all 0.5s;
   cursor: pointer;
 }
-
-.img-fluid {
-  max-width: 100%;
-  height: 100%;
+.modal-enter-from {
+  opacity: 0;
 }
-/* signin-form end */
+.modal-leave-to {
+  opacity: 0;
+}
+.modal-enter-from .modal-container,
+.modal-leave-to .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+.textarea {
+  height: 400px;
+  width: 450px;
+  border-color: #6c8bc5;
+}
+/* signup modal popup end */
+
+/* confirm-account start */
+.confirm-mail-label {
+  width: 110px;
+  text-align: right;
+  padding-bottom: 30px;
+  padding-right: 10px;
+}
+.resend-code {
+  padding-top: 15px;
+}
+.resend-code-atag {
+  color: blue;
+}
+/* confirm-account end */
+
+/* change-password start */
+.change-pass-table {
+  margin-left: 328px;
+}
+.confirm-newpass-label {
+  width: 170px;
+}
+/* change-password end */
+
+/* password-reset start */
+.reset-pass-table {
+  margin-left: 400px;
+}
+.reset-pass-tbl {
+  margin-left: 327px;
+}
+/* password-reset end */
 
 /* header-display start */
 .logo-icon {
@@ -276,7 +285,6 @@ button[disabled] {
   font-size: 25px;
   padding: 1.4rem;
 }
-
 .register button {
   width: 200px;
   height: 37px;
@@ -288,17 +296,6 @@ button[disabled] {
   cursor: pointer;
   float: right;
 }
-/* .register button .profile-btn {
-  width: 400px;
-  height: 37px;
-  border-radius: 5px;
-  background-color: #6c8bc5;
-  color: #fff;
-  font-size: 18px;
-  border: none;
-  cursor: pointer;
-  float: right;
-} */
 .totp-btn button {
   width: 200px;
   height: 37px;
@@ -310,85 +307,104 @@ button[disabled] {
   cursor: pointer;
   float: left;
 }
-
-.login-image {
-  min-height: 10px;
-  text-align: center;
-  width: 1200px;
-  height: 100%;
-  justify-content: center;
-}
 /* header-display end */
 
-/* fileUpload start */
-.lbl {
-  border-radius: 5px;
-  background-color: rgb(236, 35, 35);
-  width: 350px;
-  height: 45px;
-  text-align: center;
-  padding-top: 5px;
-  margin-bottom: 20px;
-  font-size: 25px;
-  color: white;
+/* fileDropZone start */
+.file-drop-zone {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-style: dashed !important;
+  background-color: #f7f7f9 !important;
 }
-
-.lblFile {
-  width: 110px;
-  height: 110px;
-  background-color: #9e9c9c;
-  padding: 2rem 90px;
-  margin-left: 80px;
-  border-radius: 5px;
+.file-action-group {
+  padding-top: 0.5rem;
 }
-
-.lblFile label {
-  font-size: 30px;
+.active {
+  background-color: #a8a8ca !important;
 }
-
-.lblText {
-  width: 800px;
-  height: 100px;
-  background-color: #fff;
-  border-style: solid;
-  border-radius: 5px;
-  padding-top: 22px;
-  text-align: center;
-  margin-bottom: 30px;
+.btn-browse-file {
+  background-color: #6c8bc5 !important;
 }
+/* fileDropZone end */
 
-.filename-lbl {
-  column-width: 400px;
-  text-align: center;
+/* fileItem start */
+.file-item {
+  border: 1px solid #787878;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
 }
-
-.filesize-lbl {
-  text-align: center;
+.file-item .btn-complete {
+  background-color: #2097f3 !important;
 }
-
-.convert-td {
-  padding-left: 50px;
-}
-
-.convert-td button {
-  width: 100px;
-  height: 37px;
-  border-radius: 5px;
-  background-color: #387c38;
-  color: #fff;
-  font-size: 18px;
+.file-item .btn-upload {
   border: none;
+  outline: none;
+  border-radius: 0.375rem;
   cursor: pointer;
+  font-size: 1rem;
+  padding: 0.375rem 0.75rem;
+  display: inline-block;
+  background-color: #8cc34a;
+  color: #ffffff;
 }
-
-.enable-label {
-  width: 130px;
+.download-action a {
+  display: block;
 }
+.download-action {
+  display: flex;
+  gap: 1rem;
+}
+.btn-download-link {
+  background-color: #f54337 !important;
+  text-decoration: none;
+}
+/* fileItem end */
 
+/* fileList start */
+.file-list-container {
+  background-color: #f7f7f9;
+  padding: 0.5rem;
+}
+.file-list-container .file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.empty-file-list {
+  background-color: #f7f7f9;
+  padding: 3rem 1rem;
+}
+/* fileList end */
+
+/* fileUploadManager start */
+.file-list {
+  margin-bottom: 1rem;
+}
+.file-drop-zone {
+  margin-bottom: 1rem;
+}
+.file-upload-manager {
+  margin: 1rem;
+  min-height: 50vh;
+}
+.file-action-group {
+  display: flex;
+  justify-content: flex-end;
+}
+.go-to-upload {
+  margin-bottom: 1rem;
+}
+.btn-upload {
+  background-color: #6c8bc5 !important;
+}
+/* fileUploadManager end */
+
+/* totp start */
 .scanner-lbl {
   margin-top: 10px;
 }
-
 .mfa-confirm-btn {
   width: 110px;
   height: 37px;
@@ -398,8 +414,8 @@ button[disabled] {
   font-size: 18px;
   border: none;
   cursor: pointer;
+  margin-left: 20px;
 }
-
 .mfa-cancel-btn {
   width: 120px;
   height: 37px;
@@ -409,174 +425,15 @@ button[disabled] {
   font-size: 18px;
   border: none;
   cursor: pointer;
+  margin-left: -10px;
 }
+/* totp end */
 
-.reg-checkbox {
-  transform: scale(2);
-  border: none;
-  outline-offset: 1px solid #3636db;
-}
-
-.reg-chk-td {
-  padding-right: 20px;
-}
-
-.terms-of-service-link {
-  border-radius: 5px;
-  background-color: white;
-  border: 1px solid #6c8bc5;
-  border-style: solid;
-  width: 110px;
-  height: 35px;
-  text-align: center;
-  padding-top: 4px;
-}
-/* fileUpload end */
-
-/* signup modal popup start */
-
-.modal-mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: table;
-  transition: opacity 0.3s ease;
-}
-
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.modal-container {
-  height: 550px;
-  width: 500px;
-  margin: 0px auto;
-  padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
-}
-
-.modal-header {
-  text-align: center;
-  display: contents;
-}
-
-.modal-header h3 {
-  margin-top: 0;
-  color: #6c8bc5;
-}
-
-.modal-body {
-  margin: 20px 0;
-}
-
-.modal-default-button {
-  float: right;
-  margin-top: -15px;
-  width: 120px;
-  height: 37px;
-  border-radius: 5px;
-  background-color: #6c8bc5;
-  color: #fff;
-  font-size: 18px;
-  border: none;
-  transition: all 0.5s;
-  cursor: pointer;
-}
-
-.signup-link {
-  margin-left: 280px;
-  margin-top: 30px;
-}
-
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
-.modal-enter-from {
-  opacity: 0;
-}
-
-.modal-leave-to {
-  opacity: 0;
-}
-
-.modal-enter-from .modal-container,
-.modal-leave-to .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
-}
-.textarea {
-  height: 400px;
-  width: 450px;
-  border-color: #6c8bc5;
-}
-/* signup modal popup end */
-
-/* resend-code start */
-.resend-code {
-  padding-top: 15px;
-  margin-left: 200px;
-}
-
-.resend-code-atag {
-  color: blue;
-}
-/* resend-code end */
-
-/* confirm-acc-form start */
-.errormsg {
-  margin-top: 30px;
-}
-
-/* confirm-acc-form end */
-
-/* drop-down start */
+/* menu drop-down start */
 .dropdown-toggle:active,
 .dropdown-toggle:hover,
 .btn.show,
 .open .dropdown-toggle {
   background: #4a69a3 !important;
 }
-/* drop-down end */
-
-table {
-  margin-top: 30px;
-}
-
-.signup-tbl {
-  margin-left: 100px;
-}
-
-.confirm-newpass-label {
-  width: 170px;
-}
-
-.password-input {
-  position: relative;
-  margin-top: 10px;
-}
-
-.password-input i {
-  position: absolute;
-  left: 210px;
-  top: -2px;
-  padding: 9px 8px;
-  color: #aaa;
-}
-.form-control.is-invalid,
-.was-validated .form-control:invalid {
-  background-image: none !important;
-}
+/* menu drop-down end */

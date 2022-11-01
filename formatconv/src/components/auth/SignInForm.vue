@@ -121,7 +121,6 @@ export default {
               name: "confirm",
               query: {
                 username: email.value,
-                errormsg: t("E001"),
               },
             });
           }
@@ -165,7 +164,7 @@ export default {
     function autoTimeout(result) {
       console.log("time out", result);
       // const seconds_timeout = 3600;
-      const seconds_timeout = 60;
+      const seconds_timeout = 6000;
       // ユーザーのログインが 1 時間後に期限切れになるように設定する
       const expirationDate =
         +result.idToken.payload["auth_time"] + seconds_timeout;
@@ -329,7 +328,9 @@ export default {
                         v-on:blur="passwordBlured = true"
                       />
                       <i
-                        class="bi bi-eye-slash"
+                        :class="[
+                          showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill',
+                        ]"
                         aria-hidden="true"
                         @click="showPassword = !showPassword"
                       ></i>
@@ -353,14 +354,18 @@ export default {
                     >
                   </td>
                 </tr>
+                <tr>
+                  <td></td>
+                  <td>
+                    <!-- ボタンエリア -->
+                    <div class="sign-in">
+                      <button :disabled="signinDisable">
+                        {{ $t("screenItemProperties.button.loginBtn") }}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
               </table>
-
-              <!-- ボタンエリア -->
-              <div class="sign-in">
-                <button :disabled="signinDisable">
-                  {{ $t("screenItemProperties.button.loginBtn") }}
-                </button>
-              </div>
             </div>
             <!-- mfa を有効にするときに表示する -->
             <div v-if="confirmMFACode">
@@ -397,13 +402,18 @@ export default {
                     </div>
                   </td>
                 </tr>
+                <tr>
+                  <td></td>
+                  <td>
+                    <!-- ボタンエリア -->
+                    <div class="sign-in">
+                      <button :disabled="signinDisable">
+                        {{ $t("screenItemProperties.button.loginBtn") }}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
               </table>
-              <!-- ボタンエリア -->
-              <div class="sign-in">
-                <button :disabled="signinDisable">
-                  {{ $t("screenItemProperties.button.loginBtn") }}
-                </button>
-              </div>
             </div>
           </form>
         </template>

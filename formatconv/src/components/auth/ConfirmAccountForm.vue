@@ -207,27 +207,40 @@ export default {
                   </div>
                 </td>
               </tr>
-            </table>
-            <!-- ボタンエリア -->
-            <div class="sign-in">
-              <button :disabled="disableBtn">
-                {{ $t("screenItemProperties.button.confirmAccountBtn") }}
-              </button>
-            </div>
-            <!-- 新しいコードを送るエリア -->
-            <div class="resend-code">
-              {{ $t("screenItemProperties.confirmAccount.sentNewCodeLabel") }}
-
-              <a @click="resendCode" class="resend-code-atag"
-                ><span class="figcaption"
-                  ><u>
+              <tr>
+                <td></td>
+                <td>
+                  <!-- ボタンエリア -->
+                  <div class="sign-in">
+                    <button :disabled="disableBtn">
+                      {{ $t("screenItemProperties.button.confirmAccountBtn") }}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <!-- 新しいコードを送るエリア -->
+                  <div class="resend-code">
                     {{
-                      $t("screenItemProperties.confirmAccount.sentNewCodeLink")
-                    }}</u
-                  ></span
-                ></a
-              >
-            </div>
+                      $t("screenItemProperties.confirmAccount.sentNewCodeLabel")
+                    }}
+
+                    <a @click="resendCode" class="resend-code-atag"
+                      ><span class="figcaption"
+                        ><u>
+                          {{
+                            $t(
+                              "screenItemProperties.confirmAccount.sentNewCodeLink"
+                            )
+                          }}</u
+                        ></span
+                      ></a
+                    >
+                  </div>
+                </td>
+              </tr>
+            </table>
           </div>
         </template>
       </body-display>

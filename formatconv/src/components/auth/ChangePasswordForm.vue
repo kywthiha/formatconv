@@ -254,7 +254,11 @@ export default {
                           v-on:blur="oldPasswordBlured = true"
                         />
                         <i
-                          class="bi bi-eye-slash"
+                          :class="[
+                            showCurrentPassword
+                              ? 'bi-eye-fill'
+                              : 'bi-eye-slash-fill',
+                          ]"
                           aria-hidden="true"
                           @click="showCurrentPassword = !showCurrentPassword"
                         ></i>
@@ -294,7 +298,11 @@ export default {
                           v-on:blur="newPasswordBlured = true"
                         />
                         <i
-                          class="bi bi-eye-slash"
+                          :class="[
+                            showNewPassword
+                              ? 'bi-eye-fill'
+                              : 'bi-eye-slash-fill',
+                          ]"
                           aria-hidden="true"
                           @click="showNewPassword = !showNewPassword"
                         ></i>
@@ -344,7 +352,11 @@ export default {
                           v-on:blur="confirmNewPasswordBlured = true"
                         />
                         <i
-                          class="bi bi-eye-slash"
+                          :class="[
+                            showNewConfirmPassword
+                              ? 'bi-eye-fill'
+                              : 'bi-eye-slash-fill',
+                          ]"
                           aria-hidden="true"
                           @click="
                             showNewConfirmPassword = !showNewConfirmPassword
@@ -356,18 +368,22 @@ export default {
                       </div>
                     </td>
                   </tr>
+                  <tr>
+                    <td></td>
+                    <td>
+                      <!-- ボタンエリア -->
+                      <div class="sign-in">
+                        <button :disabled="changePasswordDisable">
+                          {{
+                            $t(
+                              "screenItemProperties.changePassword.changePassword"
+                            )
+                          }}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 </table>
-                <!-- ボタンエリア -->
-                <div class="sign-in">
-                  <button
-                    class="change-pass-btn"
-                    :disabled="changePasswordDisable"
-                  >
-                    {{
-                      $t("screenItemProperties.changePassword.changePassword")
-                    }}
-                  </button>
-                </div>
               </div>
             </form>
           </template>

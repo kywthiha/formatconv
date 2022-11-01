@@ -174,22 +174,4 @@ const handleOnDrop = async (event) => {
     />
   </div>
 </template>
-<style scoped>
-.file-drop-zone {
-  padding: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-style: dashed !important;
-  background-color: #f7f7f9 !important;
-}
-.file-action-group {
-  padding-top: 0.5rem;
-}
-.active {
-  background-color: #a8a8ca !important;
-}
-.btn-browse-file {
-  background-color: #6c8bc5 !important;
-}
-</style>
+<style scoped></style>

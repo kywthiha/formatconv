@@ -282,7 +282,8 @@ export default {
                   </td>
                   <td>
                     <input
-                      type="email"
+                      type="text"
+                      class="signup-mail"
                       v-model.trim="email"
                       maxlength="128"
                       id="email"
@@ -424,17 +425,21 @@ export default {
                     </div>
                   </td>
                 </tr>
+                <tr>
+                  <td colspan="4">
+                    <div class="signup-link">
+                      {{ $t("screenItemProperties.signup.alreadySignup") }}
+                      <a @click="resendCode" class="resend-code-atag"
+                        ><router-link to="/signin"
+                          ><span class="figcaption">
+                            {{ $t("screenItemProperties.button.loginBtn") }}
+                          </span>
+                        </router-link></a
+                      >
+                    </div>
+                  </td>
+                </tr>
               </table>
-              <div class="signup-link">
-                {{ $t("screenItemProperties.signup.alreadySignup") }}
-                <a @click="resendCode" class="resend-code-atag"
-                  ><router-link to="/signin"
-                    ><span class="figcaption">
-                      {{ $t("screenItemProperties.button.loginBtn") }}
-                    </span>
-                  </router-link></a
-                >
-              </div>
             </template>
           </body-display>
         </div>
