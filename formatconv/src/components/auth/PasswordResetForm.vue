@@ -34,6 +34,8 @@ export default {
     const confirmPasswordParam = t("errorParams.confirmNewPassword");
     let messageType = ref("");
     let param = t("errorParams.verificationCode");
+    const showNewPassword = ref(false);
+    const showNewConfirmPassword = ref(false);
 
     // 入力チェックのため
     const {
@@ -184,6 +186,8 @@ export default {
       confirmPasswordRequireMsg,
       messageType,
       param,
+      showNewPassword,
+      showNewConfirmPassword,
     };
   },
 };
@@ -266,7 +270,7 @@ export default {
                 </div>
               </form>
             </div>
-            <!-- パスワードの更新 -->
+            <!-- パスワードリセット -->
             <div v-if="confirmCode">
               <form @submit.prevent="resetPassword" @keydown="handleKeyDown">
                 <table class="reset-pass-tbl">
@@ -313,26 +317,34 @@ export default {
                       }}</label>
                     </td>
                     <td>
-                      <input
-                        type="password"
-                        v-model.trim="password"
-                        maxlength="256"
-                        autocomplete="false"
-                        v-bind:class="{
-                          'form-control': true,
-                          'is-invalid':
+                      <div class="password-input">
+                        <input
+                          :type="[showNewPassword ? 'text' : 'password']"
+                          v-model.trim="password"
+                          maxlength="256"
+                          autocomplete="false"
+                          v-bind:class="{
+                            'form-control': true,
+                            'is-invalid':
+                              !validPassword(password, passParam) &&
+                              passwordBlured,
+                          }"
+                          v-bind:style="[
                             !validPassword(password, passParam) &&
-                            passwordBlured,
-                        }"
-                        v-bind:style="[
-                          !validPassword(password, passParam) && passwordBlured
-                            ? { 'margin-bottom': '0px' }
-                            : { 'margin-bottom': '20px' },
-                        ]"
-                        v-on:blur="passwordBlured = true"
-                      />
-                      <div class="invalid-feedback">
-                        {{ passRequireMsg }}
+                            passwordBlured
+                              ? { 'margin-bottom': '0px' }
+                              : { 'margin-bottom': '20px' },
+                          ]"
+                          v-on:blur="passwordBlured = true"
+                        />
+                        <i
+                          class="bi bi-eye-slash"
+                          aria-hidden="true"
+                          @click="showNewPassword = !showNewPassword"
+                        ></i>
+                        <div class="invalid-feedback">
+                          {{ passRequireMsg }}
+                        </div>
                       </div>
                     </td>
                   </tr>
@@ -347,35 +359,44 @@ export default {
                       }}</label>
                     </td>
                     <td>
-                      <input
-                        type="password"
-                        v-model.trim="confirmPassword"
-                        maxlength="256"
-                        autocomplete="false"
-                        v-bind:class="{
-                          'form-control': true,
-                          'is-invalid':
+                      <div class="password-input">
+                        <input
+                          :type="[showNewConfirmPassword ? 'text' : 'password']"
+                          v-model.trim="confirmPassword"
+                          maxlength="256"
+                          autocomplete="false"
+                          v-bind:class="{
+                            'form-control': true,
+                            'is-invalid':
+                              !validConfirmPassword(
+                                confirmPassword,
+                                password,
+                                passParam,
+                                confirmPasswordParam
+                              ) && confirmPasswordBlured,
+                          }"
+                          v-bind:style="[
                             !validConfirmPassword(
                               confirmPassword,
                               password,
                               passParam,
                               confirmPasswordParam
-                            ) && confirmPasswordBlured,
-                        }"
-                        v-bind:style="[
-                          !validConfirmPassword(
-                            confirmPassword,
-                            password,
-                            passParam,
-                            confirmPasswordParam
-                          ) && confirmPasswordBlured
-                            ? { 'margin-bottom': '0px' }
-                            : { 'margin-bottom': '20px' },
-                        ]"
-                        v-on:blur="confirmPasswordBlured = true"
-                      />
-                      <div class="invalid-feedback">
-                        {{ confirmPasswordRequireMsg }}
+                            ) && confirmPasswordBlured
+                              ? { 'margin-bottom': '0px' }
+                              : { 'margin-bottom': '20px' },
+                          ]"
+                          v-on:blur="confirmPasswordBlured = true"
+                        />
+                        <i
+                          class="bi bi-eye-slash"
+                          aria-hidden="true"
+                          @click="
+                            showNewConfirmPassword = !showNewConfirmPassword
+                          "
+                        ></i>
+                        <div class="invalid-feedback">
+                          {{ confirmPasswordRequireMsg }}
+                        </div>
                       </div>
                     </td>
                   </tr>
