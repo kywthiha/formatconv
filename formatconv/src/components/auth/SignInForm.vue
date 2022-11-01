@@ -62,6 +62,7 @@ export default {
     const passParam = t("errorParams.password");
     const pass = t("errorParams.totpCode");
     const digitpass = t("screenItemProperties.signin.onlyDigit");
+    const showPassword = ref(false);
 
     function hideAlert() {
       message.value = "";
@@ -218,6 +219,7 @@ export default {
       digitpass,
       validVerificationCode,
       verificationCodeRequireMsg,
+      showPassword,
     };
   },
 };
@@ -296,29 +298,36 @@ export default {
                     </label>
                   </td>
                   <td>
-                    <input
-                      type="password"
-                      maxlength="256"
-                      v-model.trim="password"
-                      autocomplete="false"
-                      v-bind:class="{
-                        'form-control': true,
-                        'is-invalid':
+                    <div class="password-input">
+                      <input
+                        :type="[showPassword ? 'text' : 'password']"
+                        maxlength="256"
+                        v-model.trim="password"
+                        autocomplete="false"
+                        v-bind:class="{
+                          'form-control': true,
+                          'is-invalid':
+                            !signinValidPassword(password, passParam) &&
+                            passwordBlured,
+                        }"
+                        v-bind:style="[
                           !signinValidPassword(password, passParam) &&
-                          passwordBlured,
-                      }"
-                      v-bind:style="[
-                        !signinValidPassword(password, passParam) &&
-                        passwordBlured
-                          ? {
-                              'margin-bottom': '0px',
-                            }
-                          : { 'margin-bottom': '20px' },
-                      ]"
-                      v-on:blur="passwordBlured = true"
-                    />
-                    <div class="invalid-feedback">
-                      {{ signinPassRequireMsg }}
+                          passwordBlured
+                            ? {
+                                'margin-bottom': '0px',
+                              }
+                            : { 'margin-bottom': '20px' },
+                        ]"
+                        v-on:blur="passwordBlured = true"
+                      />
+                      <i
+                        class="bi bi-eye-slash"
+                        aria-hidden="true"
+                        @click="showPassword = !showPassword"
+                      ></i>
+                      <div class="invalid-feedback">
+                        {{ signinPassRequireMsg }}
+                      </div>
                     </div>
                   </td>
                 </tr>
