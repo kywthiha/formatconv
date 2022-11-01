@@ -5,7 +5,6 @@
     作成日 : 2022/10/17　 
 -->
 <script>
-import { computed } from "@vue/reactivity";
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import TermsAndConditionsForm from "./TermsAndConditionsForm.vue";
@@ -16,7 +15,6 @@ import {
 import { POOL_DATA } from "../../config/cognito";
 import HeaderDisplay from "../layout/HeaderDisplay.vue";
 import validation from "../../hooks/validation";
-import useAlert from "../../hooks/alert";
 import { useI18n } from "vue-i18n";
 import { handleKeyDown, exceptionError } from "../common/common";
 
@@ -49,6 +47,7 @@ export default {
     const { t } = useI18n();
     const passParam = t("errorParams.password");
     const confirmPasswordParam = t("errorParams.confirmPassword");
+
     // 入力チェックのため
     const {
       validUsername,
@@ -60,9 +59,6 @@ export default {
       validEmail,
       emailRequireMsg,
     } = validation();
-
-    // メッセージを表示する
-    const { setMessage } = useAlert();
 
     // メッセージを隠す
     function hideAlert() {
@@ -82,8 +78,7 @@ export default {
         if (modal === true && checked === true) {
           disableBtn.value = false;
         } else if (modal === false && checked === true) {
-          // to ask
-          setMessage(t("errorMessages.E0018"));
+          message.value = t("errorMessages.E0018");
           messageType.value = "danger";
         }
       }
@@ -91,7 +86,7 @@ export default {
 
     // サインアップメソッドを呼び出す
     async function signUp() {
-      // alert("signup");
+      // 連続ボタン対応
       disableBtn.value = true;
 
       if (!isValid()) {
@@ -177,9 +172,6 @@ export default {
 
       return true;
     }
-    function iconClick() {
-      alert("Click me!!!");
-    }
 
     return {
       openModal,
@@ -217,7 +209,6 @@ export default {
       showPassword,
       showConfirmPassword,
       messageType,
-      iconClick,
     };
   },
 };
@@ -252,7 +243,6 @@ export default {
           <body-display>
             <template v-slot:body>
               <table class="signup-tbl">
-                <!-- <div class="reg-input-text"> -->
                 <!-- アカウント名 -->
                 <tr>
                   <td class="account-name-label">
@@ -283,8 +273,6 @@ export default {
                     </div>
                   </td>
                 </tr>
-                <!-- </div> -->
-                <!-- <div class="reg-input-text"> -->
                 <!-- メール -->
                 <tr>
                   <td class="mail-label">
@@ -315,8 +303,6 @@ export default {
                     </div>
                   </td>
                 </tr>
-                <!-- </div> -->
-                <!-- <div class="reg-input-text"> -->
                 <tr>
                   <!-- パスワード -->
                   <td class="password-label">
@@ -356,7 +342,6 @@ export default {
                       </div>
                     </div>
                   </td>
-
                   <!-- 利用規約 -->
                   <td>
                     <div style="padding-left: 30px">
@@ -377,8 +362,6 @@ export default {
                     </div>
                   </td>
                 </tr>
-                <!-- </div> -->
-                <!-- <div class="confirm-password-input"> -->
                 <tr>
                   <!-- パスワード確認 -->
                   <td class="password-label">
@@ -435,7 +418,6 @@ export default {
                     </div>
                   </td>
                 </tr>
-                <!-- </div> -->
               </table>
               <div class="signup-link">
                 {{ $t("screenItemProperties.signup.alreadySignup") }}

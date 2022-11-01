@@ -31,20 +31,27 @@ export default {
     let message = ref("");
     let messageType = ref("");
 
+    // 入力チェックのため
     const { validVerificationCode, verificationCodeRequireMsg } = validation();
 
+    // 英語変換対応
     const { t } = useI18n();
     let param = t("errorParams.verificationCode");
 
     // コードを再送する
     function resendCode() {
+      // Cognito ユーザープールデータをセットアップする
       const userPool = new CognitoUserPool(POOL_DATA);
+
       const userData = {
         Username: username.value,
         Pool: userPool,
       };
+
+      // ユーザー名とユーザープール情報に基づいて Cognito User オブジェクトを作成する
       const cognitoUser = new CognitoUser(userData);
 
+      // コードを再送するため、APIを呼び出す
       cognitoUser.resendConfirmationCode(function (err, result) {
         if (result.CodeDeliveryDetails.Destination != null) {
           messageType.value = "success";
@@ -54,13 +61,12 @@ export default {
           messageType.value = "danger";
           message.value = exceptionError(err.name, param);
         }
-
-        console.log("call result: " + result.CodeDeliveryDetails.Destination);
       });
     }
 
     // アカウントのサインアップ時にコードの使用を確認する
     async function confirmCode() {
+      // 連続ボタン対応
       disableBtn.value = true;
 
       if (!isValid()) {
@@ -79,7 +85,6 @@ export default {
 
       // Cognito 確認登録メソッドを呼び出す
       await cognitUser.confirmRegistration(code.value, true, (err, result) => {
-        console.log("in confirm ", err);
         if (err !== null) {
           messageType.value = "danger";
           message.value = exceptionError(err.name, param);
@@ -92,10 +97,12 @@ export default {
       });
     }
 
+    // メッセージを隠す
     function hideAlert() {
       message.value = "";
     }
 
+    // 入力チェック対応
     function isValid() {
       if (!validVerificationCode(code.value, param)) {
         verificationCodeBlured.value = true;
@@ -227,9 +234,3 @@ export default {
     </div>
   </form>
 </template>
-
-<style>
-.confrimDiv {
-  width: 1000px;
-}
-</style>
