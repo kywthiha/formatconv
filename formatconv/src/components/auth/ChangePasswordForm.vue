@@ -203,7 +203,7 @@ export default {
     <div>
       <div>
         <login-header-form></login-header-form>
-        <!-- Error Alert -->
+        <!-- エラーメッセージ表示 -->
         <div
           class="alert alert-dismissible align-items-center fade show"
           :class="[messageType == 'danger' ? 'alert-danger' : 'alert-success']"
@@ -268,7 +268,6 @@ export default {
                       </div>
                     </td>
                   </tr>
-
                   <!-- 新しいパスワード -->
                   <tr>
                     <td class="mail-label">
@@ -312,7 +311,6 @@ export default {
                       </div>
                     </td>
                   </tr>
-
                   <!-- 新しいパスワード確認 -->
                   <tr>
                     <td class="mail-label">

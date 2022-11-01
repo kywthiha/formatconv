@@ -206,7 +206,7 @@ export default {
 <template>
   <div>
     <login-header-form></login-header-form>
-    <!-- Error Alert -->
+    <!-- エラーメッセージ表示 -->
     <div
       class="alert alert-dismissible align-items-center fade show"
       :class="[messageType == 'danger' ? 'alert-danger' : 'alert-success']"
@@ -223,6 +223,7 @@ export default {
             <div class="col-12 text-start">
               <div>
                 <div class="row">
+                  <!-- QAコードを表示 -->
                   <div class="mb-3 text-center">
                     <div class="scanner-lbl">
                       {{ $t("screenItemProperties.totpForm.title") }}
@@ -237,6 +238,7 @@ export default {
                   </div>
                   <hr />
                   <div class="mt-1 text-center">
+                    <!-- MFAコード -->
                     <p>{{ $t("screenItemProperties.totpForm.mfaCode") }}</p>
                     <div class="row text-center">
                       <div class="col-4 offset-md-4 mb-2">

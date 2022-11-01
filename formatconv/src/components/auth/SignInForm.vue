@@ -231,8 +231,7 @@ export default {
           <label>{{ $t("screenItemProperties.common.title") }}</label>
         </template>
       </header-display>
-
-      <!-- Error Alert -->
+      <!-- エラーメッセージ表示 -->
       <div
         class="alert alert-danger alert-dismissible align-items-center fade show"
         v-if="message"
@@ -273,7 +272,6 @@ export default {
                     </div>
                   </td>
                 </tr>
-
                 <!-- パスワード -->
                 <tr class="table-row">
                   <td class="password-label">
@@ -321,7 +319,7 @@ export default {
                 <tr>
                   <td></td>
                   <td style="text-align: right">
-                    <!-- リンク -->
+                    <!-- リセットリンク -->
                     <router-link to="/resetPassword"
                       ><span class="figcaption"
                         ><u>{{
@@ -346,8 +344,8 @@ export default {
             </div>
             <!-- mfa を有効にするときに表示する -->
             <div v-if="confirmMFACode">
-              <!-- ワンタイムパスワード -->
               <table class="totp-table">
+                <!-- ワンタイムパスワード -->
                 <tr>
                   <td class="totp-label">
                     <label>{{

@@ -14,6 +14,9 @@
 }
 .alert-dismissible .btn-close {
   padding-top: revert;
+  position: absolute;
+  top: 2px;
+  right: 2px;
 }
 input[type="text"],
 input[type="password"] {

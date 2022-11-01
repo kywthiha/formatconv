@@ -214,7 +214,7 @@ export default {
             <label>{{ $t("screenItemProperties.common.title") }}</label>
           </template>
         </header-display>
-        <!-- Error Alert -->
+        <!-- エラーメッセージ表示 -->
         <div
           class="alert alert-dismissible align-items-center fade show"
           :class="[messageType == 'danger' ? 'alert-danger' : 'alert-success']"
@@ -259,6 +259,7 @@ export default {
                       </div>
                     </td>
                   </tr>
+                  <!-- ログインリンク -->
                   <tr>
                     <td colspan="2">
                       <router-link to="/signin"
@@ -324,7 +325,6 @@ export default {
                       </div>
                     </td>
                   </tr>
-
                   <!-- 新しいパスワード -->
                   <tr>
                     <td class="password-label">
@@ -368,7 +368,6 @@ export default {
                       </div>
                     </td>
                   </tr>
-
                   <!-- 新しいパスワード確認 -->
                   <tr>
                     <td class="password-label">

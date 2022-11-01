@@ -23,7 +23,8 @@
       "closeBtn": "閉じる",
       "uploadBtn": "アップロード",
       "cancelBtn": "キャンセル",
-      "sendBtn": "送信"
+      "sendBtn": "送信",
+      "homeBtn": "ホーム"
     },
     "signup": {
       "userName": "アカウント名:",

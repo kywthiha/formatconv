@@ -23,10 +23,11 @@ export default {
     <div v-if="show" class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
+          <!-- モーダルのタイトル -->
           <div class="modal-header">
             <slot name="header">default header</slot>
           </div>
-
+          <!-- モーダルの内容 -->
           <div class="modal-body">
             <slot name="body">
               <textarea
@@ -35,11 +36,10 @@ export default {
                 v-model="logitems"
                 maxlength="2000"
               ></textarea>
-
               <content />
             </slot>
           </div>
-
+          <!-- ボタンエリア -->
           <div class="modal-footer">
             <slot name="footer">
               <button class="modal-default-button" @click="$emit('close')">

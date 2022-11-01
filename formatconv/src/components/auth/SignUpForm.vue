@@ -228,7 +228,7 @@ export default {
               <label>{{ $t("screenItemProperties.common.title") }}</label>
             </template>
           </header-display>
-          <!-- Error Alert -->
+          <!-- エラーメッセージ表示 -->
           <div
             class="alert alert-dismissible align-items-center fade show"
             :class="[
@@ -345,7 +345,7 @@ export default {
                       </div>
                     </div>
                   </td>
-                  <!-- 利用規約 -->
+                  <!-- 利用規約チェックボックス -->
                   <td>
                     <div style="padding-left: 30px">
                       <input
@@ -357,6 +357,7 @@ export default {
                       />
                     </div>
                   </td>
+                  <!-- 利用規約ボタン -->
                   <td style="padding-bottom: 10px">
                     <div class="terms-of-service-link">
                       <a @click="openModal">{{
@@ -426,6 +427,7 @@ export default {
                   </td>
                 </tr>
                 <tr>
+                  <!-- 再送信する -->
                   <td colspan="4">
                     <div class="signup-link">
                       {{ $t("screenItemProperties.signup.alreadySignup") }}

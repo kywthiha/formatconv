@@ -154,7 +154,7 @@ export default {
           <label>{{ $t("screenItemProperties.common.title") }}</label>
         </template>
       </header-display>
-      <!-- Error Alert -->
+      <!-- エラーメッセージ表示 -->
       <div
         class="alert alert-dismissible align-items-center fade show"
         :class="[messageType == 'danger' ? 'alert-danger' : 'alert-success']"
@@ -234,7 +234,6 @@ export default {
                     {{
                       $t("screenItemProperties.confirmAccount.sentNewCodeLabel")
                     }}
-
                     <a @click="resendCode" class="resend-code-atag"
                       ><span class="figcaption"
                         ><u>
