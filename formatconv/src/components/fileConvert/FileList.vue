@@ -7,7 +7,7 @@
 <script setup>
 import { useStore } from "vuex";
 import { computed } from "vue";
-import fileItem from "./fileItem.vue";
+import FileItem from "./FileItem.vue";
 
 const store = useStore();
 
@@ -19,7 +19,7 @@ const fileItems = computed(
   <div class="file-list-container card" v-if="fileItems.length">
     <div class="file-list">
       <!-- ドラッグ と ドロップしたファイルを表示するエリア -->
-      <fileItem
+      <FileItem
         v-for="fileItem in fileItems"
         :key="fileItem.file.name"
         :item="fileItem"

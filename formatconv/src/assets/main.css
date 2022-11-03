@@ -1,12 +1,12 @@
 #app {
-  max-width: 1280px;
+  max-width: 1250px;
   margin: 0 auto;
+  flex: 1;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-    min-height: 100vh;
-  }
+body {
+  display: flex;
+  place-items: center;
+  min-height: 100vh;
+  padding: 1rem;
 }
