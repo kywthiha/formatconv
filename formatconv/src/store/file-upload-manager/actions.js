@@ -23,7 +23,7 @@ export default {
     try {
       const token = await getToken();
       const response = await fetch(
-        "https://wdduz75b1m.execute-api.us-east-1.amazonaws.com/test/presigned-url-upload",
+        `${import.meta.env.VITE_API_URL}/presign-url-upload`,
         {
           method: "POST",
           headers: {

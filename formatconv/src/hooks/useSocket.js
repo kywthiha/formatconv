@@ -29,7 +29,7 @@ export const useSocket = () => {
     if (window.socket && window.socket.readyState === window.socket.OPEN) {
       window.socket.send(
         JSON.stringify({
-          action: "requestConnectionId",
+          action: "store-connection-id",
           connectionId: connectionId.value,
         })
       );
@@ -42,7 +42,7 @@ export const useSocket = () => {
     // Create WebSocket connection.
     const token = await getToken();
     window.socket = new WebSocket(
-      `wss://4m0y1f0f55.execute-api.us-east-1.amazonaws.com/production?Authorization=${token}`
+      `${import.meta.env.VITE_WEBSOKET_URL}?Authorization=${token}`
     );
 
     // Connection opened
@@ -50,7 +50,7 @@ export const useSocket = () => {
       if (connectionId.value) {
         window.socket.send(
           JSON.stringify({
-            action: "requestConnectionId",
+            action: "store-connection-id",
             connectionId: connectionId.value,
           })
         );
