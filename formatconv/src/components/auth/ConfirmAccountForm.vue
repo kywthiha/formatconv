@@ -167,7 +167,7 @@ export default {
       <body-display>
         <template v-slot:body>
           <div>
-            <table class="reset-pass-table">
+            <table>
               <!-- メール -->
               <tr>
                 <td class="confirm-mail-label">

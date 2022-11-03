@@ -229,7 +229,7 @@ export default {
             <!-- 認証済みメールでコードを送信する -->
             <div v-if="!confirmCode">
               <form @submit.prevent="sendCode" @keydown="handleKeyDown">
-                <table class="reset-pass-table">
+                <table>
                   <!-- メール -->
                   <tr>
                     <td class="signin-mail-label">

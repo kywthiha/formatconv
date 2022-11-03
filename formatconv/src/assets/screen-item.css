@@ -1,8 +1,9 @@
 /* common start */
-.container {
+.sing-in-container {
   min-height: 35vh;
   justify-content: center;
   align-items: center;
+  display: flex;
 }
 .alert {
   text-align: center;
@@ -67,7 +68,7 @@ table {
 
 /* sign-in start */
 .signin-table {
-  margin-left: 400px;
+  /* margin-left: 400px; */
 }
 .signin-mail-label {
   width: 110px;
@@ -153,12 +154,10 @@ table {
   padding-top: 4px;
 }
 .signup-link {
-  margin-left: 180px;
   margin-top: 30px;
+  text-align: center;
 }
-.signup-tbl {
-  margin-left: 300px;
-}
+
 /* sign-up end */
 
 /* signup modal popup start */
@@ -244,19 +243,13 @@ table {
 }
 /* confirm-account end */
 
-/* change-password start */
-.change-pass-table {
-  margin-left: 328px;
-}
 .confirm-newpass-label {
   width: 170px;
 }
 /* change-password end */
 
 /* password-reset start */
-.reset-pass-table {
-  margin-left: 400px;
-}
+
 .reset-pass-tbl {
   margin-left: 327px;
 }

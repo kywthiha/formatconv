@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="sing-in-container">
     <div>
       <slot name="body"></slot>
     </div>

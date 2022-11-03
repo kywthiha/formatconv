@@ -243,7 +243,7 @@ export default {
       <body-display>
         <template v-slot:body>
           <form @submit.prevent="signIn" @keydown="handleKeyDown">
-            <div v-if="!confirmMFACode" style="margin-right: 38px">
+            <div v-if="!confirmMFACode">
               <table class="signin-table">
                 <!-- メール -->
                 <tr>
