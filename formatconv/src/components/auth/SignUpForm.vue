@@ -1,5 +1,5 @@
 <!--
-    クラス名 : SignUpForm
+    クラス名 : signUpForm
     概要 : 新規アカウント作成処理画面
     作成者 : GICM_MHK
     作成日 : 2022/10/17　 
@@ -7,19 +7,20 @@
 <script>
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import TermsAndConditionsForm from "./TermsAndConditionsForm.vue";
+import termsAndConditionsForm from "./termsAndConditionsForm.vue";
 import {
   CognitoUserPool,
   CognitoUserAttribute,
 } from "amazon-cognito-identity-js";
 import { POOL_DATA } from "../../config/cognito";
-import HeaderDisplay from "../layout/HeaderDisplay.vue";
+import headerDisplay from "../layout/headerDisplay.vue";
 import validation from "../../hooks/validation";
 import { useI18n } from "vue-i18n";
 import { handleKeyDown, exceptionError } from "../common/common";
+import TermsAndConditionsForm from "./termsAndConditionsForm.vue";
 
 export default {
-  components: { HeaderDisplay, TermsAndConditionsForm },
+  components: { headerDisplay, termsAndConditionsForm, TermsAndConditionsForm },
   setup() {
     // Vuex ルーターにアクセスする
     const router = useRouter();
@@ -93,10 +94,7 @@ export default {
         return;
       }
 
-      /*
-      ユーザープール オブジェクトを作成する。
-      object パラメーターは、「Cognito ユーザー プールを使用するようにアプリケーションを構成する」セクションで設定した定数に保持されている Cognito ユーザー プール データを参照する。
-      */
+      // ユーザープール オブジェクトを作成する。
       const userPool = new CognitoUserPool(POOL_DATA);
 
       //この属性の配列は、パラメーターとしてサインアップ メソッドに渡される。
@@ -214,251 +212,199 @@ export default {
 };
 </script>
 
-<template v-slot:body>
+<template>
   <div>
     <form @submit.prevent="signUp" @keydown="handleKeyDown">
-      <div v-if="!confirmMFACode">
-        <div>
-          <header-display>
-            <template v-slot:titlebar-slot>
-              <div class="logo-icon">
-                <img src="../../assets/logo-icon.png" class="img-fluid" />
-              </div>
-              <!-- タイトル -->
-              <label>{{ $t("screenItemProperties.common.title") }}</label>
-            </template>
-          </header-display>
-          <!-- エラーメッセージ表示 -->
-          <div
-            class="alert alert-dismissible align-items-center fade show"
-            :class="[
-              messageType == 'danger' ? 'alert-danger' : 'alert-success',
-            ]"
-            v-if="message"
-            style="text-align: center"
-          >
-            <label>{{ message }}</label>
-            <button type="button" class="btn-close" @click="hideAlert"></button>
-          </div>
-          <body-display>
-            <template v-slot:body>
-              <table class="signup-tbl">
-                <!-- アカウント名 -->
-                <tr>
-                  <td class="account-name-label">
-                    <label class="reg-accname-label">{{
-                      $t("screenItemProperties.common.accountName")
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      v-model.trim="username"
-                      maxlength="63"
-                      v-bind:class="{
+      <div>
+        <header-display>
+          <template v-slot:titlebar-slot>
+            <div class="logo-icon">
+              <img src="../../assets/logo-icon.png" class="img-fluid" />
+            </div>
+            <!-- タイトル -->
+            <label>{{ $t("screenItemProperties.common.title") }}</label>
+          </template>
+        </header-display>
+        <!-- エラーメッセージ表示 -->
+        <div class="alert alert-dismissible align-items-center fade show" :class="[
+          messageType == 'danger' ? 'alert-danger' : 'alert-success',
+        ]" v-if="message" style="text-align: center">
+          <label>{{ message }}</label>
+          <button type="button" class="btn-close" @click="hideAlert"></button>
+        </div>
+        <body-display>
+          <template v-slot:body>
+            <table class="signup-tbl">
+              <!-- アカウント名 -->
+              <tr>
+                <td class="account-name-label">
+                  <label class="reg-accname-label">{{
+                  $t("screenItemProperties.common.accountName")
+                  }}</label>
+                </td>
+                <td>
+                  <input type="text" v-model.trim="username" maxlength="63" v-bind:class="{
+                    'form-control': true,
+                    'is-invalid':
+                      !validUsername(username) && usernameBlured,
+                  }" v-bind:style="[
+                      !validUsername(username) && usernameBlured
+                        ? { 'margin-bottom': '0px' }
+                        : { 'margin-bottom': '20px' },
+                    ]" v-on:blur="usernameBlured = true" autocomplete="false" />
+                  <div class="invalid-feedback">
+                    {{ usernameRequireMsg }}
+                  </div>
+                </td>
+              </tr>
+              <!-- メール -->
+              <tr>
+                <td class="mail-label">
+                  <label class="sign-up-label">{{
+                  $t("screenItemProperties.common.email")
+                  }}</label>
+                </td>
+                <td>
+                  <input type="text" class="signup-mail" v-model.trim="email" maxlength="128" id="email" v-bind:class="{
+                    'form-control': true,
+                    'is-invalid': !validEmail(email) && emailBlured,
+                  }" v-bind:style="[
+                      !validEmail(email) && emailBlured
+                        ? { 'margin-bottom': '0px' }
+                        : { 'margin-bottom': '20px' },
+                    ]" v-on:blur="emailBlured = true" autocomplete="false" />
+                  <div class="invalid-feedback">
+                    {{ emailRequireMsg }}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <!-- パスワード -->
+                <td class="password-label">
+                  <label class="sign-up-label">{{
+                  $t("screenItemProperties.common.password")
+                  }}</label>
+                </td>
+                <td>
+                  <div class="password-input">
+                    <input class="form-control" :type="[showPassword ? 'text' : 'password']" v-model.trim="password"
+                      autocomplete="false" maxlength="256" id="current-password" v-bind:class="{
                         'form-control': true,
                         'is-invalid':
-                          !validUsername(username) && usernameBlured,
-                      }"
-                      v-bind:style="[
-                        !validUsername(username) && usernameBlured
+                          !validPassword(password, passParam) &&
+                          passwordBlured,
+                      }" v-bind:style="[
+                        !validPassword(password, passParam) && passwordBlured
                           ? { 'margin-bottom': '0px' }
                           : { 'margin-bottom': '20px' },
-                      ]"
-                      v-on:blur="usernameBlured = true"
-                      autocomplete="false"
-                    />
+                      ]" v-on:blur="passwordBlured = true" />
+                    <i :class="[
+                      showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill',
+                    ]" aria-hidden="true" @click="showPassword = !showPassword"></i>
                     <div class="invalid-feedback">
-                      {{ usernameRequireMsg }}
+                      {{ passRequireMsg }}
                     </div>
-                  </td>
-                </tr>
-                <!-- メール -->
-                <tr>
-                  <td class="mail-label">
-                    <label class="sign-up-label">{{
-                      $t("screenItemProperties.common.email")
-                    }}</label>
-                  </td>
-                  <td>
-                    <input
-                      type="text"
-                      class="signup-mail"
-                      v-model.trim="email"
-                      maxlength="128"
-                      id="email"
-                      v-bind:class="{
+                  </div>
+                </td>
+                <!-- 利用規約チェックボックス -->
+                <td>
+                  <div style="padding-left: 30px">
+                    <input type="checkbox" class="reg-checkbox" id="checkbox" @change="changeCheckbox"
+                      :disabled="disableCheckbox" />
+                  </div>
+                </td>
+                <!-- 利用規約ボタン -->
+                <td style="padding-bottom: 10px">
+                  <div class="terms-of-service-link">
+                    <a @click="openModal">{{
+                    $t("screenItemProperties.button.termsOfServiceBtn")
+                    }}</a>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <!-- パスワード確認 -->
+                <td class="password-label">
+                  <label class="sign-up-label">{{
+                  $t("screenItemProperties.signup.confirmPassword")
+                  }}</label>
+                </td>
+                <td>
+                  <div class="password-input">
+                    <input :type="[showConfirmPassword ? 'text' : 'password']" v-model.trim="confirm_password"
+                      autocomplete="false" id="confirm-password" maxlength="256" v-bind:class="{
                         'form-control': true,
-                        'is-invalid': !validEmail(email) && emailBlured,
-                      }"
-                      v-bind:style="[
-                        !validEmail(email) && emailBlured
-                          ? { 'margin-bottom': '0px' }
-                          : { 'margin-bottom': '20px' },
-                      ]"
-                      v-on:blur="emailBlured = true"
-                      autocomplete="false"
-                    />
-                    <div class="invalid-feedback">
-                      {{ emailRequireMsg }}
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <!-- パスワード -->
-                  <td class="password-label">
-                    <label class="sign-up-label">{{
-                      $t("screenItemProperties.common.password")
-                    }}</label>
-                  </td>
-                  <td>
-                    <div class="password-input">
-                      <input
-                        class="form-control"
-                        :type="[showPassword ? 'text' : 'password']"
-                        v-model.trim="password"
-                        autocomplete="false"
-                        maxlength="256"
-                        id="current-password"
-                        v-bind:class="{
-                          'form-control': true,
-                          'is-invalid':
-                            !validPassword(password, passParam) &&
-                            passwordBlured,
-                        }"
-                        v-bind:style="[
-                          !validPassword(password, passParam) && passwordBlured
-                            ? { 'margin-bottom': '0px' }
-                            : { 'margin-bottom': '20px' },
-                        ]"
-                        v-on:blur="passwordBlured = true"
-                      />
-                      <i
-                        :class="[
-                          showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill',
-                        ]"
-                        aria-hidden="true"
-                        @click="showPassword = !showPassword"
-                      ></i>
-                      <div class="invalid-feedback">
-                        {{ passRequireMsg }}
-                      </div>
-                    </div>
-                  </td>
-                  <!-- 利用規約チェックボックス -->
-                  <td>
-                    <div style="padding-left: 30px">
-                      <input
-                        type="checkbox"
-                        class="reg-checkbox"
-                        id="checkbox"
-                        @change="changeCheckbox"
-                        :disabled="disableCheckbox"
-                      />
-                    </div>
-                  </td>
-                  <!-- 利用規約ボタン -->
-                  <td style="padding-bottom: 10px">
-                    <div class="terms-of-service-link">
-                      <a @click="openModal">{{
-                        $t("screenItemProperties.button.termsOfServiceBtn")
-                      }}</a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <!-- パスワード確認 -->
-                  <td class="password-label">
-                    <label class="sign-up-label">{{
-                      $t("screenItemProperties.signup.confirmPassword")
-                    }}</label>
-                  </td>
-                  <td>
-                    <div class="password-input">
-                      <input
-                        :type="[showConfirmPassword ? 'text' : 'password']"
-                        v-model.trim="confirm_password"
-                        autocomplete="false"
-                        id="confirm-password"
-                        maxlength="256"
-                        v-bind:class="{
-                          'form-control': true,
-                          'is-invalid':
-                            !validConfirmPassword(
-                              confirm_password,
-                              password,
-                              passParam,
-                              confirmPasswordParam
-                            ) && confirmPasswordBlured,
-                        }"
-                        v-bind:style="[
+                        'is-invalid':
                           !validConfirmPassword(
                             confirm_password,
                             password,
                             passParam,
                             confirmPasswordParam
-                          ) && confirmPasswordBlured
-                            ? { 'margin-bottom': '0px' }
-                            : { 'margin-bottom': '20px' },
-                        ]"
-                        v-on:blur="confirmPasswordBlured = true"
-                      />
-                      <i
-                        :class="[
-                          showConfirmPassword
-                            ? 'bi-eye-fill'
-                            : 'bi-eye-slash-fill',
-                        ]"
-                        aria-hidden="true"
-                        @click="showConfirmPassword = !showConfirmPassword"
-                      ></i>
-                      <div class="invalid-feedback">
-                        {{ confirmPasswordRequireMsg }}
-                      </div>
+                          ) && confirmPasswordBlured,
+                      }" v-bind:style="[
+                        !validConfirmPassword(
+                          confirm_password,
+                          password,
+                          passParam,
+                          confirmPasswordParam
+                        ) && confirmPasswordBlured
+                          ? { 'margin-bottom': '0px' }
+                          : { 'margin-bottom': '20px' },
+                      ]" v-on:blur="confirmPasswordBlured = true" />
+                    <i :class="[
+                      showConfirmPassword
+                        ? 'bi-eye-fill'
+                        : 'bi-eye-slash-fill',
+                    ]" aria-hidden="true" @click="showConfirmPassword = !showConfirmPassword"></i>
+                    <div class="invalid-feedback">
+                      {{ confirmPasswordRequireMsg }}
                     </div>
-                  </td>
-                  <td colspan="2" style="padding-left: 30px">
-                    <!-- ボタンエリア -->
-                    <div class="sign-up">
-                      <button :disabled="disableBtn">
-                        {{ $t("screenItemProperties.button.registerBtn") }}
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <!-- 再送信する -->
-                  <td colspan="4">
-                    <div class="signup-link">
-                      {{ $t("screenItemProperties.signup.alreadySignup") }}
-                      <a @click="resendCode" class="resend-code-atag"
-                        ><router-link to="/signin"
-                          ><span class="figcaption">
-                            {{ $t("screenItemProperties.button.loginBtn") }}
-                          </span>
-                        </router-link></a
-                      >
-                    </div>
-                  </td>
-                </tr>
-              </table>
-            </template>
-          </body-display>
-        </div>
+                  </div>
+                </td>
+                <td colspan="2" style="padding-left: 30px">
+                  <!-- ボタンエリア -->
+                  <div class="sign-up">
+                    <button :disabled="disableBtn">
+                      {{ $t("screenItemProperties.button.registerBtn") }}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <!-- 再送信する -->
+                <td colspan="4">
+                  <div class="signup-link">
+                    {{ $t("screenItemProperties.signup.alreadySignup") }}
+                    <a @click="resendCode" class="resend-code-atag">
+                      <router-link to="/signin"><span class="figcaption">
+                          {{ $t("screenItemProperties.button.loginBtn") }}
+                        </span>
+                      </router-link>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </template>
+        </body-display>
       </div>
     </form>
     <!-- モーダルのため -->
     <!--
   このテンプレート フラグメントを body タグにテレポートする。
   -->
-    <teleport to="body" />
-    <terms-and-conditions-form :show="showModal" @close="showModal = false">
-      <template #header>
-        <h3>{{ $t("screenItemProperties.button.termsOfServiceBtn") }}</h3>
-      </template>
-    </terms-and-conditions-form>
-    <teleport />
+    <template v-if="showModal">
+      <Teleport to="body" />
+      <termsAndConditionsForm :show="showModal" @close="showModal = false">
+        <template #header>
+          <h3>{{ $t("screenItemProperties.button.termsOfServiceBtn") }}</h3>
+        </template>
+      </termsAndConditionsForm>
+      <Teleport />
+    </template>
     <!-- モーダルのため -->
   </div>
 </template>
-<style></style>
+<style>
+
+</style>

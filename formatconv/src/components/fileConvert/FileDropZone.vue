@@ -1,20 +1,22 @@
 <!--
-    クラス名 : FileUploadForm
-    概要 : 変換ファイルアップロード処理画面
-    作成者 : GICM_KTH
+    クラス名 :  fileDropZone
+    概要 : 変換ファイルアップロードエリア処理
+    作成者 : GICM
     作成日 : 2022/10/17　 
 -->
 <script setup>
 import { onMounted, onUnmounted, ref } from "vue";
 import { useStore } from "vuex";
-import { getAllFileEntries } from "../../utils/FileUtils";
-import { filesToZip } from "../../utils/ZipUtils";
+import { useI18n } from "vue-i18n";
+import { getAllFileEntries } from "../../utils/fileUtils";
+import { filesToZip } from "../../utils/zipUtils";
 
 const store = useStore();
 const events = ["dragenter", "dragover", "dragleave", "drop"];
 const active = ref(false);
-const allowImageTypes = ["image/tiff", "image/tif"];
+const allowImageTypes = ["image/jpeg"];
 const compressFiles = ref([]);
+const { t } = useI18n();
 
 const setActive = () => {
   active.value = true;
@@ -53,7 +55,7 @@ const compressFolder = async (files, fileName) => {
   if (filterFiles.length > 0) {
     compressFiles.value.push({
       fileName,
-      message: "Compressing...",
+      message: t("successMessages.I0003"),
     });
     const zipFile = await filesToZip(
       filterFiles.map((file) => ({
@@ -79,7 +81,7 @@ const handleInputFileChange = async (event) => {
   if (zipFile) {
     setFileItems([zipFile].map((file) => ({ file })));
   } else {
-    alert("Empty File");
+    alert(t("errorMessages.E0020"));
   }
   event.target.value = null;
 };
@@ -92,7 +94,7 @@ const handleOnDrop = async (event) => {
       const folderName = `${item.fullPath.split("/")[1]}.zip`;
       compressFiles.value.push({
         fileName: folderName,
-        message: "Reading...",
+        message: t("successMessages.I0004"),
       });
       const fileItems = await getAllFileEntries(item);
       compressFiles.value = compressFiles.value.filter(
@@ -104,7 +106,7 @@ const handleOnDrop = async (event) => {
       } else {
         compressFiles.value.push({
           fileName: folderName,
-          error: "This folder is empty",
+          error: t("errorMessages.E0020"),
         });
       }
     }

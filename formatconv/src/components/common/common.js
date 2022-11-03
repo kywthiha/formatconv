@@ -1,3 +1,9 @@
+/*
+    クラス名 : common
+    概要 : システム共通機能
+    作成者 : GICM
+    作成日 : 2022/10/17　 
+*/
 import { ref } from "vue";
 import i18n from "../../main";
 import { CognitoUserPool } from "amazon-cognito-identity-js";

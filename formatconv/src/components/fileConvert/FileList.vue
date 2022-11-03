@@ -1,13 +1,13 @@
 <!--
-    クラス名 : FileUploadForm
-    概要 : 変換ファイルアップロード処理画面
+    クラス名 : fileList
+    概要 : アップロードするファイルリスト処理
     作成者 : GICM_KTH
     作成日 : 2022/10/17　 
 -->
 <script setup>
 import { useStore } from "vuex";
 import { computed } from "vue";
-import FileItem from "./FileItem.vue";
+import fileItem from "./fileItem.vue";
 
 const store = useStore();
 
@@ -19,7 +19,7 @@ const fileItems = computed(
   <div class="file-list-container card" v-if="fileItems.length">
     <div class="file-list">
       <!-- ドラッグ と ドロップしたファイルを表示するエリア -->
-      <FileItem
+      <fileItem
         v-for="fileItem in fileItems"
         :key="fileItem.file.name"
         :item="fileItem"

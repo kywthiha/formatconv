@@ -1,7 +1,7 @@
 <!--
-    クラス名 : ConfirmAccountForm
+    クラス名 : confirmAccountForm
     概要 : 検証コード入力処理画面
-    作成者 : GICM_KZP/GICM_MHK
+    作成者 : GICM
     作成日 : 2022/10/17　 
 -->
 <script>

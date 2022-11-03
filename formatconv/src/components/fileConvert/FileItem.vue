@@ -1,13 +1,13 @@
 <!--
-    クラス名 : FileUploadForm
-    概要 : 変換ファイルアップロード処理画面
-    作成者 : GICM_KTH
+    クラス名 :  fileItem
+    概要 : アップロードファイル処理
+    作成者 : GICM
     作成日 : 2022/10/17　 
 -->
 <script setup>
 import { reactive, ref, watch, computed } from "vue";
 import { useStore } from "vuex";
-import { humanFileSize } from "../../utils/FileUtils";
+import { humanFileSize } from "../../utils/fileUtils";
 
 const store = useStore();
 const props = defineProps(["item"]);

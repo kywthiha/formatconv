@@ -3,9 +3,9 @@
 </template>
 
 <script>
-import SignUpForm from "../components/auth/SignUpForm.vue";
+import signUpForm from "../components/auth/signUpForm.vue";
 export default {
-  components: { SignUpForm },
+  components: { signUpForm },
   name: "SignUp",
 };
 </script>

@@ -1,14 +1,14 @@
 <!--
-    クラス名 : FileUploadForm
+    クラス名 : fileUploadForm
     概要 : 変換ファイルアップロード処理画面
-    作成者 : GICM_KTH
+    作成者 : GICM
     作成日 : 2022/10/17　 
 -->
 <script setup>
 import { onBeforeMount } from "vue";
 import { useStore } from "vuex";
-import LoginHeaderForm from "../auth/LoginHeaderForm.vue";
-import FileUploadManager from "./FileUploadManager.vue";
+import loginHeaderForm from "../auth/loginHeaderForm.vue";
+import fileUploadManager from "./fileUploadManager.vue";
 
 const store = useStore();
 onBeforeMount(() => {
@@ -19,6 +19,6 @@ onBeforeMount(() => {
 <template>
   <div>
     <login-header-form></login-header-form>
-    <FileUploadManager />
+    <fileUploadManager />
   </div>
 </template>

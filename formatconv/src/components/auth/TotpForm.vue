@@ -1,7 +1,7 @@
 <!--
-    クラス名 : TotpForm
+    クラス名 : totpForm
     概要 : 多要素認証ONの場合、ワンタイムパスワード入力処理画面
-    作成者 : GICM_MHK
+    作成者 : GICM
     作成日 : 2022/10/17　 
 -->
 <script>
@@ -11,7 +11,7 @@ import { CognitoUserPool } from "amazon-cognito-identity-js";
 import store from "../../store/index";
 import { POOL_DATA } from "../../config/cognito";
 import { useRoute, useRouter } from "vue-router";
-import LoginHeaderForm from "../auth/LoginHeaderForm.vue";
+import loginHeaderForm from "./loginHeaderForm.vue";
 import { useI18n } from "vue-i18n";
 import { handleKeyDown, exceptionError } from "../common/common";
 import validation from "../../hooks/validation";
@@ -19,7 +19,7 @@ import validation from "../../hooks/validation";
 export default {
   components: {
     QrcodeVue,
-    LoginHeaderForm,
+    loginHeaderForm,
   },
   setup() {
     const route = useRoute();
@@ -35,7 +35,7 @@ export default {
     let messageType = ref("");
     const { validVerificationCode, verificationCodeRequireMsg } = validation();
     const qrCodeBlured = ref(false);
-    let param = t("screenItemProperties.totpForm.mfaCode");
+    let param = t("screenItemProperties.totp.mfaCode");
     let disableBtn = ref(false);
     // 半角数字のみ
     const digitpass = t("screenItemProperties.signin.onlyDigit");
@@ -114,7 +114,7 @@ export default {
           setMFA(true);
           messageType.value = "success";
           message.value = t("successMessages.I0002", {
-            param1: t("screenItemProperties.totpForm.enableMultiFactorAuth"),
+            param1: t("screenItemProperties.totp.enableMultiFactorAuth"),
           });
           showQRCode.value = false;
           disableBtn.value = false;
@@ -226,7 +226,7 @@ export default {
                   <!-- QAコードを表示 -->
                   <div class="mb-3 text-center">
                     <div class="scanner-lbl">
-                      {{ $t("screenItemProperties.totpForm.title") }}
+                      {{ $t("screenItemProperties.totp.title") }}
                     </div>
                     <div class="mt-3">
                       <qrcode-vue
@@ -239,7 +239,7 @@ export default {
                   <hr />
                   <div class="mt-1 text-center">
                     <!-- MFAコード -->
-                    <p>{{ $t("screenItemProperties.totpForm.mfaCode") }}</p>
+                    <p>{{ $t("screenItemProperties.totp.mfaCode") }}</p>
                     <div class="row text-center">
                       <div class="col-4 offset-md-4 mb-2">
                         <input
@@ -257,7 +257,7 @@ export default {
                           }"
                           v-bind:style="[
                             !validVerificationCode(qrCode, param, digitpass) &&
-                            qrCodeeBlured
+                            qrCodeBlured
                               ? { 'margin-bottom': '0px' }
                               : { 'margin-bottom': '20px' },
                           ]"

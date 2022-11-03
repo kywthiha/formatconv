@@ -1,3 +1,11 @@
+/* 
+ クラス名 : fileUtils.js
+ 概要 : ファイル処理
+ 作成者 : GICM
+ 作成日 : 2022/10/27　 
+*/
+
+// ファイルサイズを画面に表示するため計算処理
 export function humanFileSize(size) {
   const i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
   return {

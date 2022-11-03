@@ -1,7 +1,7 @@
 <!--
-    クラス名 : ChangePasswordForm
+    クラス名 : changePasswordForm
     概要 : パスワード変更処理画面
-    作成者 : GICM_MHK
+    作成者 : GICM
     作成日 : 2022/10/18　 
 -->
 <script>
@@ -12,11 +12,11 @@ import { POOL_DATA } from "../../config/cognito";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
 import validation from "../../hooks/validation";
-import LoginHeaderForm from "../auth/LoginHeaderForm.vue";
+import loginHeaderForm from "./loginHeaderForm.vue";
 import { handleKeyDown, exceptionError, getToken } from "../common/common";
 
 export default {
-  components: { LoginHeaderForm },
+  components: { loginHeaderForm },
   setup() {
     const store = useStore();
     const { t } = useI18n();

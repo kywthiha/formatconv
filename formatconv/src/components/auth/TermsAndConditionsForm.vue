@@ -1,15 +1,15 @@
 <!--
-    クラス名 : TermsAndConditionsForm
+    クラス名 : termsAndConditionsForm
     概要 : 利用規約情報表示処理画面
-    作成者 : GICM_MHK
+    作成者 : GICM
     作成日 : 2022/10/17　 
 -->
 <script>
-import logs from "../common/contents";
+import conditions from "../common/contents";
 export default {
   data() {
     return {
-      logitems: logs,
+      conditions: conditions,
     };
   },
   props: {
@@ -33,7 +33,7 @@ export default {
               <textarea
                 readonly
                 class="textarea"
-                v-model="logitems"
+                v-model="conditions"
                 maxlength="2000"
               ></textarea>
               <content />

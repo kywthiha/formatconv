@@ -1,15 +1,15 @@
 <!--
-    クラス名 : FileUploadForm
-    概要 : 変換ファイルアップロード処理画面
-    作成者 : GICM_KTH
+    クラス名 : fileUploadManager
+    概要 : 変換ファイルアップロード処理
+    作成者 : GICM
     作成日 : 2022/10/17　 
 -->
 <script setup>
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
-import FileDropZone from "./FileDropZone.vue";
-import FileList from "./FileList.vue";
+import fileDropZone from "./fileDropZone.vue";
+import fileList from "./fileList.vue";
 const store = useStore();
 const { t } = useI18n();
 const handleUpload = () => {
@@ -41,7 +41,7 @@ const handleGotoUpload = () => {
 </script>
 <template>
   <div class="file-upload-manager">
-    <FileDropZone class="file-drop-zone" v-if="!uploadStatus" />
+    <fileDropZone class="file-drop-zone" v-if="!uploadStatus" />
     <button
       v-else-if="processStatus"
       class="btn btn-danger go-to-upload"
@@ -49,7 +49,7 @@ const handleGotoUpload = () => {
     >
       {{ $t("screenItemProperties.fileUpload.goToUpload") }}
     </button>
-    <FileList class="file-list" />
+    <fileList class="file-list" />
     <div class="file-action-group" v-if="!uploadStatus">
       <button
         class="btn btn-primary col-auto btn-upload"

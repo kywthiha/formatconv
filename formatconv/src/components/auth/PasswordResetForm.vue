@@ -1,7 +1,7 @@
 <!--
-    クラス名 : PasswordResetForm
+    クラス名 : passwordResetForm
     概要 : パスワードリセット処理画面
-    作成者 : GICM_KZP/GICM_MHK
+    作成者 : GICM
     作成日 : 2022/10/17　 
 -->
 <script>

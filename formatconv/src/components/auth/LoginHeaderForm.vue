@@ -1,3 +1,9 @@
+<!--
+    クラス名 : loginHeaderForm
+    概要 : ログイン後のヘッダ表示
+    作成者 : GICM
+    作成日 : 2022/10/17　 
+-->
 <script>
 import { computed } from "@vue/reactivity";
 import { onBeforeMount, onBeforeUpdate } from "vue";

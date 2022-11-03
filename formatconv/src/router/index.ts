@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import SignUp from "../components/auth/SignUpForm.vue";
-import FileUpload from "../components/fileConvert/FileUploadForm.vue";
-import MFASettings from "../components/auth/TotpForm.vue";
-import PasswordResetForm from "../components/auth/PasswordResetForm.vue";
-import Confirm from "../components/auth/ConfirmAccountForm.vue";
+import homeView from "../views/homeView.vue";
+import signUpForm from "../components/auth/signUpForm.vue";
+import fileUploadForm from "../components/fileConvert/fileUploadForm.vue";
+import totpForm from "../components/auth/totpForm.vue";
+import passwordResetForm from "../components/auth/passwordResetForm.vue";
+import confirmAccountForm from "../components/auth/confirmAccountForm.vue";
 import store from "../store/index.js";
-import ChangePasswordForm from "../components/auth/ChangePasswordForm.vue";
-import SigninForm from "../views/Signin.vue";
+import changePasswordForm from "../components/auth/changePasswordForm.vue";
+import signInView from "../views/signInView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,45 +15,45 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: HomeView,
+      component: homeView,
       beforeEnter: isAuthenticated,
     },
     {
       path: "/signin",
       name: "signin",
-      component: SigninForm,
+      component: signInView,
     },
     {
       path: "/signup",
       name: "signup",
-      component: SignUp,
+      component: signUpForm,
     },
     {
       path: "/resetPassword",
       name: "resetPassword",
-      component: PasswordResetForm,
+      component: passwordResetForm,
     },
     {
       path: "/confirm",
       name: "confirm",
-      component: Confirm,
+      component: confirmAccountForm,
     },
     {
       path: "/fileUpload",
       name: "fileUpload",
-      component: FileUpload,
+      component: fileUploadForm,
       beforeEnter: isAuthenticated,
     },
     {
       path: "/mfa",
       name: "Mfa",
-      component: MFASettings,
+      component: totpForm,
       beforeEnter: isAuthenticated,
     },
     {
       path: "/changePassword",
       name: "ChangePassword",
-      component: ChangePasswordForm,
+      component: changePasswordForm,
       beforeEnter: isAuthenticated,
     },
   ],

@@ -1,3 +1,11 @@
+/* 
+ クラス名 : imageUtils.js
+ 概要 : ファイルリサイズ処理
+ 作成者 : GICM
+ 作成日 : 2022/10/27　 
+*/
+
+// ブラザーで開けるイメージをリサイズする処理
 export function resizeImage(file) {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -20,7 +28,7 @@ export function resizeImage(file) {
           }
         },
         file.type,
-        0.7
+        0.7 // イメージQuality(0-1)を設定できる
       );
     };
   });

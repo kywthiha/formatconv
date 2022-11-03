@@ -3,10 +3,10 @@
 </template>
 
 <script>
-import FileUploadForm from "../components/fileConvert/FileUploadForm.vue";
+import fileUploadForm from "../components/fileConvert/fileUploadForm.vue";
 
 export default {
-  components: { FileUploadForm },
+  components: { fileUploadForm },
   name: "fileUpload",
 };
 </script>

@@ -1,7 +1,7 @@
 <!--
-    クラス名 : SignInForm
+    クラス名 : signInForm
     概要 : ログイン処理画面
-    作成者 : GICM_MHK
+    作成者 : GICM
     作成日 : 2022/10/17　 
 -->
 <script>
@@ -13,23 +13,23 @@ import {
   CognitoUser,
   AuthenticationDetails,
 } from "amazon-cognito-identity-js";
-import ResetPassword from "./PasswordResetForm.vue";
+import resetPassword from "./passwordResetForm.vue";
 import { POOL_DATA } from "../../config/cognito";
-import MFASettings from "./TotpForm.vue";
-import HeaderDisplay from "../layout/HeaderDisplay.vue";
-import LocaleSelect from "../LocaleSelect.vue";
-import BodyDisplay from "../layout/BodyDisplay.vue";
+import totpForm from "./totpForm.vue";
+import headerDisplay from "../layout/headerDisplay.vue";
+import localeSelect from "../localeSelect.vue";
+import bodyDisplay from "../layout/bodyDisplay.vue";
 import { useI18n } from "vue-i18n";
 import validation from "../../hooks/validation";
 import { handleKeyDown, exceptionError } from "../common/common";
 
 export default {
   components: {
-    MFASettings,
-    HeaderDisplay,
-    LocaleSelect,
-    BodyDisplay,
-    ResetPassword,
+    totpForm,
+    headerDisplay,
+    localeSelect,
+    bodyDisplay,
+    resetPassword,
   },
   setup() {
     // Vue ルーターへの参照を作成する

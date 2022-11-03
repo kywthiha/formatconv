@@ -1,5 +1,12 @@
+/* 
+ クラス名 : zipUtils.js
+ 概要 : ファイル圧縮化処理
+ 作成者 : GICM
+ 作成日 : 2022/10/27　 
+*/
 import * as zip from "@zip.js/zip.js";
 
+// 指定されたフォルダーにある全ファイルを圧縮化する
 export function filesToZip(file_list, folder_name) {
   return new Promise((resolve, reject) => {
     const zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"), {
