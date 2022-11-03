@@ -215,14 +215,18 @@ export default {
           </template>
         </header-display>
         <!-- エラーメッセージ表示 -->
-        <div
-          class="alert alert-dismissible align-items-center fade show"
-          :class="[messageType == 'danger' ? 'alert-danger' : 'alert-success']"
-          v-if="message"
-          style="text-align: center"
-        >
-          <label>{{ message }}</label>
-          <button type="button" class="btn-close" @click="hideAlert"></button>
+        <div class="alert-container">
+          <div
+            class="alert alert-dismissible align-items-center fade show"
+            :class="[
+              messageType == 'danger' ? 'alert-danger' : 'alert-success',
+            ]"
+            v-if="message"
+            style="text-align: center"
+          >
+            <label>{{ message }}</label>
+            <button type="button" class="btn-close" @click="hideAlert"></button>
+          </div>
         </div>
         <body-display>
           <template v-slot:body>
@@ -290,7 +294,7 @@ export default {
             <!-- パスワードリセット -->
             <div v-if="confirmCode">
               <form @submit.prevent="resetPassword" @keydown="handleKeyDown">
-                <table class="reset-pass-tbl">
+                <table>
                   <!-- 検証コード -->
                   <tr>
                     <td class="signin-mail-label">

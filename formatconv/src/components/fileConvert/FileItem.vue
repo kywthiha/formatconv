@@ -105,8 +105,10 @@ const deleteFileItem = () =>
 </script>
 <template>
   <div class="file-item card">
-    <div class="alert alert-danger" role="alert" v-if="error_message">
-      {{ error_message }}
+    <div class="alert-container">
+      <div class="alert alert-danger" role="alert" v-if="error_message">
+        {{ error_message }}
+      </div>
     </div>
     <div class="row justify-content-between">
       <div class="row col">

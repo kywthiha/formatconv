@@ -5,13 +5,16 @@
   align-items: center;
   display: flex;
 }
+.alert-container {
+  display: flex;
+  justify-content: center;
+}
 .alert {
   text-align: center;
-  width: 500px !important;
-  padding: 0.5rem;
+  min-width: 30rem;
   align-content: stretch;
-  margin-left: 380px;
   margin-top: 30px;
+  padding: 0.5rem 2rem;
 }
 .alert-dismissible .btn-close {
   padding-top: revert;
@@ -87,9 +90,7 @@ table {
   padding-bottom: 20px;
   padding-right: 10px;
 }
-.totp-table {
-  margin-left: 345px;
-}
+
 .sign-in {
   margin: 15px 0 15px 0;
   padding-top: 15px;
@@ -250,9 +251,6 @@ table {
 
 /* password-reset start */
 
-.reset-pass-tbl {
-  margin-left: 327px;
-}
 /* password-reset end */
 
 /* header-display start */

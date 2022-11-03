@@ -226,11 +226,18 @@ export default {
           </template>
         </header-display>
         <!-- エラーメッセージ表示 -->
-        <div class="alert alert-dismissible align-items-center fade show" :class="[
-          messageType == 'danger' ? 'alert-danger' : 'alert-success',
-        ]" v-if="message" style="text-align: center">
-          <label>{{ message }}</label>
-          <button type="button" class="btn-close" @click="hideAlert"></button>
+        <div class="alert-container">
+          <div
+            class="alert alert-dismissible align-items-center fade show"
+            :class="[
+              messageType == 'danger' ? 'alert-danger' : 'alert-success',
+            ]"
+            v-if="message"
+            style="text-align: center"
+          >
+            <label>{{ message }}</label>
+            <button type="button" class="btn-close" @click="hideAlert"></button>
+          </div>
         </div>
         <body-display>
           <template v-slot:body>
@@ -239,19 +246,26 @@ export default {
               <tr>
                 <td class="account-name-label">
                   <label class="reg-accname-label">{{
-                  $t("screenItemProperties.common.accountName")
+                    $t("screenItemProperties.common.accountName")
                   }}</label>
                 </td>
                 <td>
-                  <input type="text" v-model.trim="username" maxlength="63" v-bind:class="{
-                    'form-control': true,
-                    'is-invalid':
-                      !validUsername(username) && usernameBlured,
-                  }" v-bind:style="[
+                  <input
+                    type="text"
+                    v-model.trim="username"
+                    maxlength="63"
+                    v-bind:class="{
+                      'form-control': true,
+                      'is-invalid': !validUsername(username) && usernameBlured,
+                    }"
+                    v-bind:style="[
                       !validUsername(username) && usernameBlured
                         ? { 'margin-bottom': '0px' }
                         : { 'margin-bottom': '20px' },
-                    ]" v-on:blur="usernameBlured = true" autocomplete="false" />
+                    ]"
+                    v-on:blur="usernameBlured = true"
+                    autocomplete="false"
+                  />
                   <div class="invalid-feedback">
                     {{ usernameRequireMsg }}
                   </div>
@@ -261,18 +275,28 @@ export default {
               <tr>
                 <td class="mail-label">
                   <label class="sign-up-label">{{
-                  $t("screenItemProperties.common.email")
+                    $t("screenItemProperties.common.email")
                   }}</label>
                 </td>
                 <td>
-                  <input type="text" class="signup-mail" v-model.trim="email" maxlength="128" id="email" v-bind:class="{
-                    'form-control': true,
-                    'is-invalid': !validEmail(email) && emailBlured,
-                  }" v-bind:style="[
+                  <input
+                    type="text"
+                    class="signup-mail"
+                    v-model.trim="email"
+                    maxlength="128"
+                    id="email"
+                    v-bind:class="{
+                      'form-control': true,
+                      'is-invalid': !validEmail(email) && emailBlured,
+                    }"
+                    v-bind:style="[
                       !validEmail(email) && emailBlured
                         ? { 'margin-bottom': '0px' }
                         : { 'margin-bottom': '20px' },
-                    ]" v-on:blur="emailBlured = true" autocomplete="false" />
+                    ]"
+                    v-on:blur="emailBlured = true"
+                    autocomplete="false"
+                  />
                   <div class="invalid-feedback">
                     {{ emailRequireMsg }}
                   </div>
@@ -282,25 +306,37 @@ export default {
                 <!-- パスワード -->
                 <td class="password-label">
                   <label class="sign-up-label">{{
-                  $t("screenItemProperties.common.password")
+                    $t("screenItemProperties.common.password")
                   }}</label>
                 </td>
                 <td>
                   <div class="password-input">
-                    <input class="form-control" :type="[showPassword ? 'text' : 'password']" v-model.trim="password"
-                      autocomplete="false" maxlength="256" id="current-password" v-bind:class="{
+                    <input
+                      class="form-control"
+                      :type="[showPassword ? 'text' : 'password']"
+                      v-model.trim="password"
+                      autocomplete="false"
+                      maxlength="256"
+                      id="current-password"
+                      v-bind:class="{
                         'form-control': true,
                         'is-invalid':
-                          !validPassword(password, passParam) &&
-                          passwordBlured,
-                      }" v-bind:style="[
+                          !validPassword(password, passParam) && passwordBlured,
+                      }"
+                      v-bind:style="[
                         !validPassword(password, passParam) && passwordBlured
                           ? { 'margin-bottom': '0px' }
                           : { 'margin-bottom': '20px' },
-                      ]" v-on:blur="passwordBlured = true" />
-                    <i :class="[
-                      showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill',
-                    ]" aria-hidden="true" @click="showPassword = !showPassword"></i>
+                      ]"
+                      v-on:blur="passwordBlured = true"
+                    />
+                    <i
+                      :class="[
+                        showPassword ? 'bi-eye-fill' : 'bi-eye-slash-fill',
+                      ]"
+                      aria-hidden="true"
+                      @click="showPassword = !showPassword"
+                    ></i>
                     <div class="invalid-feedback">
                       {{ passRequireMsg }}
                     </div>
@@ -309,15 +345,20 @@ export default {
                 <!-- 利用規約チェックボックス -->
                 <td>
                   <div style="padding-left: 30px">
-                    <input type="checkbox" class="reg-checkbox" id="checkbox" @change="changeCheckbox"
-                      :disabled="disableCheckbox" />
+                    <input
+                      type="checkbox"
+                      class="reg-checkbox"
+                      id="checkbox"
+                      @change="changeCheckbox"
+                      :disabled="disableCheckbox"
+                    />
                   </div>
                 </td>
                 <!-- 利用規約ボタン -->
                 <td style="padding-bottom: 10px">
                   <div class="terms-of-service-link">
                     <a @click="openModal">{{
-                    $t("screenItemProperties.button.termsOfServiceBtn")
+                      $t("screenItemProperties.button.termsOfServiceBtn")
                     }}</a>
                   </div>
                 </td>
@@ -326,13 +367,18 @@ export default {
                 <!-- パスワード確認 -->
                 <td class="password-label">
                   <label class="sign-up-label">{{
-                  $t("screenItemProperties.signup.confirmPassword")
+                    $t("screenItemProperties.signup.confirmPassword")
                   }}</label>
                 </td>
                 <td>
                   <div class="password-input">
-                    <input :type="[showConfirmPassword ? 'text' : 'password']" v-model.trim="confirm_password"
-                      autocomplete="false" id="confirm-password" maxlength="256" v-bind:class="{
+                    <input
+                      :type="[showConfirmPassword ? 'text' : 'password']"
+                      v-model.trim="confirm_password"
+                      autocomplete="false"
+                      id="confirm-password"
+                      maxlength="256"
+                      v-bind:class="{
                         'form-control': true,
                         'is-invalid':
                           !validConfirmPassword(
@@ -341,7 +387,8 @@ export default {
                             passParam,
                             confirmPasswordParam
                           ) && confirmPasswordBlured,
-                      }" v-bind:style="[
+                      }"
+                      v-bind:style="[
                         !validConfirmPassword(
                           confirm_password,
                           password,
@@ -350,12 +397,18 @@ export default {
                         ) && confirmPasswordBlured
                           ? { 'margin-bottom': '0px' }
                           : { 'margin-bottom': '20px' },
-                      ]" v-on:blur="confirmPasswordBlured = true" />
-                    <i :class="[
-                      showConfirmPassword
-                        ? 'bi-eye-fill'
-                        : 'bi-eye-slash-fill',
-                    ]" aria-hidden="true" @click="showConfirmPassword = !showConfirmPassword"></i>
+                      ]"
+                      v-on:blur="confirmPasswordBlured = true"
+                    />
+                    <i
+                      :class="[
+                        showConfirmPassword
+                          ? 'bi-eye-fill'
+                          : 'bi-eye-slash-fill',
+                      ]"
+                      aria-hidden="true"
+                      @click="showConfirmPassword = !showConfirmPassword"
+                    ></i>
                     <div class="invalid-feedback">
                       {{ confirmPasswordRequireMsg }}
                     </div>
@@ -376,7 +429,8 @@ export default {
                   <div class="signup-link">
                     {{ $t("screenItemProperties.signup.alreadySignup") }}
                     <a @click="resendCode" class="resend-code-atag">
-                      <router-link to="/signin"><span class="figcaption">
+                      <router-link to="/signin"
+                        ><span class="figcaption">
                           {{ $t("screenItemProperties.button.loginBtn") }}
                         </span>
                       </router-link>
@@ -405,6 +459,4 @@ export default {
     <!-- モーダルのため -->
   </div>
 </template>
-<style>
-
-</style>
+<style></style>

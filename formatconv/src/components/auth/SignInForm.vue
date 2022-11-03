@@ -232,13 +232,15 @@ export default {
         </template>
       </header-display>
       <!-- エラーメッセージ表示 -->
-      <div
-        class="alert alert-danger alert-dismissible align-items-center fade show"
-        v-if="message"
-        style="text-align: center"
-      >
-        <label>{{ message }}</label>
-        <button type="button" class="btn-close" @click="hideAlert"></button>
+      <div class="alert-container">
+        <div
+          class="alert alert-danger alert-dismissible align-items-center fade show"
+          v-if="message"
+          style="text-align: center"
+        >
+          <label>{{ message }}</label>
+          <button type="button" class="btn-close" @click="hideAlert"></button>
+        </div>
       </div>
       <body-display>
         <template v-slot:body>
@@ -344,7 +346,7 @@ export default {
             </div>
             <!-- mfa を有効にするときに表示する -->
             <div v-if="confirmMFACode">
-              <table class="totp-table">
+              <table>
                 <!-- ワンタイムパスワード -->
                 <tr>
                   <td class="totp-label">
