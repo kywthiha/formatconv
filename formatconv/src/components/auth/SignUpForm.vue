@@ -7,7 +7,7 @@
 <script>
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-import termsAndConditionsForm from "./termsAndConditionsForm.vue";
+
 import {
   CognitoUserPool,
   CognitoUserAttribute,
@@ -17,10 +17,10 @@ import headerDisplay from "../layout/headerDisplay.vue";
 import validation from "../../hooks/validation";
 import { useI18n } from "vue-i18n";
 import { handleKeyDown, exceptionError } from "../common/common";
-import TermsAndConditionsForm from "./termsAndConditionsForm.vue";
+import TermsAndConditionsForm from "./TermsAndConditionsForm.vue";
 
 export default {
-  components: { headerDisplay, termsAndConditionsForm, TermsAndConditionsForm },
+  components: { headerDisplay, TermsAndConditionsForm },
   setup() {
     // Vuex ルーターにアクセスする
     const router = useRouter();
@@ -31,7 +31,6 @@ export default {
     const username = ref("");
     const termOfService = ref("");
     const showModal = ref(false);
-    const usernameBlured = ref(false);
     let disableBtn = ref(true);
     let openedModal = ref(false);
     let changedCheckbox = ref(false);
@@ -48,11 +47,9 @@ export default {
     const { t } = useI18n();
     const passParam = t("errorParams.password");
     const confirmPasswordParam = t("errorParams.confirmPassword");
-
     // 入力チェックのため
     const {
       validUsername,
-      usernameRequireMsg,
       validPassword,
       passRequireMsg,
       validConfirmPassword,
@@ -149,6 +146,11 @@ export default {
       }
     }
 
+    // アカウント名を入力する
+    function insertUsername() {
+      username.value = email.value.replace(/[^0-9a-z]/g, "");
+    }
+
     // 入力チェック対応
     function isValid() {
       if (
@@ -159,7 +161,6 @@ export default {
           validConfirmPassword(confirm_password.value, password.value)
         )
       ) {
-        usernameBlured.value = true;
         passwordBlured.value = true;
         emailBlured.value = true;
         confirmPasswordBlured.value = true;
@@ -180,8 +181,6 @@ export default {
       signUp,
       confirm_password,
       validUsername,
-      usernameRequireMsg,
-      usernameBlured,
       validEmail,
       emailRequireMsg,
       disableBtn,
@@ -207,6 +206,7 @@ export default {
       showPassword,
       showConfirmPassword,
       messageType,
+      insertUsername,
     };
   },
 };
@@ -256,19 +256,10 @@ export default {
                     maxlength="63"
                     v-bind:class="{
                       'form-control': true,
-                      'is-invalid': !validUsername(username) && usernameBlured,
                     }"
-                    v-bind:style="[
-                      !validUsername(username) && usernameBlured
-                        ? { 'margin-bottom': '0px' }
-                        : { 'margin-bottom': '20px' },
-                    ]"
-                    v-on:blur="usernameBlured = true"
                     autocomplete="false"
+                    disabled
                   />
-                  <div class="invalid-feedback">
-                    {{ usernameRequireMsg }}
-                  </div>
                 </td>
               </tr>
               <!-- メール -->
@@ -295,6 +286,7 @@ export default {
                         : { 'margin-bottom': '20px' },
                     ]"
                     v-on:blur="emailBlured = true"
+                    @keyup="insertUsername()"
                     autocomplete="false"
                   />
                   <div class="invalid-feedback">
