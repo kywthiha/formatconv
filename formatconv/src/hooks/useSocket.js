@@ -71,7 +71,7 @@ export const useSocket = () => {
     const eventList = {
       download: ({ file_name, download_url }) => {
         store.dispatch("fileUploadManager/updateFileItems", {
-          id: file_name.split("/")[1],
+          id: file_name.split("/")[1].replace(/^output_/, ""),
           data: {
             download_url,
           },
