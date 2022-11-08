@@ -5,13 +5,7 @@
     作成日 : 2022/10/17　 
 -->
 <script>
-import conditions from "../common/contents";
 export default {
-  data() {
-    return {
-      conditions: conditions,
-    };
-  },
   props: {
     show: Boolean,
   },
@@ -33,10 +27,9 @@ export default {
               <textarea
                 readonly
                 class="textarea"
-                v-model="conditions"
+                :value="$t('conditions')"
                 maxlength="2000"
               ></textarea>
-              <content />
             </slot>
           </div>
           <!-- ボタンエリア -->
