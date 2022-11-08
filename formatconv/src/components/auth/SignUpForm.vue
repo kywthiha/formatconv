@@ -7,7 +7,6 @@
 <script>
 import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
-
 import {
   CognitoUserPool,
   CognitoUserAttribute,
@@ -440,13 +439,15 @@ export default {
   このテンプレート フラグメントを body タグにテレポートする。
   -->
     <template v-if="showModal">
-      <Teleport to="body" />
-      <termsAndConditionsForm :show="showModal" @close="showModal = false">
+      <termsAndConditionsForm
+        :show="showModal"
+        @close="showModal = false"
+        to="body"
+      >
         <template #header>
           <h3>{{ $t("screenItemProperties.button.termsOfServiceBtn") }}</h3>
         </template>
       </termsAndConditionsForm>
-      <Teleport />
     </template>
     <!-- モーダルのため -->
   </div>

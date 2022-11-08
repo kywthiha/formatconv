@@ -36,7 +36,6 @@ export default {
                 v-model="conditions"
                 maxlength="2000"
               ></textarea>
-              <content />
             </slot>
           </div>
           <!-- ボタンエリア -->
