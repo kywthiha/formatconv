@@ -32,8 +32,6 @@ export default {
     context.commit("setSession", payload);
   },
   logout(context) {
-    console.log("log out called");
-
     // gets reference to the Cognito user pool
     const userPool = new CognitoUserPool(POOL_DATA);
 

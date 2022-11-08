@@ -32,7 +32,6 @@ export default {
       store.dispatch("logout");
       router.push({
         name: "signin",
-        params: { message: "You have logged out" },
       });
     };
 
