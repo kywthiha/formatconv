@@ -18,17 +18,11 @@ function disableMFA() {
   };
 
   // ユーザーの MFA プリファレンスを設定する
-  cognitoUser.setUserMfaPreference(
-    null,
-    totpMfaSettings,
-    function (err, result) {
-      console.log("sets a users MFA preference ", totpMfaSettings);
-      if (err) {
-        console.log(err);
-      }
-      store.dispatch("setMFA", false);
-      console.log("setUserMfaPreference call result " + result);
+  cognitoUser.setUserMfaPreference(null, totpMfaSettings, function (err) {
+    if (err) {
+      console.log(err);
     }
-  );
+    store.dispatch("setMFA", false);
+  });
 }
 export default disableMFA;

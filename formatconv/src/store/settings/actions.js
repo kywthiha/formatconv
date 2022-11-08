@@ -12,22 +12,28 @@ export default {
     commit("setMFA", payload);
   },
   fetchMFAValue({ commit, rootState }) {
-    // gets reference to the Cognito user pool
-    const userPool = new CognitoUserPool(POOL_DATA);
+    if (rootState.authModule && rootState.authModule.session) {
+      // gets reference to the Cognito user pool
+      const userPool = new CognitoUserPool(POOL_DATA);
 
-    //gets current logged in user
-    const cognitoUser = userPool.getCurrentUser();
-    cognitoUser.setSignInUserSession(rootState.authModule.session);
+      //gets current logged in user
+      const cognitoUser = userPool.getCurrentUser();
+      cognitoUser.setSignInUserSession(rootState.authModule.session);
 
-    cognitoUser.getUserData(function(err, userData) {
-      if (err) {
-        console.log(err.message || JSON.stringify(err));
-        return;
-      }
-
-      if (userData.UserMFASettingList.length > 0) {
-        commit("setMFA", true);
-      }
-    });
+      cognitoUser.getUserData(function (err, userData) {
+        if (err) {
+          return;
+        }
+        if (
+          userData &&
+          userData.UserMFASettingList &&
+          userData.UserMFASettingList.length > 0
+        ) {
+          commit("setMFA", true);
+        } else {
+          commit("setMFA", false);
+        }
+      });
+    }
   },
 };

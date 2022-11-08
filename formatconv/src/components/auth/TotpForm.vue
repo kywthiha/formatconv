@@ -242,8 +242,8 @@ export default {
                   <div class="mt-1 text-center">
                     <!-- MFAコード -->
                     <p>{{ $t("screenItemProperties.totp.mfaCode") }}</p>
-                    <div class="row text-center">
-                      <div class="col-4 offset-md-4 mb-2">
+                    <div class="row justify-content-center">
+                      <div class="col-auto">
                         <input
                           type="text"
                           v-model.trim="qrCode"
@@ -264,13 +264,9 @@ export default {
                               : { 'margin-bottom': '20px' },
                           ]"
                           v-on:blur="qrCodeBlured = true"
-                          style="margin-left: 60px"
                           autocomplete="false"
                         />
-                        <div
-                          class="invalid-feedback"
-                          style="margin-top: -15px; margin-left: -30px"
-                        >
+                        <div class="invalid-feedback">
                           {{ verificationCodeRequireMsg }}
                         </div>
                       </div>
