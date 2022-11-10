@@ -7,10 +7,11 @@
 <script setup>
 import { useStore } from "vuex";
 import { computed } from "vue";
-import FileItem from "./FileItem.vue";
+import FileItem from "./fileItem.vue";
 
 const store = useStore();
 
+// ファイルリスト表示
 const fileItems = computed(
   () => store.getters["fileUploadManager/getfileItems"]
 );

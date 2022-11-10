@@ -11,6 +11,7 @@ import loginHeaderForm from "../auth/loginHeaderForm.vue";
 import fileUploadManager from "./fileUploadManager.vue";
 
 const store = useStore();
+// フォーム初期化処理
 onBeforeMount(() => {
   store.dispatch("fileUploadManager/setUploadStatus", false);
   store.dispatch("fileUploadManager/setFileItems", []);

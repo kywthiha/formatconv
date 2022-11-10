@@ -14,8 +14,7 @@ export function humanFileSize(size) {
   };
 }
 
-// Get all the entries (files or sub-directories) in a directory
-// by calling readEntries until it returns empty array
+// フォルダー中身を読み出す
 async function readAllDirectoryEntries(directoryReader) {
   let entries = [];
   let readEntries = await readEntriesPromise(directoryReader);
@@ -26,9 +25,7 @@ async function readAllDirectoryEntries(directoryReader) {
   return entries;
 }
 
-// Wrap readEntries in a promise to make working with readEntries easier
-// readEntries will return only some of the entries in a directory
-// e.g. Chrome returns at most 100 entries at a time
+// Promise機能に変更
 async function readEntriesPromise(directoryReader) {
   try {
     return await new Promise((resolve, reject) => {
@@ -39,12 +36,14 @@ async function readEntriesPromise(directoryReader) {
   }
 }
 
+// 選択されたフォルダーの中身を読み込み処理
 export async function getAllFileEntries(dataTransferItem) {
   const fileItems = [];
   // Use BFS to traverse entire directory/file structure
   const queue = [dataTransferItem];
   while (queue.length > 0) {
     const entry = queue.shift();
+    // ファイルの場合のみ読み込みする
     if (entry.isFile) {
       fileItems.push(
         await new Promise((resolve, reject) => {
@@ -54,7 +53,7 @@ export async function getAllFileEntries(dataTransferItem) {
                 if (file) {
                   resolve(file);
                 } else {
-                  reject("File Not Found");
+                  reject("ファイルが存在しません。");
                 }
               },
               (e) => {
@@ -67,6 +66,7 @@ export async function getAllFileEntries(dataTransferItem) {
         })
       );
     } else if (entry.isDirectory) {
+      // フォルダーの場合、フォルダー中身を読み込み
       queue.push(...(await readAllDirectoryEntries(entry.createReader())));
     }
   }

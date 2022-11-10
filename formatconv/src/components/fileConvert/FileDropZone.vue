@@ -19,36 +19,45 @@ const allowImageExtension = ["jpg", "jpeg"];
 const compressFiles = ref([]);
 const { t } = useI18n();
 
+// フィアルドロップエリア背景色を有効する
 const setActive = () => {
   active.value = true;
 };
+
+// フィアルドロップエリア背景色を無効する
 const setInactive = () => {
   active.value = false;
 };
 
+// イベントをストップする処理
 const preventDefaults = (event) => {
   event.preventDefault();
 };
 
+// イベント追加処理
 onMounted(() => {
   events.forEach((eventName) => {
     document.body.addEventListener(eventName, preventDefaults);
   });
 });
 
+// イベント削除処理
 onUnmounted(() => {
   events.forEach((eventName) => {
     document.body.removeEventListener(eventName, preventDefaults);
   });
 });
 
+// 画面に表示するZipリスト設定
 const setFileItems = (files) =>
   store.dispatch("fileUploadManager/addFileItems", files);
 
+// 圧縮後ファイル名設定
 const compressFileName = (compressFile) => {
   return compressFile && `${compressFile.webkitRelativePath.split("/")[0]}.zip`;
 };
 
+// ファイルを圧縮化する
 const compressFolder = async (files, fileName) => {
   const filterFiles = files.filter((file) => {
     if (file.type.length) {
@@ -62,6 +71,7 @@ const compressFolder = async (files, fileName) => {
       fileName,
       message: t("successMessages.I0003"),       // 圧縮中
     });
+    // 指定されたフォルダーにある全ファイルを圧縮化する
     const zipFile = await filesToZip(
       filterFiles.map((file) => ({
         file,
@@ -78,6 +88,7 @@ const compressFolder = async (files, fileName) => {
   }
 };
 
+// ファイル選択処理
 const handleInputFileChange = async (event) => {
   const zipFile = await compressFolder(
     Array.from(event.target.files),
@@ -87,21 +98,24 @@ const handleInputFileChange = async (event) => {
     setFileItems([zipFile].map((file) => ({ file })));
   } else {
     // アップロード対象のJPEGファイルが入っていません。
-    alert(t("errorMessages.E0020"));
+    alert(t("errorMessages.E0017"));
   }
   event.target.value = null;
 };
 
+// ファイルドロップ処理
 const handleOnDrop = async (event) => {
   setInactive();
   Array.from(event.dataTransfer.items).forEach(async (dataTransferItem) => {
     const item = dataTransferItem.webkitGetAsEntry();
     if (item && item.isDirectory) {
+      // フォルダーかどうかチェック
       const folderName = `${item.fullPath.split("/")[1]}.zip`;
       compressFiles.value.push({
         fileName: folderName,
         message: t("successMessages.I0004"),         // ファイル読み込み中
       });
+      // 
       const fileItems = await getAllFileEntries(item);
       compressFiles.value = compressFiles.value.filter(
         (item) => item.fileName != folderName
@@ -113,7 +127,7 @@ const handleOnDrop = async (event) => {
         compressFiles.value.push({
           fileName: folderName,
           // アップロード対象のJPEGファイルが入っていません。
-          error: t("errorMessages.E0020"),
+          error: t("errorMessages.E0017"),
         });
       }
     }

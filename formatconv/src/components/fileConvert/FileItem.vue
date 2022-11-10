@@ -26,9 +26,11 @@ const progress = reactive({
 
 const { unit, size } = humanFileSize(props.item.file.size);
 
+// ファイルをS3にアップロードする処理
 const uploadToS3 = async () => {
   progress.value = 0;
   const started_at = new Date();
+  // アップロード進捗対応
   const handlPprogress = (e) => {
     if (
       e.currentTarget &&
@@ -59,6 +61,7 @@ const uploadToS3 = async () => {
     if (e.lengthComputable) {
       const seconds_elapsed =
         (new Date().getTime() - started_at.getTime()) / 1000;
+      // アップロード進捗計算
       const percentage = Math.round((e.loaded / e.total) * 100);
       progress.loaded = humanFileSize(e.loaded);
       progress.speed = humanFileSize(
@@ -67,6 +70,7 @@ const uploadToS3 = async () => {
       progress.percentage = percentage;
     }
     if (e.type == "load") {
+      // アップロード完了
       setTimeout(() => {
         store.dispatch("fileUploadManager/updateFileItems", {
           id: props.item.file.name,
@@ -87,15 +91,18 @@ const uploadToS3 = async () => {
   xhr.send(props.item.file);
 };
 
+// S3署名付きURLがあるか確認処理
 watch(
   () => props.item.upload_url,
   async () => {
     if (props.item.file && props.item.upload_url && !props.item.uploaded) {
+      // ファイルをS3にアップロードする処理
       await uploadToS3();
     }
   }
 );
 
+// 「削除」ボタン表示対応
 const uploadStatus = computed(
   () => store.state.fileUploadManager.upload_status
 );

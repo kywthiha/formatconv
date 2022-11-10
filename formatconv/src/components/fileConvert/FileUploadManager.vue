@@ -14,35 +14,45 @@ const store = useStore();
 const { t } = useI18n();
 const errorMessage = ref(null)
 
+// ファイルアップロード処理
 const handleUpload = async () => {
   try{
     errorMessage.value = null;
+    // 「アップロード」ボタン削除
     store.dispatch("fileUploadManager/setUploadStatus", true);
+    // アップロード用S3署名付きURL発行処理
     await store.dispatch("fileUploadManager/requestUploadUrl");
   }catch(e){
+    // バケットが作成できませんでした。
     errorMessage.value = t("errorMessages.E0009");
   }
 };
 
+// 「アップロードへ」ボタン表示対応
 const processStatus = computed(
   () => store.getters["fileUploadManager/getProcessStatus"]
 );
 
+// 「アップロード」ボタン表示対応
 const fileItemsCount = computed(
   () => store.getters["fileUploadManager/getfileItemsCount"]
 );
 
+// ファイルドロップエリアを削除対応
 const uploadStatus = computed(
   () => store.state.fileUploadManager.upload_status
 );
 
+// 「アップロードへ」ボタン処理
 const handleGotoUpload = () => {
   // このページを離れるとアップロードされた内容がなくなりますが、よろしいでしょうか？
   const ans = window.confirm(
     t("successMessages.I0005")
   );
   if (ans) {
+    // 「アップロード」ボタン表示
     store.dispatch("fileUploadManager/setUploadStatus", false);
+    // ファイルリストを初期化する
     store.dispatch("fileUploadManager/setFileItems", []);
   }
 };
