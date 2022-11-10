@@ -76,8 +76,7 @@ export function exceptionError(exceptionMessage, param, errrorMessage) {
       break;
     case "InvalidParameterException":
       // システムエラーが発生しました。システム管理者に問い合わせしてください。
-      message.value =
-        "Cannot reset password for the user as there is no registered/verified email or phone_number";
+      message.value = t("errorMessages.E0007");
       break;
     case "EnableSoftwareTokenMFAException":
       // 入力された検証コードが間違えています。
