@@ -20,7 +20,7 @@ const handleUpload = async () => {
     store.dispatch("fileUploadManager/setUploadStatus", true);
     await store.dispatch("fileUploadManager/requestUploadUrl");
   }catch(e){
-    errorMessage.value = t("errorMessages.E0021");
+    errorMessage.value = t("errorMessages.E0009");
   }
 };
 

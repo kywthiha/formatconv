@@ -75,6 +75,7 @@ export default {
         if (modal === true && checked === true) {
           disableBtn.value = false;
         } else if (modal === false && checked === true) {
+          // 「利用規約」ボタンをクリックし、内容を確認してください。
           message.value = t("errorMessages.E0018");
           messageType.value = "danger";
         }

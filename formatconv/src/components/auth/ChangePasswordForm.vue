@@ -127,10 +127,12 @@ export default {
           changePasswordDisable.value = false;
           messageType.value = "success";
         } else {
+          // パスワード変更処理の成功メールが送信できませんでした。
           message.value = t("errorMessages.E0019");
           messageType.value = "danger";
         }
       } catch (e) {
+        // システムエラーが発生しました。システム管理者に問い合わせしてください。
         message.value = t("errorMessages.E0016");
         messageType.value = "danger";
       }

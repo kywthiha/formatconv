@@ -86,6 +86,7 @@ const handleInputFileChange = async (event) => {
   if (zipFile) {
     setFileItems([zipFile].map((file) => ({ file })));
   } else {
+    // アップロード対象のJPEGファイルが入っていません。
     alert(t("errorMessages.E0020"));
   }
   event.target.value = null;
@@ -111,6 +112,7 @@ const handleOnDrop = async (event) => {
       } else {
         compressFiles.value.push({
           fileName: folderName,
+          // アップロード対象のJPEGファイルが入っていません。
           error: t("errorMessages.E0020"),
         });
       }
