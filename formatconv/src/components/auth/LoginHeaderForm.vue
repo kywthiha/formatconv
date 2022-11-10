@@ -45,7 +45,7 @@ export default {
       store.dispatch("fetchMFAValue");
     });
 
-    //MFA ステータスを変更する
+    // MFAステータスを変更する
     function enableMFAStatus(event) {
       if (event.target.checked === true) {
         store.dispatch("setStatus", event.target.checked);
@@ -67,10 +67,10 @@ export default {
 
     return {
       mfaValue,
-      enableMFAStatus,
-      changePassword,
+      enableMFAStatus,      // MFAステータス変更
+      changePassword,       // パスワード変更画面へ移動
       profilename,
-      logout,
+      logout,               // ログアウト
     };
   },
 };
@@ -104,7 +104,7 @@ export default {
               {{ profilename }}
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <!-- 多要素認証ON/OFF -->
+              <!-- 多要素認証 -->
               <li class="dropdown-item">
                 <div class="form-switch" style="padding-left: 0em">
                   <label class="form-check-label" for="flexSwitchCheckDefault">

@@ -19,7 +19,6 @@
       "resetPasswordBtn": "リセット",
       "updatePasswordBtn": "パスワード更新",
       "convertBtn": "フォルダー選択",
-      "convertingBtn": "変換中",
       "closeBtn": "閉じる",
       "uploadBtn": "アップロード",
       "cancelBtn": "キャンセル",
@@ -27,7 +26,6 @@
       "homeBtn": "ホーム"
     },
     "signup": {
-      "userName": "アカウント名:",
       "confirmPassword": "パスワード確認:",
       "alreadySignup": "すでにアカウントをお持ちですか？"
     },
@@ -48,11 +46,9 @@
       "fileName": "フォルダ名",
       "fileSize": "サイズ",
       "goToUpload": "アップロードへ",
-      "goToUploadConfirm": "このページを離れるとアップロードされた内容がなくなりますが、よろしいでしょうか？",
       "fileDropZoneLabel": "ここにフォルダーをドロップ\nまたは",
       "emptyFileTitle": "フォルダー設定なし",
       "emptyFileBody": "変換データのフォルダーがまだ選択されていません。",
-      "complete": "完了",
       "download": "ダウンロード",
       "delete": "削除"
     },
@@ -67,7 +63,6 @@
     }
   },
   "errorParams": {
-    "email": "メールアドレス",
     "mailAddress": "メールアドレス",
     "password": "パスワード",
     "username": "アカウント名",
@@ -84,7 +79,8 @@
     "I0001": "検証コードを再送信しました。",
     "I0002": "{param1}処理が完了しました。",
     "I0003": "圧縮中",
-    "I0004": "ファイル読み込み中"
+    "I0004": "ファイル読み込み中",
+    "I0005": "このページを離れるとアップロードされた内容がなくなりますが、よろしいでしょうか？"
   },
   "errorMessages": {
     "E0001": "{param1}を入力してください。",

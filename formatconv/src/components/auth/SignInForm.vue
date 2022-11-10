@@ -50,21 +50,25 @@ export default {
 
     // 英語変換対応
     const { t } = useI18n();
+    // パスワード
     const passParam = t("errorParams.password");
+    // ワンタイムパスワード
     const pass = t("errorParams.totpCode");
+
+    // 半角数字のみ
     const digitpass = t("screenItemProperties.signin.onlyDigit");
 
     // 入力チェックのため
     const {
-      validEmail,
+      validEmail,                 // メールアドレスフォーマットチェック
       emailRequireMsg,
-      signinValidPassword,
+      signinValidPassword,        // パスワード長さチェック
       signinPassRequireMsg,
-      validVerificationCode,
+      validVerificationCode,      // 検証コードフォーマットチェック
       verificationCodeRequireMsg,
     } = validation();
 
-    // メッセージを隠す
+    // エラーメッセージエリアを隠す
     function hideAlert() {
       message.value = "";
     }
@@ -74,6 +78,7 @@ export default {
       // 連続ボタン対応
       signinDisable.value = true;
 
+      // 入力チェック
       if (!isValid()) {
         return;
       }
@@ -108,9 +113,10 @@ export default {
         },
         onFailure(error) {
           if (!error.message.includes("SOFTWARE_TOKEN_MFA_CODE")) {
+            // 例外エラー対応
             message.value = exceptionError(
               error.name,
-              t("errorParams.mailAndPass"),
+              t("errorParams.mailAndPass"), // メールアドレス又はパスワード
               error.message
             );
           }
@@ -130,6 +136,7 @@ export default {
           signinDisable.value = false;
         },
         totpRequired(codeDeliveryDetails) {
+          // エラーメッセージエリアを隠す
           hideAlert();
           confirmMFACode.value = true;
           signinDisable.value = false;
@@ -138,10 +145,11 @@ export default {
       });
     }
 
-    // 入力チェック対応
+    // 入力チェック
     function isValid() {
       if (
         !(
+          // メールアドレスフォーマットチェック・パスワード長さチェック
           validEmail(email.value) &&
           signinValidPassword(password.value, passParam)
         )
@@ -152,6 +160,7 @@ export default {
         return false;
       }
       if (
+        // 検証コードフォーマットチェック
         !validVerificationCode(mfaCode.value) &&
         confirmMFACode.value == true
       ) {
@@ -183,26 +192,26 @@ export default {
       message,
       mfaCode,
       confirmMFACode,
-      setUserSessionInfo,
+      setUserSessionInfo,       // ログインユーザーの情報を保存する
       emailBlured,
-      validEmail,
+      validEmail,               // メールアドレスフォーマットチェック
       passwordBlured,
-      signinValidPassword,
+      signinValidPassword,      // パスワード長さチェック
       emailRequireMsg,
       signinPassRequireMsg,
       alertStatus,
-      hideAlert,
-      exceptionError,
-      isValid,
+      hideAlert,                // エラーメッセージエリアを隠す
+      exceptionError,           // 例外エラー対応
+      isValid,                  // 入力チェック
       signinDisable,
-      validVerificationCode,
+      validVerificationCode,     // 検証コードフォーマットチェック
       verifyCodeRequireMsg,
       verifyCodeBlured,
-      handleKeyDown,
+      handleKeyDown,             // Enterキーイベント対応
       passParam,
       pass,
       digitpass,
-      validVerificationCode,
+      validVerificationCode,     // 検証コードフォーマットチェック
       verificationCodeRequireMsg,
       showPassword,
     };
@@ -211,13 +220,13 @@ export default {
 </script>
 
 <template>
-  <!-- <locale-select></locale-select> -->
   <div>
     <div>
       <header-display>
         <template v-slot:register-slot v-if="!confirmMFACode">
           <router-link to="/signup"
             ><button>
+              <!-- アカウント登録 -->
               <span class="figcaption">{{
                 $t("screenItemProperties.common.register")
               }}</span>
@@ -248,7 +257,7 @@ export default {
           <form @submit.prevent="signIn" @keydown="handleKeyDown">
             <div v-if="!confirmMFACode">
               <table>
-                <!-- メール -->
+                <!-- メールアドレス -->
                 <tr>
                   <td class="signin-mail-label">
                     <label>{{ $t("screenItemProperties.common.email") }}</label>
@@ -338,6 +347,7 @@ export default {
                     <!-- ボタンエリア -->
                     <div class="sign-in">
                       <button :disabled="signinDisable">
+                         <!-- ログイン -->
                         {{ $t("screenItemProperties.button.loginBtn") }}
                       </button>
                     </div>
@@ -386,6 +396,7 @@ export default {
                     <!-- ボタンエリア -->
                     <div class="sign-in">
                       <button :disabled="signinDisable">
+                        <!-- ログイン -->
                         {{ $t("screenItemProperties.button.loginBtn") }}
                       </button>
                     </div>

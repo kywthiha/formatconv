@@ -37,6 +37,7 @@ export default {
 
     // 英語変換対応
     const { t } = useI18n();
+    // 検証コード
     let param = t("errorParams.verificationCode");
     // 半角数字のみ
     const digitpass = t("screenItemProperties.signin.onlyDigit");
@@ -63,10 +64,12 @@ export default {
       cognitoUser.resendConfirmationCode(function (err, result) {
         if (result.CodeDeliveryDetails.Destination != null) {
           messageType.value = "success";
+          // 検証コードを再送信しました。
           message.value = t("successMessages.I0001");
         }
         if (err !== null) {
           messageType.value = "danger";
+          // 例外エラー対応
           message.value = exceptionError(err.name, param);
         }
       });
@@ -77,6 +80,7 @@ export default {
       // 連続ボタン対応
       disableBtn.value = true;
 
+      // 入力チェック
       if (!isValid()) {
         return;
       }
@@ -91,9 +95,10 @@ export default {
       // ユーザー名とユーザープール情報に基づいて Cognito User オブジェクトを作成する
       const cognitUser = new CognitoUser(userData);
 
-      // Cognito 確認登録メソッドを呼び出す
+      // Cognito確認登録メソッドを呼び出す
       await cognitUser.confirmRegistration(code.value, true, (err, result) => {
         if (err !== null) {
+          // 例外エラー対応
           messageType.value = "danger";
           message.value = exceptionError(err.name, param);
           disableBtn.value = false;
@@ -105,13 +110,14 @@ export default {
       });
     }
 
-    // メッセージを隠す
+    // エラーメッセージエリアを隠す
     function hideAlert() {
       message.value = "";
     }
 
-    // 入力チェック対応
+    // 入力チェック
     function isValid() {
+      // 検証コードフォーマットチェック
       if (!validVerificationCode(code.value, param)) {
         verificationCodeBlured.value = true;
         disableBtn.value = false;
@@ -122,17 +128,17 @@ export default {
     }
 
     return {
-      resendCode,
-      confirmCode,
-      code,
+      resendCode,                           // コード再送信
+      confirmCode,                          // アカウントのサインアップ時にコードの使用確認
+      code, 
       username,
-      isValid,
+      isValid,                              // 入力チェック対応
       verificationCodeBlured,
-      validVerificationCode,
+      validVerificationCode,                // 検証コードフォーマットチェック
       verificationCodeRequireMsg,
-      hideAlert,
+      hideAlert,                            // エラーメッセージエリアを隠す
       message,
-      handleKeyDown,
+      handleKeyDown,                        // Enterキーイベント対応
       disableBtn,
       messageType,
       param,
@@ -170,7 +176,7 @@ export default {
         <template v-slot:body>
           <div>
             <table>
-              <!-- メール -->
+              <!-- メールアドレス -->
               <tr>
                 <td class="confirm-mail-label">
                   <label>{{ $t("screenItemProperties.common.email") }}</label>
@@ -224,6 +230,7 @@ export default {
                   <!-- ボタンエリア -->
                   <div class="sign-in">
                     <button :disabled="disableBtn">
+                      <!-- アカウント確認 -->
                       {{ $t("screenItemProperties.button.confirmAccountBtn") }}
                     </button>
                   </div>
@@ -233,12 +240,14 @@ export default {
                 <td colspan="2">
                   <!-- 新しいコードを送るエリア -->
                   <div class="resend-code">
+                    <!-- 検証コードが届かない場合は、以下より再度送信してください。 -->
                     {{
                       $t("screenItemProperties.confirmAccount.sentNewCodeLabel")
                     }}
                     <a @click="resendCode" class="resend-code-atag"
                       ><span class="figcaption"
                         ><u>
+                          <!-- 再送信する -->
                           {{
                             $t(
                               "screenItemProperties.confirmAccount.sentNewCodeLink"

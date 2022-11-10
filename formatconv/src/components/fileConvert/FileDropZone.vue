@@ -60,7 +60,7 @@ const compressFolder = async (files, fileName) => {
   if (filterFiles.length > 0) {
     compressFiles.value.push({
       fileName,
-      message: t("successMessages.I0003"),
+      message: t("successMessages.I0003"),       // 圧縮中
     });
     const zipFile = await filesToZip(
       filterFiles.map((file) => ({
@@ -100,7 +100,7 @@ const handleOnDrop = async (event) => {
       const folderName = `${item.fullPath.split("/")[1]}.zip`;
       compressFiles.value.push({
         fileName: folderName,
-        message: t("successMessages.I0004"),
+        message: t("successMessages.I0004"),         // ファイル読み込み中
       });
       const fileItems = await getAllFileEntries(item);
       compressFiles.value = compressFiles.value.filter(
@@ -164,12 +164,14 @@ const handleOnDrop = async (event) => {
     </Teleport>
 
     <i class="bi bi-cloud-arrow-up" style="font-size: 1.5rem"></i>
+    <!-- ここにフォルダーをドロップ\nまたは -->
     <div>{{ $t("screenItemProperties.fileUpload.fileDropZoneLabel") }}</div>
     <label
       :style="{ opacity: active ? 0 : 1 }"
       class="btn btn-primary col-auto btn-browse-file"
       for="file-drop-zone-file-input-mulitple"
     >
+      <!-- フォルダー選択 -->
       {{ $t("screenItemProperties.button.convertBtn") }}
     </label>
     <input

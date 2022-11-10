@@ -35,18 +35,20 @@ export default {
     let messageType = ref("");
     const { validVerificationCode, verificationCodeRequireMsg } = validation();
     const qrCodeBlured = ref(false);
+    // MFAコード
     let param = t("screenItemProperties.totp.mfaCode");
     let disableBtn = ref(false);
     // 半角数字のみ
     const digitpass = t("screenItemProperties.signin.onlyDigit");
 
-    // メッセージを隠す
+    // エラーメッセージエリアを隠す
     function hideAlert() {
       message.value = "";
     }
 
-    // 入力チェック対応
+    // 入力チェック
     function isValid() {
+      // 検証コードフォーマットチェック
       if (!validVerificationCode(qrCode.value, param)) {
         qrCodeBlured.value = true;
         disableBtn.value = false;
@@ -55,10 +57,11 @@ export default {
       return true;
     }
 
-    // 新しい Qr コードを作成する
+    // 新しいQRコードを作成する
     function newQRCode() {
       //　「MFAを有効にする」のチェックを外すと、MFAが無効になる
       if (mfaValue.value === true) {
+        // ユーザー アカウントの MFA を無効にする
         setMFA(false);
         return;
       }
@@ -87,17 +90,19 @@ export default {
             "&issuer=CognitoJSPOC";
         },
         onFailure: function (err) {
+          // 例外エラー対応
           messageType.value = "danger";
           message.value = exceptionError(err.name);
         },
       });
     }
 
-    // MFA を確認する
+    // MFAを確認する
     function verifyMFA() {
       // 連続ボタン対応
       disableBtn.value = true;
 
+      // 入力チェック
       if (!isValid()) {
         return;
       }
@@ -111,8 +116,10 @@ export default {
       // MFA コードを検証し、ソフトウェア トークンをユーザー プロファイルにリンクする
       cognitoUser.verifySoftwareToken(qrCode.value, "SoftwareToken", {
         onSuccess: function (result) {
+          // ユーザー アカウントの MFA を有効にする
           setMFA(true);
           messageType.value = "success";
+          // 多要素認証の有効設定処理が完了しました。
           message.value = t("successMessages.I0002", {
             param1: t("screenItemProperties.totp.enableMultiFactorAuth"),
           });
@@ -122,6 +129,7 @@ export default {
           qrCodeBlured.value = false;
         },
         onFailure: function (err) {
+          // 例外エラー対応
           messageType.value = "danger";
           message.value = exceptionError(err.name);
           disableBtn.value = false;
@@ -150,6 +158,7 @@ export default {
         totpMfaSettings,
         function (err, result) {
           if (err) {
+            // 例外エラー対応
             messageType.value = "danger";
             message.value = exceptionError(err.name);
             disableBtn.value = false;
@@ -179,24 +188,24 @@ export default {
 
     return {
       isEnabled,
-      setMFA,
+      setMFA,                       // ユーザー アカウントの MFA を有効または無効にする
       mfaValue,
       qrData,
-      newQRCode,
+      newQRCode,                    // 新しいQRコードを作成する
       showQRCode,
       qrCode,
-      verifyMFA,
-      cancel,
+      verifyMFA,                    // MFAを確認する
+      cancel,                       // キャンセルボタン処理
       message,
       messageType,
       checkedValue,
-      hideAlert,
-      handleKeyDown,
-      validVerificationCode,
+      hideAlert,                    // エラーメッセージエリアを隠す
+      handleKeyDown,                // Enterキーイベント対応
+      validVerificationCode,        // 検証コードフォーマットチェック
       verificationCodeRequireMsg,
       qrCodeBlured,
       param,
-      isValid,
+      isValid,                      // 入力チェック
       disableBtn,
       digitpass,
     };
@@ -228,6 +237,7 @@ export default {
                   <!-- QAコードを表示 -->
                   <div class="mb-3 text-center">
                     <div class="scanner-lbl">
+                      <!-- Authy, Microsoft Authenticator 又は Google Authenticatorを利用して、QAコードをスキャンします。 -->
                       {{ $t("screenItemProperties.totp.title") }}
                     </div>
                     <div class="mt-3">
@@ -273,9 +283,11 @@ export default {
                     </div>
                     <!-- ボタンエリア -->
                     <button class="mfa-cancel-btn mt-2" @click="cancel">
+                      <!-- キャンセル -->
                       {{ $t("screenItemProperties.button.cancelBtn") }}
                     </button>
                     <button class="mfa-confirm-btn mt-2" :disabled="disableBtn">
+                      <!-- 送信 -->
                       {{ $t("screenItemProperties.button.sendBtn") }}
                     </button>
                   </div>

@@ -39,7 +39,7 @@ export const useSocket = () => {
   });
 
   const socketConnect = async () => {
-    // Create WebSocket connection.
+    // トークンを取得
     const token = await getToken();
     window.socket = new WebSocket(
       `${import.meta.env.VITE_WEBSOKET_URL}?Authorization=${token}`

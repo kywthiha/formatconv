@@ -37,8 +37,9 @@ const uploadStatus = computed(
 );
 
 const handleGotoUpload = () => {
+  // このページを離れるとアップロードされた内容がなくなりますが、よろしいでしょうか？
   const ans = window.confirm(
-    t("screenItemProperties.fileUpload.goToUploadConfirm")
+    t("successMessages.I0005")
   );
   if (ans) {
     store.dispatch("fileUploadManager/setUploadStatus", false);
@@ -46,9 +47,11 @@ const handleGotoUpload = () => {
   }
 };
 
+// エラーメッセージエリアを隠す
 const hideAlert = ()=>{
   errorMessage.value = null
 }
+
 </script>
 <template>
   <div class="file-upload-manager">
@@ -59,14 +62,18 @@ const hideAlert = ()=>{
         <button type="button" class="btn-close" @click="hideAlert"></button>
       </div>
     </div>
+     <!-- ファイルドロップ -->
     <fileDropZone class="file-drop-zone" v-if="!uploadStatus" />
     <button v-else-if="processStatus" class="btn btn-danger go-to-upload" @click="handleGotoUpload">
+      <!-- アップロードへ -->
       {{ $t("screenItemProperties.fileUpload.goToUpload") }}
     </button>
+     <!-- ドラッグ・ドロップしたファイルリストを表示するエリア -->
     <fileList class="file-list" />
     <div class="file-action-group" v-if="!uploadStatus">
       <button class="btn btn-primary col-auto btn-upload" @click="handleUpload"
         :disabled="uploadStatus || !fileItemsCount">
+        <!-- アップロード -->
         {{ $t("screenItemProperties.button.uploadBtn") }}
       </button>
     </div>

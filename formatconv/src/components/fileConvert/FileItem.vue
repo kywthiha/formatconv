@@ -114,12 +114,14 @@ const deleteFileItem = () =>
       <div class="row col">
         <div class="col align-self-center">
           <div class="fw-bold">
+            <!-- フォルダ名 -->
             {{ $t("screenItemProperties.fileUpload.fileName") }}
           </div>
           <div>{{ item.file.name }}</div>
         </div>
         <div class="col align-self-center">
           <div class="fw-bold">
+            <!-- サイズ -->
             {{ $t("screenItemProperties.fileUpload.fileSize") }}（{{ unit }}）
           </div>
           <div>{{ size }}</div>
@@ -136,6 +138,7 @@ const deleteFileItem = () =>
             download
             target="_blank"
           >
+            <!-- ダウンロード -->
             {{ $t("screenItemProperties.fileUpload.download") }}</a
           >
         </div>
@@ -155,6 +158,7 @@ const deleteFileItem = () =>
         </div>
 
         <button class="btn btn-danger" v-else @click="deleteFileItem">
+          <!-- 削除 -->
           {{ $t("screenItemProperties.fileUpload.delete") }}
         </button>
       </div>

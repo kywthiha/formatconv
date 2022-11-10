@@ -33,28 +33,32 @@ export default {
 
     // 英語変換対応
     const { t } = useI18n();
+    // 新しいパスワード
     const passParam = t("errorParams.newPassword");
+    // 新しいパスワード確認
     const confirmPasswordParam = t("errorParams.confirmNewPassword");
     let messageType = ref("");
+    // 検証コード
     let param = t("errorParams.verificationCode");
     // 半角数字のみ
     const digitpass = t("screenItemProperties.signin.onlyDigit");
 
     // 入力チェックのため
     const {
-      validEmail,
+      validEmail,                     // メールアドレスフォーマットチェック
       emailRequireMsg,
-      validVerificationCode,
+      validVerificationCode,          // 検証コードフォーマットチェック
       verificationCodeRequireMsg,
-      validPassword,
+      validPassword,                  // パスワードフォマットチェック
       passRequireMsg,
-      validConfirmPassword,
+      validConfirmPassword,           // パスワードやパスワード確認一致チェック
       confirmPasswordRequireMsg,
     } = validation();
 
     // 認証済みメールでコードを送信する
     function sendCode() {
       disableResetPasswordBtn.value = true;
+      // 入力チェック
       if (!isValid()) {
         return;
       }
@@ -76,10 +80,11 @@ export default {
         },
         onFailure: function (err) {
           if (err !== null) {
+            // 例外エラー対応
             messageType.value = "danger";
             message.value = exceptionError(
               err.name,
-              t("errorParams.mailAddress")
+              t("errorParams.mailAddress") // メールアドレス
             );
             disableResetPasswordBtn.value = false;
           }
@@ -113,10 +118,11 @@ export default {
         },
         onFailure(err) {
           if (err !== null) {
+            // 例外エラー対応
             messageType.value = "danger";
             message.value = exceptionError(
               err.name,
-              t("errorParams.mailAddress")
+              t("errorParams.mailAddress") // メールアドレス
             );
             disableUpdatePasswordBtn.value = false;
           }
@@ -124,10 +130,11 @@ export default {
       });
     }
 
-    // 入力チェック対応
+    // 入力チェック
     function isValidConfrimPassword() {
       if (
         !(
+          // 検証コードフォーマットチェック・パスワードフォマットチェック・パスワードやパスワード確認一致チェック
           validVerificationCode(code.value, param) &&
           validPassword(password.value, passParam) &&
           validConfirmPassword(
@@ -147,7 +154,7 @@ export default {
       return true;
     }
 
-    // 入力チェック対応
+    // 入力チェック
     function isValid() {
       if (!validEmail(email.value)) {
         emailBlured.value = true;
@@ -157,7 +164,7 @@ export default {
       return true;
     }
 
-    // メッセージを隠す
+    // エラーメッセージエリアを隠す
     function hideAlert() {
       message.value = "";
     }
@@ -167,29 +174,29 @@ export default {
       code,
       confirmPassword,
       sendCode,
-      resetPassword,
+      resetPassword,                    // パスワードの更新
       password,
       confirmCode,
-      validEmail,
+      validEmail,                       // メールアドレスフォーマットチェック
       emailRequireMsg,
       emailBlured,
-      isValid,
-      handleKeyDown,
-      exceptionError,
+      isValid,                          // 入力チェック
+      handleKeyDown,                    // Enterキーイベント対応
+      exceptionError,                   // 例外エラー対応
       message,
-      hideAlert,
+      hideAlert,                        // エラーメッセージエリアを隠す
       disableUpdatePasswordBtn,
       disableResetPasswordBtn,
-      validVerificationCode,
+      validVerificationCode,            // 検証コードフォーマットチェック
       verificationCodeRequireMsg,
       verificationCodeBlured,
-      isValidConfrimPassword,
+      isValidConfrimPassword,           // 入力チェック
       passParam,
       confirmPasswordParam,
       passwordBlured,
       confirmPasswordBlured,
-      validPassword,
-      validConfirmPassword,
+      validPassword,                    // パスワードフォマットチェック
+      validConfirmPassword,             // パスワードやパスワード確認一致チェック
       passRequireMsg,
       confirmPasswordRequireMsg,
       messageType,
@@ -234,7 +241,7 @@ export default {
             <div v-if="!confirmCode">
               <form @submit.prevent="sendCode" @keydown="handleKeyDown">
                 <table>
-                  <!-- メール -->
+                  <!-- メールアドレス -->
                   <tr>
                     <td class="signin-mail-label">
                       <label>{{
@@ -281,6 +288,7 @@ export default {
                       <!-- ボタンエリア -->
                       <div class="sign-in">
                         <button :disabled="disableResetPasswordBtn">
+                          <!-- リセット -->
                           {{
                             $t("screenItemProperties.button.resetPasswordBtn")
                           }}
@@ -433,6 +441,7 @@ export default {
                       <!-- ボタンエリア -->
                       <div class="sign-in">
                         <button :disabled="disableUpdatePasswordBtn">
+                           <!-- パスワード更新 -->
                           {{
                             $t("screenItemProperties.button.updatePasswordBtn")
                           }}

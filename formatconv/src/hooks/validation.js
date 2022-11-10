@@ -60,6 +60,7 @@ export default function FormValidation() {
       });
     } else if (confirmPassword !== password) {
       validConfirmPwd.value = false;
+      // {param1}や{param2}が不一致しています。
       confirmPasswordRequireMsg.value = t("errorMessages.E0004", {
         param1: newPassParam,
         param2: confirmPassParam,
@@ -75,14 +76,14 @@ export default function FormValidation() {
     var reMail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
     if (email.length === 0) {
-      // {param1}を入力してください。
+      // メールアドレスを入力してください。
       emailRequireMsg.value = t("errorMessages.E0001", {
-        param1: t("errorParams.email"),
+        param1: t("errorParams.mailAddress"),
       });
     } else if (!reMail.test(email)) {
-      // {param1}フォーマットが正しくありません。
+      // メールアドレスフォーマットが正しくありません。
       emailRequireMsg.value = t("errorMessages.E0002", {
-        param1: t("errorParams.email"),
+        param1: t("errorParams.mailAddress"),
       });
     }
 
@@ -94,12 +95,12 @@ export default function FormValidation() {
     var reUsername = /^(?=.{3,63}$)[a-z0-9]+$/;
 
     if (username.length === 0) {
-      // {param1}を入力してください。
+      // アカウント名を入力してください。
       usernameRequireMsg.value = t("errorMessages.E0001", {
         param1: t("errorParams.username"),
       });
     } else if (!reUsername.test(username)) {
-      // {param1}フォーマットが正しくありません。
+      // アカウント名フォーマットが正しくありません。
       usernameRequireMsg.value = t("errorMessages.E0002", {
         param1: t("errorParams.username"),
       });
@@ -131,17 +132,17 @@ export default function FormValidation() {
   }
 
   return {
-    signinValidPassword,
+    signinValidPassword,                // パスワード長さチェック
     signinPassRequireMsg,
-    validPassword,
-    validConfirmPassword,
+    validPassword,                      // パスワードフォマットチェック
+    validConfirmPassword,               // パスワードやパスワード確認一致チェック
     passRequireMsg,
     confirmPasswordRequireMsg,
     validEmail,
     emailRequireMsg,
     validUsername,
     usernameRequireMsg,
-    validVerificationCode,
+    validVerificationCode,              // 検証コードフォーマットチェック
     verificationCodeRequireMsg,
   };
 }

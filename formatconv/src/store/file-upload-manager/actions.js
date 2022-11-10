@@ -21,6 +21,7 @@ export default {
   },
   async requestUploadUrl({ commit, getters }) {
     try {
+      // トークンを取得する
       const token = await getToken();
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/presign-url-upload`,

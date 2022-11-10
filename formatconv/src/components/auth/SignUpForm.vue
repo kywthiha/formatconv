@@ -44,20 +44,22 @@ export default {
 
     // 英語変換対応
     const { t } = useI18n();
+    // パスワード
     const passParam = t("errorParams.password");
+    // パスワード確認
     const confirmPasswordParam = t("errorParams.confirmPassword");
     // 入力チェックのため
     const {
-      validUsername,
-      validPassword,
+      validUsername,                // アカウントユーザー名フォーマット変換
+      validPassword,                // パスワードフォマットチェック
       passRequireMsg,
-      validConfirmPassword,
+      validConfirmPassword,         // パスワードやパスワード確認一致チェック
       confirmPasswordRequireMsg,
-      validEmail,
+      validEmail,                   // メールアドレスフォーマットチェック
       emailRequireMsg,
     } = validation();
 
-    // メッセージを隠す
+    // エラーメッセージエリアを隠す
     function hideAlert() {
       message.value = "";
     }
@@ -87,6 +89,7 @@ export default {
       // 連続ボタン対応
       disableBtn.value = true;
 
+      // 入力チェック
       if (!isValid()) {
         return;
       }
@@ -117,6 +120,7 @@ export default {
         (err, result) => {
           // 例外エラーが発生した場合、エラーメッセージを表示し、処理を終了する。
           if (err !== null) {
+            // 例外エラー対応
             messageType.value = "danger";
             message.value = exceptionError(err.name);
             disableBtn.value = false;
@@ -146,15 +150,16 @@ export default {
       }
     }
 
-    // アカウント名を入力する
+    // アカウント名を設定する
     function insertUsername() {
       username.value = email.value.replace(/[^0-9a-z]/g, "");
     }
 
-    // 入力チェック対応
+    // 入力チェック
     function isValid() {
       if (
         !(
+          // アカウントユーザー名フォーマット変換・メールアドレスフォーマットチェック・パスワードフォマットチェック・パスワードやパスワード確認一致チェック
           validUsername(username.value) &&
           validEmail(email.value) &&
           validPassword(password.value, passParam) &&
@@ -173,40 +178,40 @@ export default {
     }
 
     return {
-      openModal,
+      openModal,                            // モーダル表示する
       showModal,
       email,
       username,
       password,
-      signUp,
+      signUp,                               // サインアップメソッドを呼び出す
       confirm_password,
-      validUsername,
-      validEmail,
+      validUsername,                        // アカウントユーザー名フォーマット変換
+      validEmail,                           // メールアドレスフォーマットチェック
       emailRequireMsg,
       disableBtn,
       openedModal,
-      changeCheckbox,
+      changeCheckbox,                       // 利用規約の未選択対応
       changedCheckbox,
-      validPassword,
+      validPassword,                        // パスワードフォマットチェック
       passwordBlured,
-      validConfirmPassword,
+      validConfirmPassword,                 // パスワードやパスワード確認一致チェック
       confirmPasswordBlured,
       passRequireMsg,
       confirmPasswordRequireMsg,
       emailBlured,
-      hideAlert,
+      hideAlert,                            // エラーメッセージエリアを隠す
       message,
-      isValid,
+      isValid,                              // 入力チェック
       termOfService,
-      handleKeyDown,
+      handleKeyDown,                        // Enterキーイベント対応
       disableCheckbox,
-      exceptionError,
+      exceptionError,                       // 例外エラー対応
       passParam,
       confirmPasswordParam,
       showPassword,
       showConfirmPassword,
       messageType,
-      insertUsername,
+      insertUsername,                       // アカウント名を設定する
     };
   },
 };
@@ -262,7 +267,7 @@ export default {
                   />
                 </td>
               </tr>
-              <!-- メール -->
+              <!-- メールアドレス -->
               <tr>
                 <td class="mail-label">
                   <label class="sign-up-label">{{
@@ -410,6 +415,7 @@ export default {
                   <!-- ボタンエリア -->
                   <div class="sign-up">
                     <button :disabled="disableBtn">
+                      <!-- 登録 -->
                       {{ $t("screenItemProperties.button.registerBtn") }}
                     </button>
                   </div>
@@ -419,10 +425,12 @@ export default {
                 <!-- 再送信する -->
                 <td colspan="4">
                   <div class="signup-link">
+                    <!-- すでにアカウントをお持ちですか？ -->
                     {{ $t("screenItemProperties.signup.alreadySignup") }}
                     <a @click="resendCode" class="resend-code-atag">
                       <router-link to="/signin"
                         ><span class="figcaption">
+                          <!-- ログイン -->
                           {{ $t("screenItemProperties.button.loginBtn") }}
                         </span>
                       </router-link>
@@ -446,6 +454,7 @@ export default {
         to="body"
       >
         <template #header>
+          <!-- 利用規約ボタン -->
           <h3>{{ $t("screenItemProperties.button.termsOfServiceBtn") }}</h3>
         </template>
       </termsAndConditionsForm>

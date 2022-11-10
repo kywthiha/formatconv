@@ -18,7 +18,7 @@ const fileItems = computed(
 <template>
   <div class="file-list-container card" v-if="fileItems.length">
     <div class="file-list">
-      <!-- ドラッグ と ドロップしたファイルを表示するエリア -->
+      <!-- ドラッグ・ドロップしたファイルを表示するエリア -->
       <FileItem
         v-for="fileItem in fileItems"
         :key="fileItem.file.name"
@@ -28,9 +28,11 @@ const fileItems = computed(
   </div>
   <div v-else class="empty-file-list">
     <h6 class="text-center">
+       <!-- フォルダー設定なし -->
       {{ $t("screenItemProperties.fileUpload.emptyFileTitle") }}
     </h6>
     <p class="text-center">
+       <!-- 変換データのフォルダーがまだ選択されていません。 -->
       {{ $t("screenItemProperties.fileUpload.emptyFileBody") }}
     </p>
   </div>

@@ -28,17 +28,20 @@ export default {
     let confirmNewPasswordBlured = ref(false);
 
     const {
-      validPassword,
+      validPassword,                // パスワードフォマットチェック
       passRequireMsg,
-      signinValidPassword,
+      signinValidPassword,          // パスワード長さチェック
       signinPassRequireMsg,
-      validConfirmPassword,
+      validConfirmPassword,         // パスワードやパスワード確認一致チェック
       confirmPasswordRequireMsg,
     } = validation();
 
     const username = computed(() => store.state.authModule.cognitoUserName);
+    // 現在のパスワード
     const currentPassParam = t("errorParams.currentPassword");
+    // 新しいパスワード
     const newPassParam = t("errorParams.newPassword");
+    // 新しいパスワード確認
     const confirmNewPassParam = t("errorParams.confirmNewPassword");
     let message = ref("");
     let messageType = ref("");
@@ -51,6 +54,7 @@ export default {
     function changePassword() {
       changePasswordDisable.value = true;
 
+      // 入力チェック
       if (!isValid()) {
         return;
       }
@@ -68,9 +72,10 @@ export default {
       // 取得できないと、「User is not authenticated」エラーが発生した
       cognitoUser.getSession(function (err, session) {
         if (err) {
+          // 例外エラー対応
           message.value = exceptionError(
             err.name,
-            t("errorParams.currentPassword")
+            t("errorParams.currentPassword") // 現在のパスワード
           );
           messageType.value = "danger";
           return;
@@ -83,9 +88,10 @@ export default {
         newPassword.value,
         function (err, result) {
           if (err) {
+            // 例外エラー対応
             message.value = exceptionError(
               err.name,
-              t("errorParams.currentPassword")
+              t("errorParams.currentPassword") // 現在のパスワード
             );
             messageType.value = "danger";
             changePasswordDisable.value = false;
@@ -100,9 +106,10 @@ export default {
       );
     }
 
-    //　パスワード変更処理が終わった後、完了メールを送信する。
+    //　パスワード変更処理が終わった後、完了メールを送信する
     async function sendMail() {
       try {
+        // トークンを取得する
         const token = await getToken();
         const response = await fetch(
           `${import.meta.env.VITE_API_URL}/change-password-sucess-mail`,
@@ -121,6 +128,7 @@ export default {
           oldPasswordBlured.value = false;
           newPasswordBlured.value = false;
           confirmNewPasswordBlured.value = false;
+          // パスワード変更処理が完了しました。
           message.value = t("successMessages.I0002", {
             param1: t("errorParams.changePassword"),
           });
@@ -138,15 +146,16 @@ export default {
       }
     }
 
-    // メッセージを隠す
+    // エラーメッセージエリアを隠す
     function hideAlert() {
       message.value = "";
     }
 
-    // 入力チェック対応
+    // 入力チェック
     function isValid() {
       if (
         !(
+          // パスワード長さチェック・パスワードフォマットチェック・パスワードやパスワード確認一致チェック
           signinValidPassword(oldPassword.value, currentPassParam) &&
           validPassword(newPassword.value, newPassParam) &&
           validConfirmPassword(
@@ -174,25 +183,25 @@ export default {
       newPasswordBlured,
       confirmNewPassword,
       confirmNewPasswordBlured,
-      validPassword,
+      validPassword,                // パスワードフォマットチェック
       passRequireMsg,
       username,
-      signinValidPassword,
+      signinValidPassword,          // パスワード長さチェック
       signinPassRequireMsg,
       currentPassParam,
       newPassParam,
-      validConfirmPassword,
+      validConfirmPassword,         // パスワードやパスワード確認一致チェック
       confirmPasswordRequireMsg,
       confirmNewPassParam,
-      isValid,
-      exceptionError,
+      isValid,                      // 入力チェック
+      exceptionError,                // 例外エラー対応
       message,
-      handleKeyDown,
-      hideAlert,
+      handleKeyDown,                // Enterキーイベント対応
+      hideAlert,                    // エラーメッセージエリアを隠す
       changePasswordDisable,
       messageType,
-      getToken,
-      sendMail,
+      getToken,                     // トークンを取得する
+      sendMail,                     // パスワード変更処理完了メール送信
       showCurrentPassword,
       showNewPassword,
       showNewConfirmPassword,
@@ -225,7 +234,7 @@ export default {
             <form @submit.prevent="changePassword" @keydown="handleKeyDown">
               <div>
                 <table class="change-pass-table">
-                  <!-- メール -->
+                  <!-- 現在のパスワード -->
                   <tr>
                     <td class="mail-label">
                       <label>
@@ -378,6 +387,7 @@ export default {
                       <!-- ボタンエリア -->
                       <div class="sign-in">
                         <button :disabled="changePasswordDisable">
+                          <!-- パスワード変更 -->
                           {{
                             $t(
                               "screenItemProperties.changePassword.changePassword"

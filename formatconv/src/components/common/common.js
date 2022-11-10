@@ -45,7 +45,7 @@ export function exceptionError(exceptionMessage, param, errrorMessage) {
       message.value = t("errorMessages.E0011");
       break;
     case "InvalidPasswordException":
-      // {param1}は半角英数字8文字以上入力してください。
+      // パスワードは半角英数字8文字以上入力してください。
       message.value = t("errorMessages.E0003", {
         param1: t("errorParams.password"),
       });
