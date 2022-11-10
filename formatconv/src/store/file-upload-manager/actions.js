@@ -49,18 +49,16 @@ export default {
         commit("setConnectionId", connection_id);
         commit("setFileItems", fileItemsUploadUrl);
       } else {
-        console.log(res);
-        if (res && res.message) {
-          alert(res.message);
-        } else {
-          alert(res);
-        }
         commit("setUploadStatus", false);
+        if (res && res.message) {
+          throw new Error(res.message)
+        } else {
+          throw new Error(res)
+        }
       }
     } catch (e) {
-      console.log(e);
-      alert(e);
       commit("setUploadStatus", false);
+      throw e
     }
   },
 };
