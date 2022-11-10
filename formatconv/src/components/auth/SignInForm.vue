@@ -121,6 +121,7 @@ export default {
               name: "confirm",
               query: {
                 username: email.value,
+                // 検証コードをまず入力してください。
                 errormsg: t("errorMessages.E0008"),
               },
             });
