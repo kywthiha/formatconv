@@ -130,9 +130,6 @@ const deleteFileItem = () =>
           {{ progress.percentage }}%
         </button>
         <div v-else-if="item.download_url" class="download-action">
-          <button class="btn-upload btn-complete">
-            {{ $t("screenItemProperties.fileUpload.complete") }}
-          </button>
           <a
             class="btn-upload btn-download-link"
             :href="item.download_url"

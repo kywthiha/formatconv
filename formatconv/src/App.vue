@@ -33,8 +33,6 @@ export default {
         );
         store.dispatch("setIsAuthenticated", true);
         store.dispatch("setName", session.idToken.payload.name);
-
-        console.log("session is valid: " + session.isValid());
       });
     } else {
       store.dispatch("setIsAuthenticated", false);
