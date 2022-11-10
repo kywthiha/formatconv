@@ -15,6 +15,7 @@ const store = useStore();
 const events = ["dragenter", "dragover", "dragleave", "drop"];
 const active = ref(false);
 const allowImageTypes = ["image/jpeg"];
+const allowImageExtension = ["jpg", "jpeg"];
 const compressFiles = ref([]);
 const { t } = useI18n();
 
@@ -49,9 +50,13 @@ const compressFileName = (compressFile) => {
 };
 
 const compressFolder = async (files, fileName) => {
-  const filterFiles = files.filter((file) =>
-    allowImageTypes.includes(file.type)
-  );
+  const filterFiles = files.filter((file) => {
+    if (file.type.length) {
+      return allowImageTypes.includes(file.type);
+    } else {
+      return allowImageExtension.includes(file.name.split(".").pop());
+    }
+  });
   if (filterFiles.length > 0) {
     compressFiles.value.push({
       fileName,
